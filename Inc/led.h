@@ -65,7 +65,6 @@ extern "C" {
       @Remarks
         Any additional remarks
      */
-#if 0
 #define LED_COLOR_OFF       0
 #define LED_COLOR_RED       1
 #define LED_COLOR_BLUE      2
@@ -74,24 +73,9 @@ extern "C" {
 #define LED_COLOR_YELLOW    5
 #define LED_COLOR_CYAN      6
 #define LED_COLOR_WHITE     7
-#else //LRE-6 1.0
-#define LED_COLOR_OFF       0
-#define LED_COLOR_RED       2
-#define LED_COLOR_BLUE      1
-#define LED_COLOR_MAGENTA   3
-#define LED_COLOR_GREEN     4
-#define LED_COLOR_YELLOW    6
-#define LED_COLOR_CYAN      5
-#define LED_COLOR_WHITE     7
-#endif
 
-#if 0
 #define LED_BIT_RED     1
 #define LED_BIT_BLUE    2
-#else // LrE-6 R1.0
-#define LED_BIT_RED     2
-#define LED_BIT_BLUE    1
-#endif
 #define LED_BIT_GREEN   4
 
 #define LED_BLINK_NONE      0

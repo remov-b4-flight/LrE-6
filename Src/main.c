@@ -254,6 +254,7 @@ int main(void)
   LED_SetBackLight(LCD_BL_ON,LED_BL_STATIC);
   HAL_Delay(LCD_PWRUP_WAIT_MS);		//Wait for LCD module power up.
   LCD_Initialize();
+  WROOM_initialize();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -277,6 +278,7 @@ int main(void)
 			  sprintf(lcdmsg,"%2x.%02x",USBD_DEVICE_VER_MAJ,USBD_DEVICE_VER_MIN);
 			  LCD_Locate(3,1);
 			  LCD_Print(lcdmsg);
+			  WROOM_set_boot_state(SET_STA);
 		  }
 
 		  EmulateKeyboard();

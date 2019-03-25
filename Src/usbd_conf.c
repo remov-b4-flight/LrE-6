@@ -224,7 +224,7 @@ void HAL_PCD_ResumeCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
   /* USER CODE BEGIN 3 */
-  LED_Set(LED_COLOR_RED,LED_BLINK_NONE);
+  LED_Set(LED_COLOR_OFF,LED_BLINK_NONE);
   if (hpcd->Init.low_power_enable)
   {
     /* Reset SLEEPDEEP bit of Cortex System Control Register. */

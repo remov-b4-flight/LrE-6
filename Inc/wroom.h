@@ -9,6 +9,7 @@
 #define WROOM_H_
 #include "main.h"
 #define WROOM_TX_BUFSIZE 100
+#define WROOM_RX_BUFSIZE 100
 
 #define	SEND_PORT	58763
 
@@ -33,5 +34,9 @@ enum {
 	SET_SEND,		//Set to send data
 	PASSTHRU		//Entered pass thru
 };
+
+void WROOM_initialize(void);
+void WROOM_set_boot_state(uint8_t state);
+
 
 #endif /* WROOM_H_ */

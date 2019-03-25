@@ -8,16 +8,16 @@
 #include <main.h>
 extern UART_HandleTypeDef huart1;
 
-char wroom_tx_buffer[WROOM_TX_BUFSIZE];
-
+uint8_t wroom_tx_buffer[WROOM_TX_BUFSIZE];
+uint8_t wroom_rx_buffer[WROOM_RX_BUFSIZE];
 uint8_t wroom_boot_state;
 
-void wroom_initialize(){
+void WROOM_initialize(){
 	wroom_boot_state = SET_STA;
 }
 
 //when goes to next stage call this func.
-void wroom_boot_op(uint8_t	state){
+void WROOM_set_boot_state(uint8_t	state){
 	uint16_t len;
 	if (state == SET_STA) {
 		strcpy(wroom_tx_buffer, AT_MODE);
@@ -37,9 +37,9 @@ void wroom_boot_op(uint8_t	state){
 	} else if(state == PASSTHRU){
 		return;	//Do Nothing
 	} else {//some error
-		strcpy(wroom_boot_state, SET_STA);
 		return;
 	}
-	HAL_UART_Transmit_DMA(&huart1,wroom_tx_buffer,len);
+	HAL_UART_Transmit_DMA(&huart1, wroom_tx_buffer, len);
+	HAL_UART_Receive_DMA(&huart1, wroom_rx_buffer, WROOM_RX_BUFSIZE);
 	wroom_boot_state = state;
 }

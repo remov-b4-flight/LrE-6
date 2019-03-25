@@ -229,12 +229,11 @@ void EXTI4_15_IRQHandler(void)
 			isKeyRelaseSent = true;
 		}
 	    rot1_prev = r1;
-#if 0
+
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
 		if (isKeyPressed)
 			  return;
-#endif
     }
     //Rotator 2
     if(pr & PRMASK_R2){ //EXTI8,9
@@ -255,14 +254,12 @@ void EXTI4_15_IRQHandler(void)
 			isKeyRelaseSent = true;
 		}
 		rot2_prev = r2;
-#if 0
+
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
 		if(isKeyPressed)
 			return;
-#endif
     }
-
 
     //Rotator 3
 	if(pr & PRMASK_R3){	//EXTI10,11
@@ -283,12 +280,11 @@ void EXTI4_15_IRQHandler(void)
 			isKeyRelaseSent = true;
 		}
 	    rot3_prev = r3;
-#if 0
+
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
 		if(isKeyPressed)
 			return;
-#endif
 	}
 
     //Rotator 4
@@ -310,12 +306,11 @@ void EXTI4_15_IRQHandler(void)
 			isKeyRelaseSent = true;
 		}
 	    rot4_prev = r4;
-#if 0
+
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
 		if(isKeyPressed)
 			return;
-#endif
     }
 
     //Rotator 6(selector)
@@ -337,24 +332,15 @@ void EXTI4_15_IRQHandler(void)
 			isKeyRelaseSent = true;
 		}
 	    rots_prev = rs;
-#if 0
+
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
 		if(isKeyPressed)
 			return;
-#endif
+
     }
   /* USER CODE END EXTI4_15_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
+
   /* USER CODE BEGIN EXTI4_15_IRQn 1 */
 
   /* USER CODE END EXTI4_15_IRQn 1 */
@@ -382,7 +368,7 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 0 */
     uint8_t r;
-    //keyboad matrix
+    //keyboard matrix
     switch(keyline){
         case 0:
             r = (Mx_GPIO_Port->IDR) & LxMASK;

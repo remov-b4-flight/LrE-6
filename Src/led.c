@@ -81,8 +81,11 @@ void LED_Set(uint8_t color, uint8_t blink) {
 			break;
 	}
 	HAL_TIM_Base_Init(&htim3);
-
+#if 1
+    if (color & LED_BIT_BLUE) {
+#else
     if (color & LED_BIT_RED) {
+#endif
     	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1);
     	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
     }else{
@@ -95,7 +98,11 @@ void LED_Set(uint8_t color, uint8_t blink) {
     }else{
     	HAL_TIM_PWM_Stop(&htim3,TIM_CHANNEL_2);
     }
+#if 1
+    if (color & LED_BIT_RED){
+#else
     if (color & LED_BIT_BLUE){
+#endif
     	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
     	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
     }else{
@@ -217,14 +224,21 @@ void LED_SetPulse(uint8_t color){
     	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2);
     	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
 	}
-
+#if 1
+	if (color & LED_BIT_BLUE){
+#else
     if (color & LED_BIT_RED) {
+#endif
     	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
     }
     if (color & LED_BIT_GREEN) {
     	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
     }
+#if 1
+    if (color & LED_BIT_RED){
+#else
     if (color & LED_BIT_BLUE){
+#endif
     	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
     }
 }

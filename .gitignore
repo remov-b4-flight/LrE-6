@@ -60,5 +60,5 @@ dkms.conf
 /Src/Backup/
 /Inc/Backup/
 *.bak
-*.kicad_pcb-bak
 /.settings/
+/.code_review_properties
