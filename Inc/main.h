@@ -179,6 +179,9 @@ void Error_Handler(void);
 #define ENC5_GPIO_Port GPIOF
 #define KEY_COUNT 16
 
+//USART CR bit mask values
+#define UART_MASK_IDLE	0x10
+
 //Key define structure
 #define KEY_DEFINE_COUNT	32
 

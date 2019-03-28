@@ -15,7 +15,9 @@
 
 #define	DELM1	"="
 #define DELM2	","
-#define PASTRU_STOP	"+++"
+#define PASSTHRU_STOP	"+++"
+#define CR		0xD
+#define	NUL		0x00
 
 #define AT_MODE		"AT+CWMODE=1\x0D\x0A"
 #define AT_HOSTNAME "AT+CWHOSTNAME=" LrE6_PRODUCT "\x0D\x0A"
@@ -25,12 +27,17 @@
 #define AT_PATHR	"AT+CIPMODE=1\x0D\x0A"
 #define AT_SEND		"AT+CIPSEND\x0D\x0A"
 
+#define AT_RESP_OK	"OK"
+#define AT_RESP_PASSTHRU ">"
+#define AT_RESP_READY	"ready"
+
 //wroom initialize state
 enum {
-	SET_STA = 0,	//Connect with WROOM
+	WROOM_RESET = 0,
+	SET_STA,	//Connect with WROOM
 	CON_AP,			//Connect with AP
 	CON_IP,			//Connect with port on host
-	SET_PATHR,		//Set to pass thru
+	SET_PASSTHRU,		//Set to pass thru
 	SET_SEND,		//Set to send data
 	PASSTHRU		//Entered pass thru
 };

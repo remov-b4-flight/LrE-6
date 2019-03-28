@@ -449,7 +449,9 @@ void TIM16_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-
+	if (huart1->Instance->CR1 && UART_MASK_IDLE && (hdma_usart1_rx->Instance->CNDTR > 0) ){
+		isWROOMDataExists = true;
+	}
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */

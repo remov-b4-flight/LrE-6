@@ -68,6 +68,7 @@ bool		lcd_timer_enable;
 bool        lcd_flag;
 bool		isUSBConfigured,prevUSBConfigured = false;
 bool		isKeyRelaseSent = true;
+bool		isWROOMDataExists;
 KEY_MODIFIER modifiers[KEY_COUNT];
 KEYBOARD_INPUT_REPORT	In_Report;
 extern KEY_DEFINE keytable[];
@@ -288,6 +289,9 @@ int main(void)
 			  lcd_flag = false;
 			  LED_SetBackLight(LCD_BL_OFF,LED_BL_STATIC);
 			  LCD_Clear();
+		  }
+		  if(isWROOMDataExists){
+			  WROOM_dispatch();
 		  }
 	  }else{
 		if(prevUSBConfigured == true){
