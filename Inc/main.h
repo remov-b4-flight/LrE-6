@@ -82,9 +82,9 @@ void Error_Handler(void);
 #define LrE6_PID 0x0BEA
 #define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
-//Defined by STM32CubeMX
-#define IND3_Pin GPIO_PIN_13
-#define IND3_GPIO_Port GPIOC
+#define PWM_PERIOD 59
+#define PWM_HI 29
+#define PWM_LO 14
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
 #define ENC_4A_EXTI_IRQn EXTI4_15_IRQn
@@ -111,14 +111,8 @@ void Error_Handler(void);
 #define ENC_1B_Pin GPIO_PIN_5
 #define ENC_1B_GPIO_Port GPIOA
 #define ENC_1B_EXTI_IRQn EXTI4_15_IRQn
-#define LED_R_Pin GPIO_PIN_6
-#define LED_R_GPIO_Port GPIOA
-#define LED_G_Pin GPIO_PIN_7
-#define LED_G_GPIO_Port GPIOA
-#define LED_B_Pin GPIO_PIN_0
-#define LED_B_GPIO_Port GPIOB
-#define BL_ON_Pin GPIO_PIN_1
-#define BL_ON_GPIO_Port GPIOB
+#define LED_DON_Pin GPIO_PIN_1
+#define LED_DON_GPIO_Port GPIOB
 #define L3_Pin GPIO_PIN_2
 #define L3_GPIO_Port GPIOB
 #define ENC_3A_Pin GPIO_PIN_10
@@ -133,12 +127,10 @@ void Error_Handler(void);
 #define ENC_6B_Pin GPIO_PIN_13
 #define ENC_6B_GPIO_Port GPIOB
 #define ENC_6B_EXTI_IRQn EXTI4_15_IRQn
-#define IND4_Pin GPIO_PIN_14
-#define IND4_GPIO_Port GPIOB
-#define IND5_Pin GPIO_PIN_15
-#define IND5_GPIO_Port GPIOB
-#define IND1_Pin GPIO_PIN_8
-#define IND1_GPIO_Port GPIOA
+#define WL_EN_Pin GPIO_PIN_15
+#define WL_EN_GPIO_Port GPIOB
+#define WL_RST_Pin GPIO_PIN_8
+#define WL_RST_GPIO_Port GPIOA
 #define STM_TX_Pin GPIO_PIN_9
 #define STM_TX_GPIO_Port GPIOA
 #define STM_RX_Pin GPIO_PIN_10
@@ -151,8 +143,8 @@ void Error_Handler(void);
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
 #define SWCLK_GPIO_Port GPIOA
-#define IND2_Pin GPIO_PIN_15
-#define IND2_GPIO_Port GPIOA
+#define BL_ON_Pin GPIO_PIN_15
+#define BL_ON_GPIO_Port GPIOA
 #define L0_Pin GPIO_PIN_3
 #define L0_GPIO_Port GPIOB
 #define L1_Pin GPIO_PIN_4

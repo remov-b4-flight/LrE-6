@@ -52,10 +52,10 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim16;
+DMA_HandleTypeDef hdma_tim3_ch4_up;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_tx;
-DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 
@@ -211,6 +211,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
+  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -544,9 +545,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = TIM_PRESC_100uS;
+  htim3.Init.Prescaler = 0;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = TIM_PERIOD_1SEC;
+  htim3.Init.Period = PWM_PERIOD;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -568,23 +569,10 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM2;
-  sConfigOC.Pulse = (TIM_PERIOD_1SEC / 2);
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
@@ -683,7 +671,8 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_DMADISABLEONERROR_INIT;
+  huart1.AdvancedInit.DMADisableonRxError = UART_ADVFEATURE_DMA_DISABLEONRXERROR;
   if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
@@ -725,21 +714,11 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(IND3_GPIO_Port, IND3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, L3_Pin|WL_EN_Pin|L0_Pin|L1_Pin 
+                          |L2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, L3_Pin|IND4_Pin|IND5_Pin|L0_Pin 
-                          |L1_Pin|L2_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, IND1_Pin|IND2_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : IND3_Pin */
-  GPIO_InitStruct.Pin = IND3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(IND3_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_WritePin(GPIOA, WL_RST_Pin|BL_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : ENC_4A_Pin ENC_4B_Pin */
   GPIO_InitStruct.Pin = ENC_4A_Pin|ENC_4B_Pin;
@@ -765,10 +744,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : L3_Pin IND4_Pin IND5_Pin L0_Pin 
-                           L1_Pin L2_Pin */
-  GPIO_InitStruct.Pin = L3_Pin|IND4_Pin|IND5_Pin|L0_Pin 
-                          |L1_Pin|L2_Pin;
+  /*Configure GPIO pins : L3_Pin WL_EN_Pin L0_Pin L1_Pin 
+                           L2_Pin */
+  GPIO_InitStruct.Pin = L3_Pin|WL_EN_Pin|L0_Pin|L1_Pin 
+                          |L2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -782,8 +761,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : IND1_Pin IND2_Pin */
-  GPIO_InitStruct.Pin = IND1_Pin|IND2_Pin;
+  /*Configure GPIO pins : WL_RST_Pin BL_ON_Pin */
+  GPIO_InitStruct.Pin = WL_RST_Pin|BL_ON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

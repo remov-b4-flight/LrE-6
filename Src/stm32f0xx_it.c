@@ -76,10 +76,10 @@ uint8_t     rot5_prev;
 
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_FS;
+extern DMA_HandleTypeDef hdma_tim3_ch4_up;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_usart1_tx;
-extern DMA_HandleTypeDef hdma_usart1_rx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
@@ -340,7 +340,16 @@ void EXTI4_15_IRQHandler(void)
 
     }
   /* USER CODE END EXTI4_15_IRQn 0 */
-
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
   /* USER CODE BEGIN EXTI4_15_IRQn 1 */
 
   /* USER CODE END EXTI4_15_IRQn 1 */
@@ -355,7 +364,7 @@ void DMA1_Channel2_3_IRQHandler(void)
 
   /* USER CODE END DMA1_Channel2_3_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart1_tx);
-  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  HAL_DMA_IRQHandler(&hdma_tim3_ch4_up);
   /* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
 
   /* USER CODE END DMA1_Channel2_3_IRQn 1 */
@@ -449,9 +458,7 @@ void TIM16_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-	if (huart1->Instance->CR1 && UART_MASK_IDLE && (hdma_usart1_rx->Instance->CNDTR > 0) ){
-		isWROOMDataExists = true;
-	}
+
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
