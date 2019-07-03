@@ -65,29 +65,32 @@ extern "C" {
       @Remarks
         Any additional remarks
      */
-#define LED_COLOR_OFF       0
-#define LED_COLOR_RED       1
-#define LED_COLOR_BLUE      2
-#define LED_COLOR_MAGENTA   3
-#define LED_COLOR_GREEN     4
-#define LED_COLOR_YELLOW    5
-#define LED_COLOR_CYAN      6
-#define LED_COLOR_WHITE     7
+enum{   //constants for expressing color.
+	LED_COLOR_OFF = 0,
+	LED_COLOR_RED,
+	LED_COLOR_BLUE,
+	LED_COLOR_GREEN,
+	LED_COLOR_WHITE,
+	LED_COLOR_YELLOW,
+	LED_COLOR_MAGENTA,
+	LED_COLOR_CYAN,
+	LED_COLOR_ORANGE,
+};
+#define COLOR_MAX 9
 
-#define LED_BIT_RED     1
-#define LED_BIT_BLUE    2
-#define LED_BIT_GREEN   4
+#define LED_COUNT		16
+#define BITS_PER_LED    32  // (RGBW) 4 * 8bit
+#define TOTAL_BITS      (LED_COUNT * BITS_PER_LED)
 
-#define LED_BLINK_NONE      0
-#define LED_BLINK_SLOW      1
-#define LED_BLINK_FAST      2
-
-#define OC_CONST_LED_OFF   0      
-#define OC_CONST_LED_ON    (period-1)
-#define LED_BL_STATIC		0
-#define LED_BL_LOWPWR		33
-#define LED_BL_SLWBLK		30000
-#define LED_BL_FSTBLK		15000
+//LED intensity definition
+#define LFFH	0xFF
+#define LBRIGHT	0x80
+#define LMAX	0x78
+#define L43		0x58
+#define LHLF	0x38
+#define LQTR	0x10
+#define LMIN	0x08
+#define LOFF	0x00
 
     // *****************************************************************************
     // *****************************************************************************
@@ -121,6 +124,15 @@ extern "C" {
         Describe enumeration elements and structure and union members above each 
         element or member.
      */
+typedef union leddata_t {
+	uint32_t	n;
+	struct	rgbw_t {
+		uint8_t	padding;
+		uint8_t	b;
+		uint8_t	r;
+		uint8_t g;
+	}	rgbw;
+} LEDDATA;
 
     // *****************************************************************************
     // *****************************************************************************
@@ -177,12 +189,9 @@ extern "C" {
         }
      */
     void LED_Initialize();
-    void LED_Set(uint8_t color, uint8_t blink);
-    void LED_2ToneFlash(uint8_t color1,uint8_t color2,uint8_t blink);
-    void LED_SetForced(uint8_t color);
-    void LED_SetPulse(uint8_t color);
-    void LED_SetBackLight(bool light,uint16_t period);
-
+    void LED_Set(uint8_t index, uint8_t color);
+    void LED_SetBackLight(bool light);
+    void SendPulse();
     /* Provide C++ Compatibility */
 #ifdef __cplusplus
 }

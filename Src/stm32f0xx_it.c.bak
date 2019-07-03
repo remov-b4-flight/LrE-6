@@ -52,25 +52,6 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#include "main.h"
-extern uint8_t	keyline;
-extern bool isKeyPressed;
-extern KEYSCAN keystat;
-extern bool lcd_flag;
-extern bool lcd_timer_enable;
-extern int32_t lcd_timer;
-extern bool isKeyRelaseSent;
-
-uint32_t previous_scan = 0;
-uint32_t previous_key = 0;
-uint32_t current_key = 0;
-KEYSCAN current_scan;
-uint8_t     rots_prev;
-uint8_t     rot1_prev;
-uint8_t     rot2_prev;
-uint8_t     rot3_prev;
-uint8_t     rot4_prev;
-uint8_t     rot5_prev;
 
 /* USER CODE END 0 */
 
@@ -169,26 +150,6 @@ void SysTick_Handler(void)
 void EXTI0_1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
-    uint32_t pr = EXTI->PR;
-	uint8_t	r5 = (ENC5_GPIO_Port->IDR) & 0x03;
-	if(pr & PRMASK_R5){
-	  if (r5 == 0) {
-	      if(rot5_prev == 2){ //CCW
-	          keystat.nb.rot5 = ROT_MOVE_CCW;
-	          isKeyPressed = true;
-	          isKeyRelaseSent = false;
-	      }else if(rot5_prev == 1){ //CW
-	          keystat.nb.rot5 = ROT_MOVE_CW;
-	          isKeyPressed = true;
-	          isKeyRelaseSent = false;
-	      }
-	  }else if(r5 == 3){
-			keystat.nb.rot5 = ROT_NOT_MOVE;
-			isKeyPressed = true;
-			isKeyRelaseSent = true;
-	  }
-	  rot5_prev = r5;
-	}
 
   /* USER CODE END EXTI0_1_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
@@ -204,140 +165,7 @@ void EXTI0_1_IRQHandler(void)
 void EXTI4_15_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
-    uint32_t pr = EXTI->PR;
 
-    uint8_t	ra = (ENC1_GPIO_Port->IDR);
-    uint8_t	r23s = ( (ENC23S_GPIO_Port->IDR) >> 8 );
-
-    // Rotator1
-    if(pr & PRMASK_R1){// EXTI4,5
-        uint8_t	r1 = ( ra >> 4 ) & 0x03;
-		if (r1 == 0) {
-			if(rot1_prev == 2){ //CCW
-				keystat.nb.rot1 = ROT_MOVE_CCW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if(rot1_prev == 1){ //CW
-				keystat.nb.rot1 = ROT_MOVE_CW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if(r1 == 3){
-			keystat.nb.rot1 = ROT_NOT_MOVE;
-			isKeyPressed = true;
-			isKeyRelaseSent = true;
-		}
-	    rot1_prev = r1;
-
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
-		if (isKeyPressed)
-			  return;
-    }
-    //Rotator 2
-    if(pr & PRMASK_R2){ //EXTI8,9
-    	uint8_t	r2 = r23s & 0x03;
-		if (r2 == 0) {
-			if(rot2_prev == 2){ //CCW
-				keystat.nb.rot2 = ROT_MOVE_CCW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if(rot2_prev == 1){ //CW
-				keystat.nb.rot2 = ROT_MOVE_CW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if(r2 == 3){
-			keystat.nb.rot2 = ROT_NOT_MOVE;
-			isKeyPressed = true;
-			isKeyRelaseSent = true;
-		}
-		rot2_prev = r2;
-
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
-		if(isKeyPressed)
-			return;
-    }
-
-    //Rotator 3
-	if(pr & PRMASK_R3){	//EXTI10,11
-		uint8_t	r3 = ( r23s >> 2 ) & 0x03;
-		if (r3 == 0) {
-			if(rot3_prev == 2){ //CCW
-				keystat.nb.rot3 = ROT_MOVE_CCW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if(rot3_prev == 1){ //CW
-				keystat.nb.rot3 = ROT_MOVE_CW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if(r3 == 3){
-			keystat.nb.rot3 = ROT_NOT_MOVE;
-			isKeyPressed = true;
-			isKeyRelaseSent = true;
-		}
-	    rot3_prev = r3;
-
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
-		if(isKeyPressed)
-			return;
-	}
-
-    //Rotator 4
-    if(pr & PRMASK_R4){ //EXTI14&15
-    	uint8_t	r4 = ( (ENC4_GPIO_Port->IDR) >> 14 ) & 0x03;
-		if (r4 == 0) {
-			if(rot4_prev == 2){ //CCW
-				keystat.nb.rot4 = ROT_MOVE_CCW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if(rot4_prev == 1){ //CW
-				keystat.nb.rot4 = ROT_MOVE_CW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if(r4 == 3){
-			keystat.nb.rot4 = ROT_NOT_MOVE;
-			isKeyPressed = true;
-			isKeyRelaseSent = true;
-		}
-	    rot4_prev = r4;
-
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
-		if(isKeyPressed)
-			return;
-    }
-
-    //Rotator 6(selector)
-    if(pr & PRMASK_RS){ //EXTI12,13
-    	uint8_t	rs = ( r23s >> 4 ) & 0x03;
-		if (rs == 0) {
-			if(rots_prev == 2){ //CCW
-				keystat.nb.rots = ROT_MOVE_CCW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if(rots_prev == 1){ //CW
-				keystat.nb.rots = ROT_MOVE_CW;
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if(rs == 3){
-			keystat.nb.rots = ROT_NOT_MOVE;
-			isKeyPressed = true;
-			isKeyRelaseSent = true;
-		}
-	    rots_prev = rs;
-
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
-		if(isKeyPressed)
-			return;
-
-    }
   /* USER CODE END EXTI4_15_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
@@ -375,60 +203,6 @@ void DMA1_Channel2_3_IRQHandler(void)
 void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 0 */
-    uint8_t r;
-    //keyboard matrix
-    switch(keyline){
-        case 0:
-            r = (Mx_GPIO_Port->IDR) & LxMASK;
-            current_scan.nb.n0 = (r);
-            keyline++;
-            HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_RESET);
-            HAL_GPIO_WritePin(L1_GPIO_Port,L1_Pin,GPIO_PIN_SET);
-            break;
-        case 1:
-            r = (Mx_GPIO_Port->IDR) & LxMASK;
-            current_scan.nb.n1 = (r);
-            keyline++;
-            HAL_GPIO_WritePin(L1_GPIO_Port,L1_Pin,GPIO_PIN_RESET);
-            HAL_GPIO_WritePin(L2_GPIO_Port,L2_Pin,GPIO_PIN_SET);
-            break;
-        case 2:
-            r = (Mx_GPIO_Port->IDR) & LxMASK;
-            current_scan.nb.n2 = (r);
-            keyline++;
-            HAL_GPIO_WritePin(L2_GPIO_Port,L2_Pin,GPIO_PIN_RESET);
-            HAL_GPIO_WritePin(L3_GPIO_Port,L3_Pin,GPIO_PIN_SET);
-            break;
-        case 3:
-            r = (Mx_GPIO_Port->IDR) & LxMASK;
-            current_scan.nb.n3 = (r);
-            HAL_GPIO_WritePin(L3_GPIO_Port,L3_Pin,GPIO_PIN_RESET);
-            HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_SET);
-            keyline = 0;
-
-            //Key detection
-            if (previous_scan==current_scan.wd){
-                current_key = current_scan.wd;
-                uint32_t dif = current_key ^ previous_key;
-                keystat.wd = current_key;
-                if (dif != 0){
-                    previous_key = current_key;
-                    isKeyPressed = true;
-                }
-            }
-            if(isKeyRelaseSent==false){
-            	current_key = 0;
-                isKeyPressed = true;
-            }
-            previous_scan = current_scan.wd;
-            break;
-    }
-
-    //LCD timer
-    if(lcd_timer_enable == true && (--lcd_timer) <= 0){
-    	lcd_timer_enable = false;
-        lcd_flag = true;
-    }
 
   /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 0 */
   HAL_TIM_IRQHandler(&htim1);

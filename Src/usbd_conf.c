@@ -112,9 +112,9 @@ static void PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd)
 void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-  /* USER CODE BEGIN SetupStageCB 0 */
+  /* USER CODE BEGIN CB0 */
   isUSBConfigured = true;
-  /* USER CODE END SetupStageCB 0 */
+  /* USER CODE END CB0 */
 
   USBD_LL_SetupStage((USBD_HandleTypeDef*)hpcd->pData, (uint8_t *)hpcd->Setup);
 }
@@ -224,7 +224,7 @@ void HAL_PCD_ResumeCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
   /* USER CODE BEGIN 3 */
-  LED_Set(LED_COLOR_OFF,LED_BLINK_NONE);
+//  LED_Set(0,LED_COLOR_OFF);
   if (hpcd->Init.low_power_enable)
   {
     /* Reset SLEEPDEEP bit of Cortex System Control Register. */
@@ -290,9 +290,9 @@ static void PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
 void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
-  /* USER CODE BEGIN DisconnCB 0 */
+  /* USER CODE BEGIN CB0 */
   isUSBConfigured = false;
-  /* USER CODE END DisconnCB 0 */
+  /* USER CODE END CB0 */
   USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData);
 }
 

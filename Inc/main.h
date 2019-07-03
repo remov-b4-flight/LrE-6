@@ -10,10 +10,10 @@
   * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -45,7 +45,6 @@ extern "C" {
 #include "led.h"
 #include "i2c-lcd.h"
 #include "bitcount.h"
-#include "wroom.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -171,9 +170,6 @@ void Error_Handler(void);
 #define ENC5_GPIO_Port GPIOF
 #define KEY_COUNT 16
 
-//USART CR bit mask values
-#define UART_MASK_IDLE	0x10
-
 //Key define structure
 #define KEY_DEFINE_COUNT	32
 
@@ -219,11 +215,6 @@ typedef struct {
 #define PRMASK_R4	0xC000
 #define PRMASK_R5	0x0003
 #define PRMASK_RS	0x3000
-
-// wroom connection parameter
-#define	SSID	"lazarus"
-#define	PASSWD	"PASSWORD"
-#define LrHOST	"***REMOVED***"
 
 //other definitions
 #define LCD_TIMER_DEFAULT   1000    //4 sec (1tick=4ms)
