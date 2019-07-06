@@ -1,4 +1,5 @@
 #include "main.h"
+#include "key_define.h"
 
 const KEY_DEFINE keytable[KEY_DEFINE_COUNT] = {
 //Switch definitions

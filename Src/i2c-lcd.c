@@ -26,6 +26,9 @@
 
 /* TODO:  Include other files here if needed. */
 #include "main.h"
+#include <string.h>
+#include "i2c-lcd.h"
+
 extern I2C_HandleTypeDef hi2c1;
 /* ************************************************************************** */
 /* ************************************************************************** */

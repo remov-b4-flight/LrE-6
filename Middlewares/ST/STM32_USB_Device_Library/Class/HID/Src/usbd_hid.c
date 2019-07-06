@@ -133,8 +133,10 @@ USBD_ClassTypeDef  USBD_HID =
   USBD_HID_GetCfgDesc,
   USBD_HID_GetDeviceQualifierDesc,
 };
+/* USER CODE BEGIN 0*/
 #undef HID_MOUSE_REPORT_DESC_SIZE
 #define HID_MOUSE_REPORT_DESC_SIZE 63
+/* USER CODE END 0*/
 /* USB HID device Configuration Descriptor */
 __ALIGN_BEGIN static uint8_t USBD_HID_CfgDesc[USB_HID_CONFIG_DESC_SIZ]  __ALIGN_END =
 {
