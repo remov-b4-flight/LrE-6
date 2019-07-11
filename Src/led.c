@@ -45,7 +45,7 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 	{.rgbw = {.r=LMAX,.g=LOFF,.b=LOFF}},//COLOR_RED,
 	{.rgbw = {.r=LOFF,.g=LOFF,.b=LMAX}},//COLOR_BLUE,
 	{.rgbw = {.r=LOFF,.g=LMAX,.b=LOFF}},//COLOR_GREEN,
-	{.rgbw = {.r=LOFF,.g=LOFF,.b=LOFF}},//COLOR_WHITE,
+	{.rgbw = {.r=LMAX,.g=LMAX,.b=LMAX}},//COLOR_WHITE,
 	{.rgbw = {.r=LHLF,.g=LHLF,.b=LOFF}},//COLOR_YELLOW,
 	{.rgbw = {.r=LHLF,.g=LOFF,.b=LHLF}},//COLOR_MAGENTA,
 	{.rgbw = {.r=LOFF,.g=LHLF,.b=LHLF}},//COLOR_CYAN,
@@ -53,23 +53,26 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 };
 
 void LED_Initialize(){
+	LEDColor[0]=LED_COLOR_WHITE;
+	LEDColor[1]=LED_COLOR_RED;
+	LEDColor[2]=LED_COLOR_ORANGE;
+	LEDColor[3]=LED_COLOR_YELLOW;
+	LEDColor[4]=LED_COLOR_GREEN;
+	LEDColor[5]=LED_COLOR_BLUE;
+	SendPulse();
 	return;
 }
 
-//Most primitive LED function flush LEDs with LEDColor[]
-void LED_Set(uint8_t index,uint8_t color){
+//Flash LEDs immediately with LEDColor[]
+void LED_Set_Quick(uint8_t index,uint8_t color){
 	LEDColor[index] = color;
 	SendPulse();
 }
 
-void LED_SetBackLight(bool light){
-	HAL_GPIO_WritePin(BL_ON_GPIO_Port,BL_ON_Pin,(light)?GPIO_PIN_SET:GPIO_PIN_RESET);
-}
-
 //make LEDPulse[] from LEDColor[]
 void Color2Pulse(){
-	uint16_t	pulse = 0;
-	LEDDATA		leddata;
+	uint8_t	pulse = 0;
+	LEDDATA	leddata;
 
 	for(uint8_t	led = 0; led < LED_COUNT; led++){
 		uint8_t c = LEDColor[led];

@@ -133,10 +133,9 @@ void LCD_SetDisplay(bool on, bool cursor, bool blink);
 void LCD_Locate(uint8_t column, uint8_t line);
 void LCD_Putchar(char c);
 void LCD_Print(char *str);
-#if 0
-void LCD_SetBL(bool light);
-#endif
-    /* Provide C++ Compatibility */
+void LCD_SetBackLight(bool light);
+
+/* Provide C++ Compatibility */
 #ifdef __cplusplus
 }
 #endif

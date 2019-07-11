@@ -156,11 +156,11 @@ void LCD_Print(char *str){
     Delay_us(LCD_DAT_WAIT_US);
 #endif
 }
-#if 0 //moved to led.c
-void LCD_SetBL(bool light) {
-    HAL_GPIO_WritePin(BL_ON_GPIO_Port,BL_ON_Pin,(light)?GPIO_PIN_SET:GPIO_PIN_RESET);
+
+void LCD_SetBackLight(bool light){
+	HAL_GPIO_WritePin(BL_ON_GPIO_Port,BL_ON_Pin,(light)?GPIO_PIN_SET:GPIO_PIN_RESET);
 }
-#endif
+
 /* *****************************************************************************
  End of File
  */

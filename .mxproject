@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/jenok/Workspace/LrE-6/Inc
+HeaderPath=D:/Workspace.atolic/LrE-6/Inc
 HeaderFiles=usb_device.h;usbd_conf.h;usbd_desc.h;stm32f0xx_it.h;stm32f0xx_hal_conf.h;main.h;
-SourcePath=C:/Users/jenok/Workspace/LrE-6/Src
+SourcePath=D:/Workspace.atolic/LrE-6/Src
 SourceFiles=usb_device.c;usbd_conf.c;usbd_desc.c;stm32f0xx_it.c;stm32f0xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]

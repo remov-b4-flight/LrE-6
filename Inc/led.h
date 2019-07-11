@@ -78,8 +78,8 @@ enum{   //constants for expressing color.
 };
 #define COLOR_MAX 9
 
-#define LED_COUNT		16
-#define BITS_PER_LED    32  // (RGBW) 4 * 8bit
+#define LED_COUNT		6
+#define BITS_PER_LED    24  // (RGB) 4 * 8bit
 #define TOTAL_BITS      (LED_COUNT * BITS_PER_LED)
 
 //LED intensity definition
@@ -189,8 +189,7 @@ typedef union leddata_t {
         }
      */
     void LED_Initialize();
-    void LED_Set(uint8_t index, uint8_t color);
-    void LED_SetBackLight(bool light);
+    void LED_Set_Quick(uint8_t index, uint8_t color);
     void SendPulse();
     /* Provide C++ Compatibility */
 #ifdef __cplusplus

@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x01
+#define USBD_DEVICE_VER_MIN	0x02
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -99,8 +99,8 @@ void Error_Handler(void);
 #define ENC_1B_Pin GPIO_PIN_5
 #define ENC_1B_GPIO_Port GPIOA
 #define ENC_1B_EXTI_IRQn EXTI4_15_IRQn
-#define LED_DON_Pin GPIO_PIN_1
-#define LED_DON_GPIO_Port GPIOB
+#define LED_DON_Pin GPIO_PIN_6
+#define LED_DON_GPIO_Port GPIOA
 #define L3_Pin GPIO_PIN_2
 #define L3_GPIO_Port GPIOB
 #define ENC_3A_Pin GPIO_PIN_10
@@ -221,6 +221,8 @@ void Delay_us(uint32_t microsec);
 #define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
 #define VDD_CALIB ((uint16_t) (330))
 #define VDD_APPLI ((uint16_t) (300))
+
+#define LED_TIME_CONSTANT	0xFF
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

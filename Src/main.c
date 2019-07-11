@@ -57,7 +57,7 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim16;
-DMA_HandleTypeDef hdma_tim3_ch4_up;
+DMA_HandleTypeDef hdma_tim3_ch1_trig;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_tx;
@@ -71,13 +71,20 @@ uint8_t		keyline;
 int32_t     lcd_timer;
 bool		lcd_timer_enable;
 bool        lcd_flag;
-bool		isUSBConfigured,prevUSBConfigured = false;
+bool		isUSBConfigured = false;
+bool		prevUSBConfigured = false;
 bool		isKeyRelaseSent = true;
 bool		isWROOMDataExists;
+bool		led_sendpulse = false;
 KEY_MODIFIER modifiers[KEY_COUNT];
 KEYBOARD_INPUT_REPORT	In_Report;
 extern KEY_DEFINE keytable[];
 extern USBD_HandleTypeDef hUsbDeviceFS;
+extern	uint8_t	LEDColor[];
+uint8_t		LEDTimer[LED_COUNT] = {
+		LED_TIME_CONSTANT,LED_TIME_CONSTANT,
+		LED_TIME_CONSTANT,LED_TIME_CONSTANT,
+		LED_TIME_CONSTANT,LED_TIME_CONSTANT};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -178,10 +185,13 @@ bool EmulateKeyboard(void)
             	lcd_flag = false;
         		lcd_timer_enable = true;
             	lcd_timer = LCD_TIMER_DEFAULT;
-            	LED_SetBackLight(LCD_BL_ON);
+            	LCD_SetBackLight(LCD_BL_ON);
             	LCD_Print(keytable[bitpos].message);
             }
-//			LED_Set(0,LED_COLOR_YELLOW);
+            LEDColor[0] = LED_COLOR_YELLOW;
+            LEDTimer[0] = 25;
+            led_sendpulse = true;
+
             isKeyReport = true;
 		}else if(rkey == 0) {// Keys are released
 			In_Report.modifier = In_Report.keys[HID_RPT_KEY_IDX] = HID_NONE;
@@ -229,6 +239,7 @@ int main(void)
   lcd_timer_enable = false;
   lcd_timer = LCD_TIMER_DEFAULT;
   isUSBConfigured = false;
+
 #if 0
   ExpandModifiers();
 #endif
@@ -257,8 +268,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim1);
 
   LED_Initialize();
-//  LED_Set(0,LED_COLOR_OFF);
-  LED_SetBackLight(LCD_BL_ON);
+  LED_Set_Quick(0,LED_COLOR_GREEN);
+  LCD_SetBackLight(LCD_BL_ON);
   HAL_Delay(LCD_PWRUP_WAIT_MS);		//Wait for LCD module power up.
   LCD_Initialize();
 //  WROOM_initialize();
@@ -272,6 +283,7 @@ int main(void)
   const float k = (110.0 - 30.0) / (ts_cal110 - ts_cal30);
 
   char lcdmsg[12];
+
   lcd_timer = LCD_TIMER_DEFAULT;
   lcd_flag = false;
   lcd_timer_enable = true;
@@ -280,7 +292,7 @@ int main(void)
 	  if(isUSBConfigured){
 		  if(prevUSBConfigured == false){
 			  //USB device configured by host
-//			  LED_Set(0,LED_COLOR_RED);
+			  LED_Set_Quick(0,LED_COLOR_RED);
 			  LCD_Print(LrE6_PRODUCT);
 			  sprintf(lcdmsg,"%2x.%02x",USBD_DEVICE_VER_MAJ,USBD_DEVICE_VER_MIN);
 			  LCD_Locate(3,1);
@@ -291,17 +303,20 @@ int main(void)
 		  EmulateKeyboard();
 
 		  if(lcd_flag){
-//			  LED_Set(0,LED_COLOR_OFF);
+			  LEDColor[0] = LED_COLOR_OFF;
+			  led_sendpulse = true;
+
 			  lcd_flag = false;
-			  LED_SetBackLight(LCD_BL_OFF);
+			  LCD_SetBackLight(LCD_BL_OFF);
 			  LCD_Clear();
 		  }
-	  }else{
+	  }else{// isUSBConfigured
 		if(prevUSBConfigured == true){
-//			LED_Set(0,LED_COLOR_BLUE);
+//			LED_Set_Quick(0,LED_COLOR_BLUE);
+			LED_Initialize();
 		}
 		if(lcd_flag){
-			LED_SetBackLight(LCD_BL_ON);
+			LCD_SetBackLight(LCD_BL_ON);
 			HAL_ADC_Start(&hadc);
 			//get value from ADC and display it...
 			while (HAL_ADC_PollForConversion(&hadc,100) != HAL_OK)	;
@@ -324,9 +339,39 @@ int main(void)
 			lcd_flag = false;
 			lcd_timer = LCD_TIMER_UPDATE;
 			lcd_timer_enable = true;
+
+			//Rotate LED colors
+			uint8_t	tempcolor = LEDColor[5];
+			LEDColor[5] = LEDColor[4];
+			LEDColor[4] = LEDColor[3];
+			LEDColor[3] = LEDColor[2];
+			LEDColor[2] = LEDColor[1];
+			LEDColor[1] = LEDColor[0];
+			LEDColor[0] = tempcolor;
+
+			led_sendpulse = true;
+
 		}
 	  }
 	  prevUSBConfigured = isUSBConfigured;
+
+#if 0
+	    //LED Timer
+	    for (uint8_t i = 0; i < LED_COUNT ; i++){
+	    if (LEDTimer[i] != LED_TIME_CONSTANT) {
+	    	if (--LEDTimer[i] == 0) {
+	    		LEDColor[i] = LED_COLOR_OFF;
+	    		LEDTimer[i] = LED_TIME_CONSTANT;
+	    		led_sendpulse = true;
+	    	}
+	    }
+#endif
+
+	  //Flashing LEDs
+	  if(led_sendpulse){
+		  SendPulse();
+		  led_sendpulse = false;
+	  }
 
     /* USER CODE END WHILE */
 
@@ -551,7 +596,7 @@ static void MX_TIM3_Init(void)
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = PWM_PERIOD;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
@@ -575,7 +620,7 @@ static void MX_TIM3_Init(void)
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -697,6 +742,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel2_3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
+  /* DMA1_Channel4_5_6_7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_5_6_7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_5_6_7_IRQn);
 
 }
 
