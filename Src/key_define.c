@@ -20,9 +20,9 @@ const KEY_DEFINE keytable[KEY_DEFINE_COUNT] = {
     {HID_NONM,			HID_NONE,	NULL},			//L3M2 rot3 push
     {HID_NONM,			HID_x,		"Reject  "},	//L3M3 rots push
 //Rotator movements
-    {HID_NONM,			HID_LB,		"Rate \x5up"},	//rot1 CW
+    {HID_NONM,			HID_LB,		"Rate \x5  "},	//rot1 CW
     {HID_NONM,			HID_RB,		"Rate \x6  "},	//rot1 CCW
-    {HID_GUIM,			HID_UP,		"Flag \x5up"},	//rot2 CW
+    {HID_GUIM,			HID_UP,		"Flag \x5  "},	//rot2 CW
     {HID_GUIM,			HID_DOWN,	"Flag \x6  "},	//rot2 CCW
     {HID_GUIM,			HID_LB,		"Rotate \x7"},	//rot3 CW
     {HID_GUIM,			HID_RB,		"Rotate \x8"},	//rot3 CCW

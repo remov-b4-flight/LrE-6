@@ -125,6 +125,10 @@ extern "C" {
 //
 #define LCD_BL_ON			true
 #define LCD_BL_OFF			false
+//CGRAM constants
+#define LCD_CGRAM_MAX		5
+#define LCD_CGRAM_BYTES		8
+#define	LCD_CGRAM_MASK		0x1F
 
 void LCD_Initialize();
 void LCD_Clear();
@@ -132,8 +136,10 @@ void LCD_Home();
 void LCD_SetDisplay(bool on, bool cursor, bool blink);
 void LCD_Locate(uint8_t column, uint8_t line);
 void LCD_Putchar(char c);
-void LCD_Print(char *str);
+void LCD_Print(const char *str);
 void LCD_SetBackLight(bool light);
+void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern);
+void LCD_SetDDADR(uint8_t address);
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus

@@ -30,7 +30,7 @@
 #include "i2c-lcd.h"
 #include "bitcount.h"
 #include "key_define.h"
-
+#include "wroom.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,6 +61,7 @@ DMA_HandleTypeDef hdma_tim3_ch1_trig;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 
@@ -68,23 +69,28 @@ bool		isKeyPressed;
 KEYSCAN     keystat;
 uint8_t     keymouse;
 uint8_t		keyline;
+bool		isKeyRelaseSent;
+
 int32_t     lcd_timer;
 bool		lcd_timer_enable;
 bool        lcd_flag;
-bool		isUSBConfigured = false;
-bool		prevUSBConfigured = false;
-bool		isKeyRelaseSent = true;
+bool		lcd_1stflag;
+
+uint8_t		LrE6State;
+uint8_t		LrE6Mode;
+
 bool		isWROOMDataExists;
-bool		led_sendpulse = false;
+bool		led_sendpulse;
+bool		led_timer_update;
+
 KEY_MODIFIER modifiers[KEY_COUNT];
 KEYBOARD_INPUT_REPORT	In_Report;
-extern KEY_DEFINE keytable[];
-extern USBD_HandleTypeDef hUsbDeviceFS;
+extern	KEY_DEFINE keytable[];
+extern	USBD_HandleTypeDef hUsbDeviceFS;
 extern	uint8_t	LEDColor[];
-uint8_t		LEDTimer[LED_COUNT] = {
-		LED_TIME_CONSTANT,LED_TIME_CONSTANT,
-		LED_TIME_CONSTANT,LED_TIME_CONSTANT,
-		LED_TIME_CONSTANT,LED_TIME_CONSTANT};
+extern	uint8_t	LEDTimer[LED_COUNT];
+const uint8_t up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
+const char* mode_string[] ={"[LrLite]","[LrE-6]"};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -115,56 +121,10 @@ void Delay_us(uint32_t microsec){
 	HAL_TIM_Base_Stop(&htim14);
 }
 
-#if 0
-void ExpandModifiers() {
-	uint8_t mod_index;
-	memset(modifiers, 0, sizeof(modifiers));
-	for (mod_index = 0; mod_index < KEY_COUNT; mod_index++) {
-		uint8_t modifier = keytable[mod_index].modifier;
-		uint8_t bitcount = bitcount8(modifier);
-		if (modifier != HID_NONM && bitcount > 1) {
-			uint8_t dst_index = 0;
-			uint8_t pattern = 0;
-			if (modifier & HID_GUIM) {
-				pattern += HID_GUIM;
-				modifiers[mod_index].element[dst_index] = pattern;
-				dst_index += 1;
-			}
-			if (modifier & HID_ALTM) {
-				pattern += HID_ALTM;
-				modifiers[mod_index].element[dst_index] = pattern;
-				dst_index += 1;
-			}
-			if (modifier & HID_SFTM) {
-				pattern += HID_SFTM;
-				modifiers[mod_index].element[dst_index] = pattern;
-				dst_index += 1;
-			}
-			if (modifier & HID_CTLM) {
-				pattern += HID_CTLM;
-				modifiers[mod_index].element[dst_index] = pattern;
-			}
-		}
-	}
+inline void Start_LCDTimer(uint32_t tick){
+	lcd_timer = tick;
+	lcd_timer_enable = true;
 }
-void SendModifierElement(uint8_t mod) {
-	In_Report.modifier = mod;
-	In_Report.keys[0] =
-	In_Report.keys[1] =
-	In_Report.keys[2] =
-	In_Report.keys[3] = HID_NONE;
-    USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t *)&In_Report,sizeof(KEYBOARD_INPUT_REPORT) );
-}
-
-void SendModifiers(uint8_t bitpos) {
-	uint8_t i;
-	for (i = 0; i < 4; i++) {
-		uint8_t mod = modifiers[bitpos].element[i];
-		if (mod == HID_NONM) break;
-		SendModifierElement(mod);
-	}
-}
-#endif
 
 bool EmulateKeyboard(void)
 {
@@ -174,11 +134,22 @@ bool EmulateKeyboard(void)
     if(isKeyPressed) {
         bitpos = ntz32(keystat.wd);
         rkey = (keystat.wd & MOD_SW_BIT_MASK);
-        if( bitpos < KEY_COUNT + (2*6) ){
+        if( bitpos < KEY_COUNT + (2 * ROT_COUNT) ){
 #if 0
         	if(modifiers[bitpos].element[0] != HID_NONM) SendModifiers(bitpos);
 #endif
-            In_Report.modifier = keytable[bitpos].modifier;
+#if 1
+        	if (bitpos == 9){
+        		LrE6Mode++;
+        		if(LrE6Mode >= MODE_COUNT){
+        			LrE6Mode = MODE_LRLITE;
+        		}
+        		LCD_Print(mode_string[LrE6Mode]);
+        		isKeyPressed = false;
+        		return false;
+        	}
+#endif
+        	In_Report.modifier = keytable[bitpos].modifier;
             In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
             if (keytable[bitpos].message != NULL) {
         		LCD_Locate(0,0);
@@ -188,9 +159,7 @@ bool EmulateKeyboard(void)
             	LCD_SetBackLight(LCD_BL_ON);
             	LCD_Print(keytable[bitpos].message);
             }
-            LEDColor[0] = LED_COLOR_YELLOW;
-            LEDTimer[0] = 25;
-            led_sendpulse = true;
+            LED_SetPulse(LED_IDX_SELECTOR,LED_COLOR_YELLOW,25);
 
             isKeyReport = true;
 		}else if(rkey == 0) {// Keys are released
@@ -234,12 +203,18 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  keyline = 0;
+  keyline = L0;
   lcd_flag = false;
   lcd_timer_enable = false;
   lcd_timer = LCD_TIMER_DEFAULT;
-  isUSBConfigured = false;
+  lcd_1stflag = true;
 
+  LrE6State = LRE6_RESET;
+  LrE6Mode	= MODE_LRLITE;
+
+  isKeyRelaseSent = true;
+  led_sendpulse = false;
+  isWROOMDataExists = false;
 #if 0
   ExpandModifiers();
 #endif
@@ -267,111 +242,138 @@ int main(void)
   HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_SET);	//Initialize SW matrix.
   HAL_TIM_Base_Start_IT(&htim1);
 
-  LED_Initialize();
-  LED_Set_Quick(0,LED_COLOR_GREEN);
-  LCD_SetBackLight(LCD_BL_ON);
+  //WROOM Hardware Reset
+  HAL_GPIO_WritePin(WL_EN_GPIO_Port,WL_EN_Pin,GPIO_PIN_SET);	//Enable Wifi module
+  WROOM_Reset(true);
+  HAL_Delay(1);
+  WROOM_Reset(false);
+
+  LED_Initialize();	//Set all LEDs 'OFF'
+
+  //Initialize LCD
   HAL_Delay(LCD_PWRUP_WAIT_MS);		//Wait for LCD module power up.
   LCD_Initialize();
-//  WROOM_initialize();
+  LCD_SetCGRAM(5,up_arrow);			//Set user defined character.
+  LCD_SetDDADR(0);
+
+  //WROOM boot-up sequence
+  WROOM_Initialize();
+  WROOM_Set_boot_state(WROOM_INIT);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint32_t inner_sensor_val;
   const uint16_t ts_cal110 = *TEMP110_CAL_ADDR;
   const uint16_t ts_cal30 = *TEMP30_CAL_ADDR;
   const float k = (110.0 - 30.0) / (ts_cal110 - ts_cal30);
 
   char lcdmsg[12];
 
-  lcd_timer = LCD_TIMER_DEFAULT;
+  //lcd_timer = LCD_TIMER_DEFAULT;
+  Start_LCDTimer(LCD_TIMER_DEFAULT);
   lcd_flag = false;
-  lcd_timer_enable = true;
+  //lcd_timer_enable = true;
+  LrE6State = LRE6_USB_NOLINK;
+
   while (1)
   {
-	  if(isUSBConfigured){
-		  if(prevUSBConfigured == false){
-			  //USB device configured by host
-			  LED_Set_Quick(0,LED_COLOR_RED);
-			  LCD_Print(LrE6_PRODUCT);
-			  sprintf(lcdmsg,"%2x.%02x",USBD_DEVICE_VER_MAJ,USBD_DEVICE_VER_MIN);
-			  LCD_Locate(3,1);
-			  LCD_Print(lcdmsg);
-//			  WROOM_set_boot_state(SET_STA);
-		  }
+	if(LrE6State == LRE6_USB_LINKUP){
+		//USB device configured by host
+		LED_Set_Quick(LED_IDX_SELECTOR,LED_COLOR_RED);
+		LCD_SetBackLight(LCD_BL_ON);
+		LCD_Print(LrE6_PRODUCT);
+		sprintf(lcdmsg,"%2x.%02x",USBD_DEVICE_VER_MAJ,USBD_DEVICE_VER_MIN);
+		LCD_Locate(3,1);
+		LCD_Print(lcdmsg);
+		LrE6State = LRE6_USB_LINKED;
 
-		  EmulateKeyboard();
+	} else if (LrE6State == LRE6_USB_LINKED){
+		//Operates as USB Keyboards.
+		EmulateKeyboard();
 
-		  if(lcd_flag){
-			  LEDColor[0] = LED_COLOR_OFF;
-			  led_sendpulse = true;
 
-			  lcd_flag = false;
-			  LCD_SetBackLight(LCD_BL_OFF);
-			  LCD_Clear();
-		  }
-	  }else{// isUSBConfigured
-		if(prevUSBConfigured == true){
-//			LED_Set_Quick(0,LED_COLOR_BLUE);
-			LED_Initialize();
+	} else if(LrE6State == LRE6_USB_LINK_LOST){
+		LED_TestPattern();
+		lcd_1stflag = false;
+		LrE6State = LRE6_USB_NOLINK;
+
+	} else if(LrE6State == LRE6_USB_NOLINK){
+		//USB Not initially configured.
+		if (lcd_flag) {
+			if (lcd_1stflag) {
+				LrE6State = LRE6_USB_LINK_LOST;
+			} else {
+				LCD_SetBackLight(LCD_BL_ON);
+
+				HAL_ADC_Start(&hadc);
+				//get value from ADC and display it...
+				while (HAL_ADC_PollForConversion(&hadc,100) != HAL_OK)	;
+
+				uint32_t inner_sensor_val = HAL_ADC_GetValue(&hadc);
+				int16_t m = inner_sensor_val - ts_cal30;
+				float t = (k * (float)m) + 30.0;
+
+				int tempf = (t * 100);
+				int8_t temp_i = tempf / 100;
+				int8_t temp_s = tempf % 100;
+
+				sprintf(lcdmsg,"%02d.%02dC\xdf",temp_i,temp_s);
+				//sprintf(lcdmsg,"%04X",inner_sensor_val);
+
+				LCD_Locate(0,0);
+				LCD_Print(lcdmsg);
+
+				//Restart LCD timer.
+				lcd_flag = false;
+				lcd_timer = LCD_TIMER_UPDATE;
+				lcd_timer_enable = true;
+
+				//Rotate LED colors
+				uint8_t	tempcolor = LEDColor[5];
+				LEDColor[5] = LEDColor[4];
+				LEDColor[4] = LEDColor[3];
+				LEDColor[3] = LEDColor[2];
+				LEDColor[2] = LEDColor[1];
+				LEDColor[1] = LEDColor[0];
+				LEDColor[0] = tempcolor;
+
+				led_sendpulse = true;
+			}
+		}// lcdflag
+	}// LrE6State
+
+	if(lcd_flag){
+		LED_Set(LED_IDX_SELECTOR,LED_COLOR_OFF);
+
+		lcd_flag = false;
+		LCD_SetBackLight(LCD_BL_OFF);
+		LCD_Clear();
+	}
+
+	if (led_timer_update){ //4x4ms = 16ms interval
+		//LED Timer
+		for (uint8_t i = LED_IDX_SELECTOR; i < LED_COUNT ; i++){
+			if (LEDTimer[i] != LED_TIMER_CONSTANT) {
+				if (--LEDTimer[i] == 0) {
+					LED_SetPulse(i,LED_COLOR_OFF,LED_TIMER_CONSTANT);
+				}
+		 	}
 		}
-		if(lcd_flag){
-			LCD_SetBackLight(LCD_BL_ON);
-			HAL_ADC_Start(&hadc);
-			//get value from ADC and display it...
-			while (HAL_ADC_PollForConversion(&hadc,100) != HAL_OK)	;
+		led_timer_update = false;
+	}
 
-			inner_sensor_val = HAL_ADC_GetValue(&hadc);
+	//Flashing LEDs
+	if (led_sendpulse) {
+		SendPulse();
+		led_sendpulse = false;
+	}
 
-			int16_t m = inner_sensor_val - ts_cal30;
-			float t = (k * (float)m) + 30.0;
-
-			int tempf = (t * 100);
-			int8_t temp_i = tempf / 100;
-			int8_t temp_s = tempf % 100;
-
-			sprintf(lcdmsg,"%02d.%02dC\xdf",temp_i,temp_s);
-			//sprintf(lcdmsg,"%04X",inner_sensor_val);
-
-			LCD_Locate(0,0);
-			LCD_Print(lcdmsg);
-			//Restart LCD timer.
-			lcd_flag = false;
-			lcd_timer = LCD_TIMER_UPDATE;
-			lcd_timer_enable = true;
-
-			//Rotate LED colors
-			uint8_t	tempcolor = LEDColor[5];
-			LEDColor[5] = LEDColor[4];
-			LEDColor[4] = LEDColor[3];
-			LEDColor[3] = LEDColor[2];
-			LEDColor[2] = LEDColor[1];
-			LEDColor[1] = LEDColor[0];
-			LEDColor[0] = tempcolor;
-
-			led_sendpulse = true;
-
-		}
-	  }
-	  prevUSBConfigured = isUSBConfigured;
-
-#if 0
-	    //LED Timer
-	    for (uint8_t i = 0; i < LED_COUNT ; i++){
-	    if (LEDTimer[i] != LED_TIME_CONSTANT) {
-	    	if (--LEDTimer[i] == 0) {
-	    		LEDColor[i] = LED_COLOR_OFF;
-	    		LEDTimer[i] = LED_TIME_CONSTANT;
-	    		led_sendpulse = true;
-	    	}
-	    }
-#endif
-
-	  //Flashing LEDs
-	  if(led_sendpulse){
-		  SendPulse();
-		  led_sendpulse = false;
-	  }
+	//Process WROOM receiving data.
+	if (isWROOMDataExists){
+		WROOM_Dispatch();
+		isWROOMDataExists = false;
+	}
 
     /* USER CODE END WHILE */
 
@@ -828,6 +830,56 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+#if 0
+void ExpandModifiers() {
+	uint8_t mod_index;
+	memset(modifiers, 0, sizeof(modifiers));
+	for (mod_index = 0; mod_index < KEY_COUNT; mod_index++) {
+		uint8_t modifier = keytable[mod_index].modifier;
+		uint8_t bitcount = bitcount8(modifier);
+		if (modifier != HID_NONM && bitcount > 1) {
+			uint8_t dst_index = 0;
+			uint8_t pattern = 0;
+			if (modifier & HID_GUIM) {
+				pattern += HID_GUIM;
+				modifiers[mod_index].element[dst_index] = pattern;
+				dst_index += 1;
+			}
+			if (modifier & HID_ALTM) {
+				pattern += HID_ALTM;
+				modifiers[mod_index].element[dst_index] = pattern;
+				dst_index += 1;
+			}
+			if (modifier & HID_SFTM) {
+				pattern += HID_SFTM;
+				modifiers[mod_index].element[dst_index] = pattern;
+				dst_index += 1;
+			}
+			if (modifier & HID_CTLM) {
+				pattern += HID_CTLM;
+				modifiers[mod_index].element[dst_index] = pattern;
+			}
+		}
+	}
+}
+void SendModifierElement(uint8_t mod) {
+	In_Report.modifier = mod;
+	In_Report.keys[0] =
+	In_Report.keys[1] =
+	In_Report.keys[2] =
+	In_Report.keys[3] = HID_NONE;
+    USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t *)&In_Report,sizeof(KEYBOARD_INPUT_REPORT) );
+}
+
+void SendModifiers(uint8_t bitpos) {
+	uint8_t i;
+	for (i = 0; i < 4; i++) {
+		uint8_t mod = modifiers[bitpos].element[i];
+		if (mod == HID_NONM) break;
+		SendModifierElement(mod);
+	}
+}
+#endif
 
 /* USER CODE END 4 */
 

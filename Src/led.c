@@ -26,6 +26,7 @@
 
 /* TODO:  Include other files here if needed. */
 #include "main.h"
+#include <string.h>
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Interface Functions                                               */
@@ -36,9 +37,12 @@
     banner.
  */
 extern TIM_HandleTypeDef htim3;
+extern bool	led_sendpulse;
 uint32_t period;
-uint8_t		LEDColor[LED_COUNT];
-uint8_t		LEDPulse[TOTAL_BITS];	//Data formed PWM width send to LED
+uint8_t	LEDColor[LED_COUNT];
+uint8_t	LEDPulse[TOTAL_BITS];	//Data formed PWM width send to LED
+uint8_t	LEDTimer[LED_COUNT];
+
 const LEDDATA LEDTable[COLOR_MAX] = {
 	//			R		G		B
 	{.rgbw = {.r=LOFF,.g=LOFF,.b=LOFF}},//COLOR_OFF,
@@ -49,10 +53,19 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 	{.rgbw = {.r=LHLF,.g=LHLF,.b=LOFF}},//COLOR_YELLOW,
 	{.rgbw = {.r=LHLF,.g=LOFF,.b=LHLF}},//COLOR_MAGENTA,
 	{.rgbw = {.r=LOFF,.g=LHLF,.b=LHLF}},//COLOR_CYAN,
-	{.rgbw = {.r=LMAX,.g=LQTR,.b=LOFF}},//COLOR_ORANGE,
+	{.rgbw = {.r=LMAX,.g=LHLF,.b=LOFF}},//COLOR_ORANGE,
 };
 
+
 void LED_Initialize(){
+	memset(LEDColor,LED_COLOR_OFF,LED_COUNT);
+	memset(LEDTimer,LED_TIMER_CONSTANT,LED_COUNT);
+
+	SendPulse();
+	return;
+}
+
+void LED_TestPattern(){
 	LEDColor[0]=LED_COLOR_WHITE;
 	LEDColor[1]=LED_COLOR_RED;
 	LEDColor[2]=LED_COLOR_ORANGE;
@@ -60,13 +73,25 @@ void LED_Initialize(){
 	LEDColor[4]=LED_COLOR_GREEN;
 	LEDColor[5]=LED_COLOR_BLUE;
 	SendPulse();
-	return;
 }
 
-//Flash LEDs immediately with LEDColor[]
+//Flush LEDs immediately with LEDColor[]
 void LED_Set_Quick(uint8_t index,uint8_t color){
 	LEDColor[index] = color;
 	SendPulse();
+}
+
+//Flush LEDs at loop in main()
+inline void LED_Set(uint8_t index,uint8_t color){
+	LEDColor[index] = color;
+	led_sendpulse = true;
+}
+
+//Flash one LED once.
+inline void LED_SetPulse(uint8_t index,uint8_t color,uint8_t pulse){
+	LEDColor[index] = color;
+    LEDTimer[index] = pulse;	// 4ms unit (i.e. pulse=25 => 100ms)
+	led_sendpulse = true;
 }
 
 //make LEDPulse[] from LEDColor[]

@@ -92,6 +92,9 @@ enum{   //constants for expressing color.
 #define LMIN	0x08
 #define LOFF	0x00
 
+#define LED_TIMER_CONSTANT	0xFF
+#define	LED_IDX_SELECTOR	0
+
     // *****************************************************************************
     // *****************************************************************************
     // Section: Data Types
@@ -189,7 +192,10 @@ typedef union leddata_t {
         }
      */
     void LED_Initialize();
+    void LED_TestPattern();
     void LED_Set_Quick(uint8_t index, uint8_t color);
+    void LED_Set(uint8_t index, uint8_t color);
+    void LED_SetPulse(uint8_t index, uint8_t color,uint8_t pulse);
     void SendPulse();
     /* Provide C++ Compatibility */
 #ifdef __cplusplus

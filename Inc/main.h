@@ -195,6 +195,30 @@ typedef struct {
 	uint8_t keys[4];
 } KEYBOARD_INPUT_REPORT;
 
+//
+enum {
+	LRE6_RESET,
+	LRE6_USB_NOLINK,
+	LRE6_USB_LINKUP,
+	LRE6_USB_LINKED,
+	LRE6_USB_LINK_LOST,
+};
+
+//Key matrix lines
+enum {
+	L0 = 0,
+	L1,
+	L2,
+	L3
+};
+
+//
+enum {
+	MODE_LRLITE = 0,
+	MODE_LRE6
+};
+#define MODE_COUNT	2
+
 #define LxMASK 0x0F
 #define MOD_SW_BIT_MASK    0x0fffffff
 //
@@ -213,16 +237,19 @@ typedef struct {
 #define ROT_NOT_MOVE        0
 #define ROT_MOVE_CW         1
 #define ROT_MOVE_CCW        2
+#define ROT_MASK			0x03
+#define	ROT_COUNT			6
 
 #define HID_RPT_KEY_IDX		1
 
 void Delay_us(uint32_t microsec);
+void Start_LCDTimer(uint32_t tick);
+
 #define TEMP110_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7C2))
 #define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
 #define VDD_CALIB ((uint16_t) (330))
 #define VDD_APPLI ((uint16_t) (300))
 
-#define LED_TIME_CONSTANT	0xFF
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

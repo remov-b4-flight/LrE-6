@@ -36,7 +36,7 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-extern bool isUSBConfigured;
+extern uint8_t	LrE6State;
 /* USER CODE END PV */
 
 PCD_HandleTypeDef hpcd_USB_FS;
@@ -113,7 +113,7 @@ void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
   /* USER CODE BEGIN 0 */
-  isUSBConfigured = true;
+  LrE6State = LRE6_USB_LINKUP;
   /* USER CODE END 0 */
 
   USBD_LL_SetupStage((USBD_HandleTypeDef*)hpcd->pData, (uint8_t *)hpcd->Setup);
@@ -290,7 +290,7 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
 {
   /* USER CODE BEGIN 1 */
-  isUSBConfigured = false;
+  LrE6State = LRE6_USB_LINK_LOST;
   /* USER CODE END 1 */
   USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData);
 }

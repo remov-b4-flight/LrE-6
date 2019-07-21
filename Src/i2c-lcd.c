@@ -30,6 +30,7 @@
 #include "i2c-lcd.h"
 
 extern I2C_HandleTypeDef hi2c1;
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Interface Functions                                               */
@@ -132,20 +133,19 @@ void LCD_Putchar(char c){
     Delay_us(LCD_DAT_WAIT_US);
 }
 
-void LCD_Print(char *str){
+void LCD_Print(const char *str){
     size_t len = strlen(str);
 
     if(len > LCD_WIDTH) len = LCD_WIDTH;
 #if 0
-    uint8_t i;
-    for (i = 0; i < len; i++){
+    for (uint8_t i = 0; i < len; i++){
         LCD_Putchar(*(str+i));
     }
 #else
     uint8_t i2cbuf[LCD_WIDTH*2],*p = i2cbuf;
-    uint8_t i;
     uint8_t cmd= LCD_I2C_CONTINUE | LCD_I2C_DATA | LCD_I2C_WRITE;    // =0xC0;
-    for(i = 0;i < (len-1) ; i++){
+
+    for(uint8_t i = 0;i < (len-1) ; i++){
         *p++ = cmd;
         *p++ = str[i];
     }
@@ -161,6 +161,36 @@ void LCD_SetBackLight(bool light){
 	HAL_GPIO_WritePin(BL_ON_GPIO_Port,BL_ON_Pin,(light)?GPIO_PIN_SET:GPIO_PIN_RESET);
 }
 
+void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
+	if(code <= LCD_CGRAM_MAX){
+		uint8_t buf[LCD_CGRAM_BYTES * 2], *p = buf;
+		uint8_t offset = code * 8;
+		//Set CGRAM address
+	    buf[0] = LCD_I2C_TAIL | LCD_I2C_INST | LCD_I2C_WRITE;
+	    buf[1] = LCD_CMD_CGADR + offset;
+	    HAL_I2C_Master_Transmit(&hi2c1,LCD_I2C_ADDR,buf,2,500);
+	    Delay_us(LCD_CMD_WAIT_US);
+
+	    uint8_t cmd= LCD_I2C_CONTINUE | LCD_I2C_DATA | LCD_I2C_WRITE;    // =0xC0;
+		for(uint8_t i = 0; i < (LCD_CGRAM_BYTES-1); i++ ){
+			*p++ = cmd;
+			*p++ = pattern[i] & LCD_CGRAM_MASK;
+		}
+		*p++ = LCD_I2C_TAIL | LCD_I2C_INST | LCD_I2C_WRITE;
+		*p++ = pattern[(LCD_CGRAM_BYTES-1)];
+	    HAL_I2C_Master_Transmit(&hi2c1,LCD_I2C_ADDR,buf,sizeof(buf),500);
+	    Delay_us(LCD_CMD_WAIT_US);
+
+	}
+}
+
+void LCD_SetDDADR(uint8_t address){
+    uint8_t buf[2];
+    buf[0] = LCD_I2C_TAIL | LCD_I2C_INST | LCD_I2C_WRITE;
+    buf[1] = LCD_CMD_DDADR + address;
+    HAL_I2C_Master_Transmit(&hi2c1,LCD_I2C_ADDR,buf,2,500);
+    Delay_us(LCD_CMD_WAIT_US);
+}
 /* *****************************************************************************
  End of File
  */

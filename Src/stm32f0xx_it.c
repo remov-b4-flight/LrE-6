@@ -57,15 +57,18 @@
 /* USER CODE BEGIN 0 */
 
 extern uint8_t	keyline;
-extern bool isKeyPressed;
-extern KEYSCAN keystat;
-extern bool lcd_flag;
-extern bool lcd_timer_enable;
-extern int32_t lcd_timer;
-extern bool isKeyRelaseSent;
+extern bool		isKeyPressed;
+extern bool		isKeyRelaseSent;
+extern KEYSCAN	keystat;
+
+extern bool		lcd_flag;
+extern bool		lcd_timer_enable;
+extern int32_t	lcd_timer;
+
 extern uint8_t	LEDColor[];
-extern bool led_sendpulse;
 extern uint8_t	LEDTimer[];
+extern bool		led_sendpulse;
+extern bool		led_timer_update;
 
 uint32_t previous_scan = 0;
 uint32_t previous_key = 0;
@@ -87,6 +90,7 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_usart1_tx;
+extern DMA_HandleTypeDef hdma_usart1_rx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
@@ -177,7 +181,7 @@ void EXTI0_1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
     uint32_t pr = EXTI->PR;
-	uint8_t	r5 = (ENC5_GPIO_Port->IDR) & 0x03;
+	uint8_t	r5 = (ENC5_GPIO_Port->IDR) & ROT_MASK;
 	if(pr & PRMASK_R5){
 	  if (r5 == 0) {
 	      if(rot5_prev == 2){ //CCW
@@ -218,7 +222,7 @@ void EXTI4_15_IRQHandler(void)
 
     // Rotator1
     if(pr & PRMASK_R1){// EXTI4,5
-        uint8_t	r1 = ( ra >> 4 ) & 0x03;
+        uint8_t	r1 = ( ra >> 4 ) & ROT_MASK;
 		if (r1 == 0) {
 			if(rot1_prev == 2){ //CCW
 				keystat.nb.rot1 = ROT_MOVE_CCW;
@@ -243,7 +247,7 @@ void EXTI4_15_IRQHandler(void)
     }
     //Rotator 2
     if(pr & PRMASK_R2){ //EXTI8,9
-    	uint8_t	r2 = r23s & 0x03;
+    	uint8_t	r2 = r23s & ROT_MASK;
 		if (r2 == 0) {
 			if(rot2_prev == 2){ //CCW
 				keystat.nb.rot2 = ROT_MOVE_CCW;
@@ -269,7 +273,7 @@ void EXTI4_15_IRQHandler(void)
 
     //Rotator 3
 	if(pr & PRMASK_R3){	//EXTI10,11
-		uint8_t	r3 = ( r23s >> 2 ) & 0x03;
+		uint8_t	r3 = ( r23s >> 2 ) & ROT_MASK;
 		if (r3 == 0) {
 			if(rot3_prev == 2){ //CCW
 				keystat.nb.rot3 = ROT_MOVE_CCW;
@@ -295,7 +299,7 @@ void EXTI4_15_IRQHandler(void)
 
     //Rotator 4
     if(pr & PRMASK_R4){ //EXTI14&15
-    	uint8_t	r4 = ( (ENC4_GPIO_Port->IDR) >> 14 ) & 0x03;
+    	uint8_t	r4 = ( (ENC4_GPIO_Port->IDR) >> 14 ) & ROT_MASK;
 		if (r4 == 0) {
 			if(rot4_prev == 2){ //CCW
 				keystat.nb.rot4 = ROT_MOVE_CCW;
@@ -321,7 +325,7 @@ void EXTI4_15_IRQHandler(void)
 
     //Rotator 6(selector)
     if(pr & PRMASK_RS){ //EXTI12,13
-    	uint8_t	rs = ( r23s >> 4 ) & 0x03;
+    	uint8_t	rs = ( r23s >> 4 ) & ROT_MASK;
 		if (rs == 0) {
 			if(rots_prev == 2){ //CCW
 				keystat.nb.rots = ROT_MOVE_CCW;
@@ -370,6 +374,7 @@ void DMA1_Channel2_3_IRQHandler(void)
 
   /* USER CODE END DMA1_Channel2_3_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart1_tx);
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
   /* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
 
   /* USER CODE END DMA1_Channel2_3_IRQn 1 */
@@ -398,33 +403,34 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
     uint8_t r;
     //keyboard matrix
     switch(keyline){
-        case 0:
+        case L0:
             r = (Mx_GPIO_Port->IDR) & LxMASK;
             current_scan.nb.n0 = (r);
             keyline++;
+            led_timer_update = true;
             HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_RESET);
             HAL_GPIO_WritePin(L1_GPIO_Port,L1_Pin,GPIO_PIN_SET);
             break;
-        case 1:
+        case L1:
             r = (Mx_GPIO_Port->IDR) & LxMASK;
             current_scan.nb.n1 = (r);
             keyline++;
             HAL_GPIO_WritePin(L1_GPIO_Port,L1_Pin,GPIO_PIN_RESET);
             HAL_GPIO_WritePin(L2_GPIO_Port,L2_Pin,GPIO_PIN_SET);
             break;
-        case 2:
+        case L2:
             r = (Mx_GPIO_Port->IDR) & LxMASK;
             current_scan.nb.n2 = (r);
             keyline++;
             HAL_GPIO_WritePin(L2_GPIO_Port,L2_Pin,GPIO_PIN_RESET);
             HAL_GPIO_WritePin(L3_GPIO_Port,L3_Pin,GPIO_PIN_SET);
             break;
-        case 3:
+        case L3:
             r = (Mx_GPIO_Port->IDR) & LxMASK;
             current_scan.nb.n3 = (r);
             HAL_GPIO_WritePin(L3_GPIO_Port,L3_Pin,GPIO_PIN_RESET);
             HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_SET);
-            keyline = 0;
+            keyline = L0;
 
             //Key detection
             if (previous_scan==current_scan.wd){
