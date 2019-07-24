@@ -258,7 +258,7 @@ int main(void)
 
   //WROOM boot-up sequence
   WROOM_Initialize();
-  WROOM_Set_boot_state(WROOM_INIT);
+  WROOM_SetState(WROOM_INIT);
 
   /* USER CODE END 2 */
 
