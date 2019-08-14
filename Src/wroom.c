@@ -116,34 +116,42 @@ void WROOM_Dispatch(){
 				break;
 
 			case CON_AP:
+#if 0
 				LCD_Locate(0,0);
 				LCD_Print("AP Conn.");
 				LCD_SetBackLight(LCD_BL_ON);
 				Start_LCDTimer(LCD_TIMER_UPDATE);
+#endif
 				WROOM_SetState(CON_IP);
 				break;
 
 			case CON_IP:
+#if 0
 				LCD_Locate(0,0);
 				LCD_Print("TCP Con.");
 				LCD_SetBackLight(LCD_BL_ON);
 				Start_LCDTimer(LCD_TIMER_UPDATE);
+#endif
 				WROOM_SetState(SET_SVR);
 				break;
 
 			case SET_SVR:
+#if 0
 				LCD_Locate(0,0);
 				LCD_Print("SET SVR");
 				LCD_SetBackLight(LCD_BL_ON);
 				Start_LCDTimer(LCD_TIMER_UPDATE);
+#endif
 				WROOM_SetState(IDLE);
 				break;
 
 			case SEND_CONT:	//STM32 got 'SEND OK'+CRLF
+#if 0
 				LCD_Locate(0,0);
 				LCD_Print("SENT.");
 				LCD_SetBackLight(LCD_BL_ON);
 				Start_LCDTimer(LCD_TIMER_UPDATE);
+#endif
 				WROOM_SetState(IDLE);
 
 			default:

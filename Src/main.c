@@ -722,6 +722,12 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_DMADISABLEONERROR_INIT;
   huart1.AdvancedInit.DMADisableonRxError = UART_ADVFEATURE_DMA_DISABLEONRXERROR;
+  /* USER CODE BEGIN USART1_Init 3 */
+#if 0
+  MODIFY_REG(huart1.Instance->CR2,0,(LF << UART_CR2_ADDRESS_LSB_POS));
+  MODIFY_REG(huart1.Instance->CR1,0,(USART_CR1_CMIE));
+#endif
+  /* USER CODE END USART1_Init 3 */
   if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
