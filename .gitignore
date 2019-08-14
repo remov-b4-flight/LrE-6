@@ -56,10 +56,11 @@ dkms.conf
 
 #Others
 /Debug/
+/Release/
 /Src/Backup/
 /Inc/Backup/
-*.bak
 /.settings/
 /.code_review_properties
-/Release/
 *.launch
+*.zip
+*.bak
