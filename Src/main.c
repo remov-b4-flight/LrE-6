@@ -90,7 +90,7 @@ extern	USBD_HandleTypeDef hUsbDeviceFS;
 extern	uint8_t	LEDColor[];
 extern	uint8_t	LEDTimer[LED_COUNT];
 const uint8_t up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
-const char* mode_string[] ={"[LrLite]","[LrE-6]"};
+const char* mode_string[] ={"[HID]","[LrE-6]"};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -142,7 +142,7 @@ bool EmulateKeyboard(void)
         	if (bitpos == 9){
         		LrE6Mode++;
         		if(LrE6Mode >= MODE_COUNT){
-        			LrE6Mode = MODE_LRLITE;
+        			LrE6Mode = MODE_HID;
         		}
         		LCD_Print(mode_string[LrE6Mode]);
         		isKeyPressed = false;
@@ -210,7 +210,7 @@ int main(void)
   lcd_1stflag = true;
 
   LrE6State = LRE6_RESET;
-  LrE6Mode	= MODE_LRLITE;
+  LrE6Mode	= MODE_HID;
 
   isKeyRelaseSent = true;
   led_sendpulse = false;
@@ -242,11 +242,13 @@ int main(void)
   HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_SET);	//Initialize SW matrix.
   HAL_TIM_Base_Start_IT(&htim1);
 
+  #if WROOM_ENABLE
   //WROOM Hardware Reset
   HAL_GPIO_WritePin(WL_EN_GPIO_Port,WL_EN_Pin,GPIO_PIN_SET);	//Enable Wifi module
   WROOM_Reset(true);
   HAL_Delay(1);
   WROOM_Reset(false);
+#endif
 
   LED_Initialize();	//Set all LEDs 'OFF'
 
@@ -256,9 +258,11 @@ int main(void)
   LCD_SetCGRAM(5,up_arrow);			//Set user defined character.
   LCD_SetDDADR(0);
 
+#if WROOM_ENABLE
   //WROOM boot-up sequence
   WROOM_Initialize();
   WROOM_SetState(WROOM_INIT);
+#endif
 
   /* USER CODE END 2 */
 
@@ -723,7 +727,7 @@ static void MX_USART1_UART_Init(void)
   huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_DMADISABLEONERROR_INIT;
   huart1.AdvancedInit.DMADisableonRxError = UART_ADVFEATURE_DMA_DISABLEONRXERROR;
   /* USER CODE BEGIN USART1_Init 3 */
-#if 0
+#if WROOM_ENABLE
   MODIFY_REG(huart1.Instance->CR2,0,(LF << UART_CR2_ADDRESS_LSB_POS));
   MODIFY_REG(huart1.Instance->CR1,0,(USART_CR1_CMIE));
 #endif
