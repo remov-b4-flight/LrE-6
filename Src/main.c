@@ -90,7 +90,7 @@ extern	USBD_HandleTypeDef hUsbDeviceFS;
 extern	uint8_t	LEDColor[];
 extern	uint8_t	LEDTimer[LED_COUNT];
 const uint8_t up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
-const char* mode_string[] ={"[HID]","[LrE-6]"};
+const char* mode_string[] ={"[HID]","[MIDI]"};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
