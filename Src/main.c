@@ -138,7 +138,7 @@ bool EmulateKeyboard(void)
 #if 0
         	if(modifiers[bitpos].element[0] != HID_NONM) SendModifiers(bitpos);
 #endif
-#if 1
+#if 0 //works only in MIDI
         	if (bitpos == 9){
         		LrE6Mode++;
         		if(LrE6Mode >= MODE_COUNT){
@@ -776,8 +776,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, L3_Pin|WL_EN_Pin|L0_Pin|L1_Pin 
-                          |L2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, L3_Pin|L0_Pin|L1_Pin|L2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, WL_RST_Pin|BL_ON_Pin, GPIO_PIN_RESET);
@@ -806,10 +805,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : L3_Pin WL_EN_Pin L0_Pin L1_Pin 
-                           L2_Pin */
-  GPIO_InitStruct.Pin = L3_Pin|WL_EN_Pin|L0_Pin|L1_Pin 
-                          |L2_Pin;
+  /*Configure GPIO pins : L3_Pin L0_Pin L1_Pin L2_Pin */
+  GPIO_InitStruct.Pin = L3_Pin|L0_Pin|L1_Pin|L2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

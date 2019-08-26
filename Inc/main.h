@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x03
+#define USBD_DEVICE_VER_MIN	0x10
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -115,8 +115,6 @@ void Error_Handler(void);
 #define ENC_6B_Pin GPIO_PIN_13
 #define ENC_6B_GPIO_Port GPIOB
 #define ENC_6B_EXTI_IRQn EXTI4_15_IRQn
-#define WL_EN_Pin GPIO_PIN_15
-#define WL_EN_GPIO_Port GPIOB
 #define WL_RST_Pin GPIO_PIN_8
 #define WL_RST_GPIO_Port GPIOA
 #define STM_TX_Pin GPIO_PIN_9
@@ -214,8 +212,8 @@ enum {
 
 //
 enum {
-	MODE_LRLITE = 0,
-	MODE_LRE6
+	MODE_HID = 0,
+	MODE_MIDI
 };
 #define MODE_COUNT	2
 
