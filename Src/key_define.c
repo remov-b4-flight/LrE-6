@@ -12,7 +12,7 @@ const KEY_DEFINE keytable[KEY_DEFINE_COUNT] = {
     {HID_NONM,			HID_z,		"Zoom In "},	//L1M2	SW8
     {HID_GUIM,			HID_z,		"Undo    "},	//L1M3	SW9
     {HID_NONM,			HID_5,		"Rate 5  "},	//L2M0	SW5
-    {HID_NONM,			HID_b,		"Quick c."},	//L2M1	SW10 [MODE]
+    {HID_NONM,			HID_NONE,	NULL},			//L2M1	SW10 [MODE]
     {HID_NONM,			HID_NONE,	NULL},			//L2M2 rot4 push
     {HID_NONM,			HID_NONE,	NULL},			//L2M3 rot5 push
     {HID_NONM,			HID_0,		"Rate res."},	//L3M0 rot1 push

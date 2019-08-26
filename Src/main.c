@@ -138,7 +138,7 @@ bool EmulateKeyboard(void)
 #if 0
         	if(modifiers[bitpos].element[0] != HID_NONM) SendModifiers(bitpos);
 #endif
-#if 0 //works only in MIDI
+#if 1 //works only in MIDI
         	if (bitpos == 9){
         		LrE6Mode++;
         		if(LrE6Mode >= MODE_COUNT){
