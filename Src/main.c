@@ -90,9 +90,6 @@ extern	USBD_HandleTypeDef hUsbDeviceFS;
 extern	uint8_t	LEDColor[];
 extern	uint8_t	LEDTimer[LED_COUNT];
 const uint8_t up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
-#if 0
-const char* mode_string[] ={"[HID]","[MIDI]"};
-#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -139,17 +136,6 @@ bool EmulateKeyboard(void)
         if( bitpos < KEY_COUNT + (2 * ROT_COUNT) ){
 #if 0
         	if(modifiers[bitpos].element[0] != HID_NONM) SendModifiers(bitpos);
-#endif
-#if 0 //works only in MIDI
-        	if (bitpos == 9){
-        		LrE6Mode++;
-        		if(LrE6Mode >= MODE_COUNT){
-        			LrE6Mode = MODE_HID;
-        		}
-        		LCD_Print(mode_string[LrE6Mode]);
-        		isKeyPressed = false;
-        		return false;
-        	}
 #endif
         	In_Report.modifier = keytable[bitpos].modifier;
             In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
@@ -244,7 +230,7 @@ int main(void)
   HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_SET);	//Initialize SW matrix.
   HAL_TIM_Base_Start_IT(&htim1);
 
-  #if WROOM_ENABLE
+#if WROOM_ENABLE
   //WROOM Hardware Reset
   HAL_GPIO_WritePin(WL_EN_GPIO_Port,WL_EN_Pin,GPIO_PIN_SET);	//Enable Wifi module
   WROOM_Reset(true);
