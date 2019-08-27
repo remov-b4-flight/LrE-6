@@ -125,7 +125,7 @@ inline void Start_LCDTimer(uint32_t tick){
 	lcd_timer = tick;
 	lcd_timer_enable = true;
 }
-
+#if 0 //HID
 bool EmulateKeyboard(void)
 {
     uint32_t rkey;
@@ -183,7 +183,74 @@ bool EmulateKeyboard(void)
     } else
         return false;
 }
+#else //MIDI
+bool EmulateMIDI(){
+    uint32_t rkey;
+    uint8_t bitpos;
+    bool isKeyReport;
+    if(isKeyPressed) {
+        bitpos = ntz32(keystat.wd);
+        rkey = (keystat.wd & MOD_SW_BIT_MASK);
+        if( bitpos < KEY_COUNT + (2 * ROT_COUNT) ){
+        	if (bitpos == 9){//[MODE] SW
+        		LrE6Mode++;
+        		if(LrE6Mode >= MODE_COUNT){
+        			LrE6Mode = MODE_HID;
+        		}
+        		LCD_Locate(0,0);
+        		LCD_Print(mode_string[LrE6Mode]);
+        		isKeyPressed = false;
+        		return false;
+        	}
+#if 0  //HID
+        	In_Report.modifier = keytable[bitpos].modifier;
+            In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
+#else //MIDI
+            //Set 'NOTE ON'
+#endif
+            //Print Message to LCD&LED
+            if (keytable[bitpos].message != NULL) {
+        		LCD_Locate(0,0);
+            	lcd_flag = false;
+        		lcd_timer_enable = true;
+            	lcd_timer = LCD_TIMER_DEFAULT;
+            	LCD_SetBackLight(LCD_BL_ON);
+            	LCD_Print(keytable[bitpos].message);
+            }
+            LED_SetPulse(LED_IDX_SELECTOR,LED_COLOR_YELLOW,25);
 
+            isKeyReport = true;
+		}else if(rkey == 0) {// Keys are released
+#if 0 //HID
+			In_Report.modifier = In_Report.keys[HID_RPT_KEY_IDX] = HID_NONE;
+#else //MIDI
+			//Set 'NOTE OFF'
+#endif
+
+			isKeyReport = true;
+        }else
+        	isKeyReport = false;
+
+        if(isKeyReport){
+        	USBD_HID_HandleTypeDef *hhid = hUsbDeviceFS.pClassData;
+        	while( hhid->state != HID_IDLE ){
+        		Delay_us(100);
+        	}
+#if 0
+			USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t *)&In_Report,sizeof(KEYBOARD_INPUT_REPORT) );
+#else
+			//Send MIDI Message via USB
+#endif
+			isKeyReport = false;
+        }
+
+        /* Clear the switch pressed flag */
+        isKeyPressed = false;
+        return true;
+    } else
+        return false;
+}
+#endif
 /* USER CODE END 0 */
 
 /**
@@ -237,12 +304,16 @@ int main(void)
   MX_ADC_Init();
   MX_TIM16_Init();
   MX_USART1_UART_Init();
+#if 0 //HID
   MX_USB_DEVICE_Init();
+#else //MIDI
+  MX_USB_MIDI_INIT();
+#endif
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_SET);	//Initialize SW matrix.
   HAL_TIM_Base_Start_IT(&htim1);
 
-  #if WROOM_ENABLE
+#if WROOM_ENABLE
   //WROOM Hardware Reset
   HAL_GPIO_WritePin(WL_EN_GPIO_Port,WL_EN_Pin,GPIO_PIN_SET);	//Enable Wifi module
   WROOM_Reset(true);
@@ -293,9 +364,13 @@ int main(void)
 		LrE6State = LRE6_USB_LINKED;
 
 	} else if (LrE6State == LRE6_USB_LINKED){
+#if 0 //HID
 		//Operates as USB Keyboards.
 		EmulateKeyboard();
-
+#else //MIDI
+		//Operate as MIDI Instruments.
+		EmulateMIDI();
+#endif
 
 	} else if(LrE6State == LRE6_USB_LINK_LOST){
 		LED_TestPattern();

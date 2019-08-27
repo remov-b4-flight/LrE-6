@@ -76,8 +76,11 @@
   */
 
 /** USB Device initialization function. */
-void MX_USB_DEVICE_Init(void);
-
+#if 0 //HID
+ void MX_USB_DEVICE_Init(void);
+#else //MIDI
+ void MX_USB_MIDI_INIT(void);
+#endif
 /*
  * -- Insert functions declaration here --
  */
