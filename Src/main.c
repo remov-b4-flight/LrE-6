@@ -30,7 +30,9 @@
 #include "i2c-lcd.h"
 #include "bitcount.h"
 #include "key_define.h"
+#if WROOM_ENABLE
 #include "wroom.h"
+#endif
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,7 +79,6 @@ bool        lcd_flag;
 bool		lcd_1stflag;
 
 uint8_t		LrE6State;
-uint8_t		LrE6Mode;
 
 bool		isWROOMDataExists;
 bool		led_sendpulse;
@@ -198,7 +199,6 @@ int main(void)
   lcd_1stflag = true;
 
   LrE6State = LRE6_RESET;
-  LrE6Mode	= MODE_HID;
 
   isKeyRelaseSent = true;
   led_sendpulse = false;
@@ -360,13 +360,13 @@ int main(void)
 		SendPulse();
 		led_sendpulse = false;
 	}
-
+#if WROOM_ENABLE
 	//Process WROOM receiving data.
 	if (isWROOMDataExists){
 		WROOM_Dispatch();
 		isWROOMDataExists = false;
 	}
-
+#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
