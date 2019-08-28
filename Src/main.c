@@ -30,7 +30,9 @@
 #include "i2c-lcd.h"
 #include "bitcount.h"
 #include "key_define.h"
+#if WROOM_ENABLE
 #include "wroom.h"
+#endif
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -447,13 +449,13 @@ int main(void)
 		SendPulse();
 		led_sendpulse = false;
 	}
-
+#if WROOM_ENABLE
 	//Process WROOM receiving data.
 	if (isWROOMDataExists){
 		WROOM_Dispatch();
 		isWROOMDataExists = false;
 	}
-
+#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
