@@ -67,7 +67,7 @@ void Error_Handler(void);
 #define TIM_PERIOD_1SEC 10000
 #define TIM_PERIOD_125uS 125
 #define TIM_PERIOD_10mS 10000
-#define LrE6_PID 0x0BEA
+#define LrE6_PID 0xA320
 #define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
 #define PWM_PERIOD 59

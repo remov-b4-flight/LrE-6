@@ -63,7 +63,7 @@
   * @{
   */
 
-#define USBD_VID     1155
+#define USBD_VID     0x1209
 #define USBD_LANGID_STRING     1033
 #define USBD_MANUFACTURER_STRING     LrE6_VENDOR
 #define USBD_PID_FS     LrE6_PID
