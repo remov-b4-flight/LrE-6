@@ -63,7 +63,7 @@
   * @{
   */
 
-#define USBD_VID     1155
+#define USBD_VID     0x1209
 #define USBD_LANGID_STRING     1033
 #define USBD_MANUFACTURER_STRING     LrE6_VENDOR
 #define USBD_PID_FS     LrE6_PID
@@ -296,7 +296,9 @@ uint8_t * USBD_FS_SerialStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
   /* Update the serial number string descriptor with the data from the unique
    * ID */
   Get_SerialNum();
-
+  /* USER CODE BEGIN USBD_FS_SerialStrDescriptor */
+  
+  /* USER CODE END USBD_FS_SerialStrDescriptor */
   return (uint8_t *) USBD_StringSerial;
 }
 
