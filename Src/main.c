@@ -288,6 +288,7 @@ int main(void)
 	} else if(LrE6State == LRE6_USB_LINK_LOST){
 		LED_TestPattern();
 		lcd_1stflag = false;
+		lcd_timer_enable = true;
 		LrE6State = LRE6_USB_NOLINK;
 
 	} else if(LrE6State == LRE6_USB_NOLINK){
