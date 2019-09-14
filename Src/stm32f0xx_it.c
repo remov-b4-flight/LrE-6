@@ -184,11 +184,19 @@ void EXTI0_1_IRQHandler(void)
 	uint8_t	r5 = (ENC5_GPIO_Port->IDR) & ROT_MASK;
 	if(pr & PRMASK_R5){
 	  if (r5 == 0) {
+#if ENC_9R5KQ
+	      if(rot5_prev == 1){ //CCW
+#else
 	      if(rot5_prev == 2){ //CCW
+#endif
 	          keystat.nb.rot5 = ROT_MOVE_CCW;
 	          isKeyPressed = true;
 	          isKeyRelaseSent = false;
+#if ENC_9R5KQ
+	      }else if(rot5_prev == 2){ //CW
+#else
 	      }else if(rot5_prev == 1){ //CW
+#endif
 	          keystat.nb.rot5 = ROT_MOVE_CW;
 	          isKeyPressed = true;
 	          isKeyRelaseSent = false;
@@ -224,11 +232,19 @@ void EXTI4_15_IRQHandler(void)
     if(pr & PRMASK_R1){// EXTI4,5
         uint8_t	r1 = ( ra >> 4 ) & ROT_MASK;
 		if (r1 == 0) {
+#if	ENC_9R5KQ
+			if(rot1_prev == 1){ //CCW
+#else
 			if(rot1_prev == 2){ //CCW
+#endif
 				keystat.nb.rot1 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
+#if	ENC_9R5KQ
+			}else if(rot1_prev == 2){ //CW
+#else
 			}else if(rot1_prev == 1){ //CW
+#endif
 				keystat.nb.rot1 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
@@ -249,11 +265,20 @@ void EXTI4_15_IRQHandler(void)
     if(pr & PRMASK_R2){ //EXTI8,9
     	uint8_t	r2 = r23s & ROT_MASK;
 		if (r2 == 0) {
+#if ENC_9R5KQ
+			if(rot2_prev == 1){ //CCW
+#else
 			if(rot2_prev == 2){ //CCW
+#endif
+
 				keystat.nb.rot2 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
+#if ENC_9R5KQ
+			}else if(rot2_prev == 2){ //CW
+#else
 			}else if(rot2_prev == 1){ //CW
+#endif
 				keystat.nb.rot2 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
@@ -275,11 +300,19 @@ void EXTI4_15_IRQHandler(void)
 	if(pr & PRMASK_R3){	//EXTI10,11
 		uint8_t	r3 = ( r23s >> 2 ) & ROT_MASK;
 		if (r3 == 0) {
+#if ENC_9R5KQ
+			if(rot3_prev == 1){ //CCW
+#else
 			if(rot3_prev == 2){ //CCW
+#endif
 				keystat.nb.rot3 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
+#if ENC_9R5KQ
+			}else if(rot3_prev == 2){ //CW
+#else
 			}else if(rot3_prev == 1){ //CW
+#endif
 				keystat.nb.rot3 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
@@ -301,11 +334,19 @@ void EXTI4_15_IRQHandler(void)
     if(pr & PRMASK_R4){ //EXTI14&15
     	uint8_t	r4 = ( (ENC4_GPIO_Port->IDR) >> 14 ) & ROT_MASK;
 		if (r4 == 0) {
+#if ENC_9R5KQ
+			if(rot4_prev == 1){ //CCW
+#else
 			if(rot4_prev == 2){ //CCW
+#endif
 				keystat.nb.rot4 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
+#if ENC_9R5KQ
+			}else if(rot4_prev == 2){ //CW
+#else
 			}else if(rot4_prev == 1){ //CW
+#endif
 				keystat.nb.rot4 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
@@ -327,11 +368,19 @@ void EXTI4_15_IRQHandler(void)
     if(pr & PRMASK_RS){ //EXTI12,13
     	uint8_t	rs = ( r23s >> 4 ) & ROT_MASK;
 		if (rs == 0) {
+#if ENC_9R5KQ
+			if(rots_prev == 1){ //CCW
+#else
 			if(rots_prev == 2){ //CCW
+#endif
 				keystat.nb.rots = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
+#if ENC_9R5KQ
+			}else if(rots_prev == 2){ //CW
+#else
 			}else if(rots_prev == 1){ //CW
+#endif
 				keystat.nb.rots = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;

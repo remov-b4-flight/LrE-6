@@ -67,9 +67,10 @@ void Error_Handler(void);
 #define TIM_PERIOD_1SEC 10000
 #define TIM_PERIOD_125uS 125
 #define TIM_PERIOD_10mS 10000
-#define LrE6_PID 0xA320
+#define LrE6_PID 0x0001
 #define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
+//#define ENC_9R5KQ	1	//reverse encoders
 #define PWM_PERIOD 59
 #define PWM_HI 29
 #define PWM_LO 14
@@ -228,7 +229,7 @@ enum {
 #define PRMASK_RS	0x3000
 
 //other definitions
-#define LCD_TIMER_DEFAULT   1000    //4 sec (1tick=4ms)
+#define LCD_TIMER_DEFAULT   500		//2 sec (1tick=4ms)
 #define LCD_TIMER_INIT      10      //40m sec initialze time
 #define LCD_TIMER_UPDATE	250		//1 sec (LCD update in non HID)
 
