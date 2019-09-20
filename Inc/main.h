@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x10
+#define USBD_DEVICE_VER_MIN	0x11
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -70,7 +70,19 @@ void Error_Handler(void);
 #define LrE6_PID 0xA320
 #define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
+#define LrE6_WIN	1	//Use windows shortcut.
 #define ENC_9R5KQ	1	//reverse encoders
+#if ENC_9R5KQ
+	#define ENC_MV3		3
+	#define ENC_MV2		2
+	#define ENC_MV1		1
+	#define ENC_MV0		0
+#else //Standard EC11 type
+	#define ENC_MOVE	0
+	#define ENC_MVCCW	2
+	#define ENC_MVCW	1
+	#define ENC_NOMV	3
+#endif
 #define PWM_PERIOD 59
 #define PWM_HI 29
 #define PWM_LO 14

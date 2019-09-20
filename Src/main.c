@@ -344,8 +344,8 @@ int main(void)
 		LCD_Clear();
 	}
 
+	//LED Timer
 	if (led_timer_update){ //4x4ms = 16ms interval
-		//LED Timer
 		for (uint8_t i = LED_IDX_SELECTOR; i < LED_COUNT ; i++){
 			if (LEDTimer[i] != LED_TIMER_CONSTANT) {
 				if (--LEDTimer[i] == 0) {
