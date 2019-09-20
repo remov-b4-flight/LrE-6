@@ -209,6 +209,7 @@ bool EmulateMIDI(){
             In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
 #else //MIDI
             //Set 'NOTE ON'
+            //midi_event[cable_num].midi_byte[0] = MIDI_NOTE_BASE + bitpos
 #endif
             //Print Message to LCD&LED
             if (keytable[bitpos].message != NULL) {
@@ -238,10 +239,11 @@ bool EmulateMIDI(){
         	while( hhid->state != HID_IDLE ){
         		Delay_us(100);
         	}
-#if 0
+#if 0 //HID
 			USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t *)&In_Report,sizeof(KEYBOARD_INPUT_REPORT) );
-#else
+#else //MIDI
 			//Send MIDI Message via USB
+            //midi_GenerateUsbPacket()
 #endif
 			isKeyReport = false;
         }

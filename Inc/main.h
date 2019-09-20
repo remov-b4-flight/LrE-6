@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x20
+#define USBD_DEVICE_VER_MIN	0x21
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -72,7 +72,6 @@ void Error_Handler(void);
 #define LrE6_VENDOR "Ruffles Inc."
 //#define ENC_9R5KQ	1	//reverse encoders
 #define LrE6_WIN	1	//Use windows shortcut.
-#define ENC_9R5KQ	1	//reverse encoders
 #if ENC_9R5KQ
 	#define ENC_MV3		3
 	#define ENC_MV2		2
