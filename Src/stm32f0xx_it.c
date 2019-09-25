@@ -182,6 +182,7 @@ void EXTI0_1_IRQHandler(void)
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
     uint32_t pr = EXTI->PR;
 	uint8_t	r5 = (ENC5_GPIO_Port->IDR) & ROT_MASK;
+	//rotator 5
 	if(pr & PRMASK_R5){
 #if ENC_9R5KQ
     	if ( r5 == ENC_MV0 ) {
@@ -658,12 +659,12 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
                     isKeyPressed = true;
                 }
             }
-#ifndef ENC_9R5KQ
+
             if(isKeyRelaseSent == false){
             	current_key = 0;
                 isKeyPressed = true;
             }
-#endif
+
             previous_scan = current_scan.wd;
             break;
     }

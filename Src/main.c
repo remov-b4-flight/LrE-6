@@ -113,11 +113,14 @@ static void MX_USART1_UART_Init(void);
 
 //Delay process in us unit.
 void Delay_us(uint32_t microsec){
+
 	htim14.Init.Period = microsec;
 	HAL_TIM_Base_Init(&htim14);
 	HAL_TIM_Base_Start(&htim14);
 	htim14.Instance->SR = 0;
+
 	while((htim14.Instance->SR & TIM_SR_UIF) == 0)	;	//wait until timer up.
+
 	HAL_TIM_Base_Stop(&htim14);
 }
 
@@ -126,11 +129,11 @@ inline void Start_LCDTimer(uint32_t tick){
 	lcd_timer_enable = true;
 }
 
-bool EmulateKeyboard(void)
-{
+bool EmulateKeyboard(void){
     uint32_t rkey;
     uint8_t bitpos;
     bool isKeyReport;
+
     if(isKeyPressed) {
         bitpos = ntz32(keystat.wd);
         rkey = (keystat.wd & MOD_SW_BIT_MASK);
