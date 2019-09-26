@@ -229,6 +229,7 @@ enum {
 	MODE_MIDI
 };
 #define MODE_COUNT	2
+#define CABLE_NUM	0
 
 #define LxMASK 0x0F
 #define MOD_SW_BIT_MASK    0x0fffffff

@@ -30,6 +30,8 @@
 #include "i2c-lcd.h"
 #include "bitcount.h"
 #include "key_define.h"
+#include "midi_note.h"
+#include "usbd_midi_if.h"
 #if WROOM_ENABLE
 #include "wroom.h"
 #endif
@@ -93,6 +95,7 @@ extern	uint8_t	LEDColor[];
 extern	uint8_t	LEDTimer[LED_COUNT];
 const uint8_t up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
 const char* mode_string[] ={"[HID]","[MIDI]"};
+extern MIDIEvent midi_event[];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -212,7 +215,7 @@ bool EmulateMIDI(){
             In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
 #else //MIDI
             //Set 'NOTE ON'
-            //midi_event[cable_num].midi_byte[0] = MIDI_NOTE_BASE + bitpos
+            midi_event[CABLE_NUM].midi_byte[0] = MIDI_NOTE_BASE + bitpos;
 #endif
             //Print Message to LCD&LED
             if (keytable[bitpos].message != NULL) {
