@@ -130,14 +130,8 @@ inline void Start_LCDTimer(uint32_t tick){
 	lcd_timer = tick;
 	lcd_timer_enable = true;
 }
-<<<<<<< HEAD
 #if 0 //HID
-bool EmulateKeyboard(void)
-{
-=======
-
 bool EmulateKeyboard(void){
->>>>>>> refs/heads/master
     uint32_t rkey;
     uint8_t bitpos;
     bool isKeyReport;
