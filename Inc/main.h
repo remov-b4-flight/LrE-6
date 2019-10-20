@@ -242,7 +242,7 @@ enum {
 #define PRMASK_R3	0x0C00
 #define PRMASK_R4	0xC000
 #define PRMASK_R5	0x0003
-#define PRMASK_RS	0x3000
+#define PRMASK_R6	0x3000
 
 //other definitions
 #define LCD_TIMER_DEFAULT   500		//2 sec (1tick=4ms)
