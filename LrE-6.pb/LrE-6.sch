@@ -2291,7 +2291,7 @@ $EndComp
 Wire Wire Line
 	12250 4150 12700 4150
 Text Notes 15150 9550 0    197  ~ 0
-R2.01
+R2.02
 Wire Wire Line
 	11750 3250 12700 3250
 Wire Wire Line

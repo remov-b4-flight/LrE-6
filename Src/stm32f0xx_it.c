@@ -74,7 +74,7 @@ uint32_t previous_scan = 0;
 uint32_t previous_key = 0;
 uint32_t current_key = 0;
 KEYSCAN current_scan;
-uint8_t     rots_prev;
+uint8_t     rot6_prev;
 uint8_t     rot1_prev;
 uint8_t     rot2_prev;
 uint8_t     rot3_prev;
@@ -479,50 +479,50 @@ void EXTI4_15_IRQHandler(void)
     	uint8_t	rs = ( r23s >> 4 ) & ROT_MASK;
 #if ENC_9R5KQ
     	if ( rs == ENC_MV0 || rs == ENC_MV3 ) { //Stopped
-			if( rots_prev == ENC_MV1 || rots_prev == ENC_MV2 ){
-				keystat.nb.rots = ROT_NOT_MOVE;
+			if( rot6_prev == ENC_MV1 || rot6_prev == ENC_MV2 ){
+				keystat.nb.rot6 = ROT_NOT_MOVE;
 				isKeyPressed = true;
 				isKeyRelaseSent = true;
 			}
 		}else if( rs == ENC_MV1 ){ //Moved
-			if( rots_prev == ENC_MV0 ){
-				keystat.nb.rots = ROT_MOVE_CW;
+			if( rot6_prev == ENC_MV0 ){
+				keystat.nb.rot6 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
-			}else if( rots_prev == ENC_MV3 ){
-				keystat.nb.rots = ROT_MOVE_CCW;
+			}else if( rot6_prev == ENC_MV3 ){
+				keystat.nb.rot6 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}
 		}else if( rs == ENC_MV2 ){ //Moved
-			if( rots_prev == ENC_MV0 ){
-				keystat.nb.rots = ROT_MOVE_CCW;
+			if( rot6_prev == ENC_MV0 ){
+				keystat.nb.rot6 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
-			}else if( rots_prev == ENC_MV3 ){
-				keystat.nb.rots = ROT_MOVE_CW;
+			}else if( rot6_prev == ENC_MV3 ){
+				keystat.nb.rot6 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}
 		}
 #else
     	if ( rs == ENC_MOVE ) {
-			if( rots_prev == ENC_MVCCW ){ //CCW
-				keystat.nb.rots = ROT_MOVE_CCW;
+			if( rot6_prev == ENC_MVCCW ){ //CCW
+				keystat.nb.rot6 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
-			}else if( rots_prev == ENC_MVCW ){ //CW
-				keystat.nb.rots = ROT_MOVE_CW;
+			}else if( rot6_prev == ENC_MVCW ){ //CW
+				keystat.nb.rot6 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}
 		}else if( rs == ENC_NOMV ){
-			keystat.nb.rots = ROT_NOT_MOVE;
+			keystat.nb.rot6 = ROT_NOT_MOVE;
 			isKeyPressed = true;
 			isKeyRelaseSent = true;
 		}
 #endif
-	    rots_prev = rs;
+	    rot6_prev = rs;
 
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);

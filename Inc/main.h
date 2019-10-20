@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x21
+#define USBD_DEVICE_VER_MIN	0x22
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -185,7 +185,7 @@ typedef union {
 		unsigned char rot3:2;	//Selector
 		unsigned char rot4:2;	//Selector
 		unsigned char rot5:2;	//Selector
-		unsigned char rots:2;	//Selector
+		unsigned char rot6:2;	//Selector
         unsigned int  uu:4;	//dummy
     } nb;
 } KEYSCAN;
@@ -225,10 +225,13 @@ enum {
 
 //
 enum {
-	MODE_HID = 0,
-	MODE_MIDI
+	LrE6_MODE0 = 0,
+	LrE6_MODE1 = 1,
+	LrE6_MODE2 = 2,
+	LrE6_MODE3 = 3,
 };
-#define MODE_COUNT	2
+
+#define MODE_COUNT	4
 #define CABLE_NUM	0
 
 #define LxMASK 0x0F

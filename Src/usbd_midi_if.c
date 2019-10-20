@@ -30,7 +30,9 @@ static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length);
 #define MIDI_BUFFER_SIZ (512)//FIFO buffer byte size for midi message buffer
 
 RingBufferU8 rbuf_usb_rx[MIDI_OUT_JACK_NUM]; //for input from USB
+#if 0
 RingBufferU8 rbuf_jack_rx[MIDI_IN_JACK_NUM];  //for input from MIDI-IN jack
+#endif
 
 //for receiving midi data from jack
 MidiAnalysisStatus analyzed_status[MIDI_IN_JACK_NUM];
@@ -49,14 +51,14 @@ FUNC_STATUS midiInit()
 			return FUNC_ERROR;
 		}
 	}
-
+#if 0
 	for(i=0; i<MIDI_IN_JACK_NUM; i++){
 		if(BUFFER_SUCCESS != cureRingBufferU8Init(&rbuf_jack_rx[i], MIDI_BUFFER_SIZ))
 		{
 			return FUNC_ERROR;
 		}
 	}
-
+#endif
 	//Init RX
 	for(i=0; i<MIDI_IN_JACK_NUM; i++){
 
@@ -71,7 +73,7 @@ FUNC_STATUS midiInit()
 
 	return FUNC_SUCCESS;
 }
-
+#if 0
 FUNC_STATUS midiGetFromUsbRx(uint8_t cable_num, uint8_t* dat)
 {
 	if(BUFFER_SUCCESS != cureRingBufferU8Dequeue(&rbuf_usb_rx[cable_num], dat))
@@ -140,7 +142,7 @@ bool isRxBufEmpty()
 	}
 	return true;
 }
-
+#endif
 
 USBD_MIDI_ItfTypeDef USBD_Interface_fops_FS =
 {
@@ -226,7 +228,8 @@ void sendMidiMessage(uint8_t *msg, uint16_t size){
 }
 
 static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length){
-  uint32_t i = 0;
+#if 0
+	uint32_t i = 0;
   while (i < length) {
     APP_Rx_Buffer[APP_Rx_ptr_in] = *(msg + i);
     APP_Rx_ptr_in++;
@@ -235,9 +238,10 @@ static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length){
       APP_Rx_ptr_in = 0;
     }
   }
+#endif
   return USBD_OK;
 }
-
+#if 0
 bool midiEventIsGenerated(uint8_t cable_num)
 {
 	uint8_t upper_half_byte= (rx_midi_msg[cable_num]) & 0xF0;
@@ -477,4 +481,4 @@ void midiProcess(){
 		}
 	}
 }
-
+#endif

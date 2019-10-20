@@ -94,8 +94,10 @@ extern	USBD_HandleTypeDef hUsbDeviceFS;
 extern	uint8_t	LEDColor[];
 extern	uint8_t	LEDTimer[LED_COUNT];
 const uint8_t up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
-const char* mode_string[] ={"[HID]","[MIDI]"};
-extern MIDIEvent midi_event[];
+const char* mode_string[MODE_COUNT] ={"Scene0","Scene1","Scene2","Scene3"};
+uint8_t MIDI_CC_Value[MODE_COUNT][ROT_COUNT];
+uint8_t	USBMIDI_Event[4];
+extern USBD_HandleTypeDef *pInstance;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,6 +112,8 @@ static void MX_ADC_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
+void midiGenerateUsbPacket(uint8_t cable_num);
+void MIDI_Tx_Event(uint8_t *buff);
 
 /* USER CODE END PFP */
 
@@ -133,6 +137,11 @@ inline void Start_LCDTimer(uint32_t tick){
 	lcd_timer = tick;
 	lcd_timer_enable = true;
 }
+
+void MIDI_Tx_Event(uint8_t *buff){
+    USBD_LL_Transmit (pInstance, MIDI_IN_EP,buff,4);
+}
+
 #if 0 //HID
 bool EmulateKeyboard(void){
     uint32_t rkey;
@@ -203,7 +212,7 @@ bool EmulateMIDI(){
         	if (bitpos == 9){//[MODE] SW
         		LrE6Mode++;
         		if(LrE6Mode >= MODE_COUNT){
-        			LrE6Mode = MODE_HID;
+        			LrE6Mode = LrE6_MODE0;
         		}
         		LCD_Locate(0,0);
         		LCD_Print(mode_string[LrE6Mode]);
@@ -214,8 +223,11 @@ bool EmulateMIDI(){
         	In_Report.modifier = keytable[bitpos].modifier;
             In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
 #else //MIDI
-            //Set 'NOTE ON'
-            midi_event[CABLE_NUM].midi_byte[0] = MIDI_NOTE_BASE + bitpos;
+            //Set 'Control change'
+            USBMIDI_Event[0] = 0x0B; // cable# | status
+            USBMIDI_Event[1] = 0xB0;
+            USBMIDI_Event[2] = ;
+            USBMIDI_Event[3] = ;
 #endif
             //Print Message to LCD&LED
             if (keytable[bitpos].message != NULL) {
@@ -234,6 +246,10 @@ bool EmulateMIDI(){
 			In_Report.modifier = In_Report.keys[HID_RPT_KEY_IDX] = HID_NONE;
 #else //MIDI
 			//Set 'NOTE OFF'
+            USBMIDI_Event[0] = 0x08; // cable# | status
+            USBMIDI_Event[1] = (MIDI_CIN_NOTE_OFF << 4);
+            USBMIDI_Event[2] = MIDI_NOTE_BASE + bitpos;
+            USBMIDI_Event[3] = MIDI_VELOCITY_DEFAULT;
 #endif
 
 			isKeyReport = true;
@@ -241,15 +257,15 @@ bool EmulateMIDI(){
         	isKeyReport = false;
 
         if(isKeyReport){
+#if 0 //HID
         	USBD_HID_HandleTypeDef *hhid = hUsbDeviceFS.pClassData;
         	while( hhid->state != HID_IDLE ){
         		Delay_us(100);
         	}
-#if 0 //HID
 			USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t *)&In_Report,sizeof(KEYBOARD_INPUT_REPORT) );
 #else //MIDI
 			//Send MIDI Message via USB
-            //midi_GenerateUsbPacket()
+			MIDI_Tx_Event(USBMIDI_Event);
 #endif
 			isKeyReport = false;
         }
@@ -287,7 +303,7 @@ int main(void)
   lcd_1stflag = true;
 
   LrE6State = LRE6_RESET;
-  LrE6Mode	= MODE_HID;
+  LrE6Mode	= LrE6_MODE0;
 
   isKeyRelaseSent = true;
   led_sendpulse = false;
