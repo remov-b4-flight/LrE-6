@@ -8,12 +8,12 @@
 */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include <midi.h>
 #include "usbd_midi.h"
 #include "usbd_desc.h"
 #include "stm32f0xx_hal_conf.h"
 #include "usbd_ctlreq.h"
 #include "stm32f0xx_hal.h"
-#include "midi_note.h"
 
 static uint8_t  USBD_MIDI_Init (USBD_HandleTypeDef *pdev, uint8_t cfgidx);
 static uint8_t  USBD_MIDI_DeInit (USBD_HandleTypeDef *pdev, uint8_t cfgidx);
@@ -23,12 +23,12 @@ static uint8_t  USBD_MIDI_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum);
 static uint8_t  *USBD_MIDI_GetCfgDesc (uint16_t *length);
 //uint8_t  *USBD_MIDI_GetDeviceQualifierDescriptor (uint16_t *length);
 USBD_HandleTypeDef *pInstance = NULL; 
-
+#if 0
 uint32_t APP_Rx_ptr_in  = 0;
 uint32_t APP_Rx_ptr_out = 0;
 uint32_t APP_Rx_length  = 0;
+#endif
 uint8_t  USB_Tx_State = 0;
-
 __ALIGN_BEGIN uint8_t USB_Rx_Buffer[MIDI_DATA_OUT_PACKET_SIZE] __ALIGN_END ;
 __ALIGN_BEGIN uint8_t APP_Rx_Buffer[APP_RX_DATA_SIZE] __ALIGN_END ;
 
@@ -72,15 +72,11 @@ USBD_ClassTypeDef  USBD_MIDI =
 __ALIGN_BEGIN uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZ] __ALIGN_END =
 {
   // configuration descriptor
-  0x09, CONFIG, 0x53, 0x00, 0x02, 0x01, 0x00, 0x80, MIDI_POWER,
+  0x09, CONFIG, 0x53, 0x00, 0x01, CONFIG1, 0x00, BUSPOWERED, MIDI_POWER,
 
   // The Audio Interface Collection
-#if 0
-  0x09, INTERFACE	, 0x00, 0x00, 0x00, AUDIO, AUDIO_CONTROL, MIDI_UNUSED, MIDI_UNUSED, // Standard AC Interface Descriptor
-  0x09, CS_INTERFACE, 0x01, 0x00, 0x01, 0x09, 0x00, 0x01, 0x01, 						// Class-specific AC Interface Descriptor
-#endif
-  0x09, INTERFACE	, 0x01, 0x00, 0x02, AUDIO, MIDI_STREAM, MIDI_UNUSED, MIDI_UNUSED,	// MIDIStreaming Interface Descriptors
-  0x07, CS_INTERFACE, HEADER, 0x00, 0x01, 0x41, 0x00,   									// Class-Specific MS Interface Header Descriptor
+  0x09, INTERFACE	, INTF0,  0x00, 0x02, AUDIO, MIDI_STREAM, MIDI_UNUSED, MIDI_UNUSED,	// MIDIStreaming Interface Descriptors
+  0x07, CS_INTERFACE, HEADER, 0x00, 0x01, 0x41, 0x00,   								// Class-Specific MS Interface Header Descriptor
 
   // MIDI IN JACKS
   0x06, CS_INTERFACE, MIDI_IN_JACK, MIDI_JACK_ENB, 0x01, 3,//MIDI-IN 1 (embedded)
@@ -91,10 +87,10 @@ __ALIGN_BEGIN uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZ] __ALIGN_END =
 
   // IN endpoint descriptor
   0x09, ENDPOINT, MIDI_IN_EP, 0x02, 0x40, 0x00, 0x01, MIDI_UNUSED, MIDI_UNUSED,
-  0x05, CS_ENDPOINT, 0x01, 0x01, 0x03,
+  0x05, CS_ENDPOINT, MS_GENERAL, 0x01, 0x03,
   // OUT endpoint descriptor
   0x09, ENDPOINT, MIDI_OUT_EP, 0x02, 0x40, 0x00, 0x01, MIDI_UNUSED, MIDI_UNUSED,
-  0x05, CS_ENDPOINT, 0x01, 0x01, 0x01,
+  0x05, CS_ENDPOINT, MS_GENERAL, 0x01, 0x01,
 };
 
 static uint8_t USBD_MIDI_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx){

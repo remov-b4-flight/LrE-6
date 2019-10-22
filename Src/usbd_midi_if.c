@@ -209,7 +209,9 @@ static uint16_t MIDI_DataRx(uint8_t *msg, uint16_t length){
 
 	  for(cnt = 0;cnt < midi_size;cnt ++){
 		  u8b = *(msg + 4*cnt_msgs + cnt + 1);
+#if 0
 		  cureRingBufferU8Enqueue(&rbuf_usb_rx[cable_num], &u8b);
+#endif
 	  }
   }
 

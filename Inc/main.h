@@ -224,15 +224,18 @@ enum {
 };
 
 //
-enum {
-	LrE6_MODE0 = 0,
-	LrE6_MODE1 = 1,
-	LrE6_MODE2 = 2,
-	LrE6_MODE3 = 3,
-};
+#ifdef MIDI
+	enum {
+		LrE6_SCENE0 = 0,
+		LrE6_SCENE1 = 1,
+		LrE6_SCENE2 = 2,
+		LrE6_SCENE3 = 3,
+	};
 
-#define MODE_COUNT	4
-#define CABLE_NUM	0
+	#define SCENE_COUNT	4
+	#define CABLE_NUM	0
+	#define MODE_SW_BIT	9
+#endif
 
 #define LxMASK 0x0F
 #define MOD_SW_BIT_MASK    0x0fffffff
