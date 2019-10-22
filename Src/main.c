@@ -19,7 +19,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include <midi.h>
+#include "midi.h"
 #include "main.h"
 #include "usb_device.h"
 
@@ -79,10 +79,11 @@ int32_t     lcd_timer;
 bool		lcd_timer_enable;
 bool        lcd_flag;
 bool		lcd_1stflag;
-
+#ifdef MIDI
 uint8_t		LrE6State;
+bool		isPrev_key;
+#endif
 uint8_t		LrE6Scene;
-
 bool		isWROOMDataExists;
 bool		led_sendpulse;
 bool		led_timer_update;
@@ -199,12 +200,16 @@ bool EmulateMIDI(){
         bitpos = ntz32(keystat.wd);
         rkey = (keystat.wd & MOD_SW_BIT_MASK);
         if( bitpos < KEY_COUNT ){//SWITCHES
-        	if (bitpos == MODE_SW_BIT){//[MODE] SW
+        	if (bitpos == SCENE_BIT){//[MODE] SW
         		LrE6Scene++;
         		if(LrE6Scene >= SCENE_COUNT){
         			LrE6Scene = LrE6_SCENE0;
         		}
         		LCD_Locate(0,0);
+            	lcd_flag = false;
+        		lcd_timer_enable = true;
+            	lcd_timer = LCD_TIMER_DEFAULT;
+            	LCD_SetBackLight(LCD_BL_ON);
         		LCD_Print(mode_string[LrE6Scene]);
         		isKeyPressed = false;
         		return false;
@@ -213,9 +218,10 @@ bool EmulateMIDI(){
             //Set 'Control change'(Button ON)
             USBMIDI_Event[0] = MIDI_CC_HEADER;
             USBMIDI_Event[1] = MIDI_CC_STATUS;
-            USBMIDI_Event[2] = bitpos * LrE6Scene;
+            USBMIDI_Event[2] = MIDI_CCCH_SW_BASE + (LrE6Scene * KEY_COUNT) + bitpos;
             USBMIDI_Event[3] = MIDI_CC_ON;
             prev_ch = USBMIDI_Event[2];
+            isPrev_key = true;
 
             //Print Message to LCD&LED
             if (keytable[bitpos].message != NULL) {
@@ -229,12 +235,13 @@ bool EmulateMIDI(){
             LED_SetPulse(LED_IDX_SELECTOR,LED_COLOR_YELLOW,25);
             isKeyReport = true;
 
-        }else if( KEY_COUNT <= bitpos && bitpos < KEY_COUNT + (2 * ROT_COUNT) )   {
+        }else if( KEY_COUNT <= bitpos && bitpos < KEY_COUNT + (2 * ROT_COUNT) )   { //rotator
+        	uint8_t n = (bitpos - KEY_COUNT) / 2;
             USBMIDI_Event[0] = MIDI_CC_HEADER;
             USBMIDI_Event[1] = MIDI_CC_STATUS;
-            USBMIDI_Event[2] = bitpos * LrE6Scene;
-            USBMIDI_Event[3] = MIDI_CC_ON;
-            prev_ch = USBMIDI_Event[2];
+            USBMIDI_Event[2] = MIDI_CCCH_ROT_BASE + (ROTPERSCENE * LrE6Scene) + n;
+            USBMIDI_Event[3] = MIDI_CC_Value[LrE6Scene][n];
+            isPrev_key = false;
 
             //Print Message to LCD&LED
             if (keytable[bitpos].message != NULL) {
@@ -248,20 +255,20 @@ bool EmulateMIDI(){
             LED_SetPulse(LED_IDX_SELECTOR,LED_COLOR_YELLOW,25);
             isKeyReport = true;
 
-        }else if(rkey == 0) {// Keys are released
+        }else if(isPrev_key == true && rkey == 0) {// Keys are released
 			//Set 'Control Change'(Button OFF)
-            USBMIDI_Event[0] = MIDI_CC_HEADER; // cable# | status
+            USBMIDI_Event[0] = MIDI_CC_HEADER;
             USBMIDI_Event[1] = MIDI_CC_STATUS;
             USBMIDI_Event[2] = prev_ch;
             USBMIDI_Event[3] = MIDI_CC_OFF;
 			isKeyReport = true;
+			isPrev_key = false;
         }else
         	isKeyReport = false;
 
         if(isKeyReport){
 			//Send MIDI Message via USB
 			MIDI_Tx_Event(USBMIDI_Event);
-
 			isKeyReport = false;
         }
 
@@ -301,7 +308,9 @@ int main(void)
 
   isKeyRelaseSent = true;
   led_sendpulse = false;
+#if WROOM_ENABLE
   isWROOMDataExists = false;
+#endif
 #if 0
   ExpandModifiers();
 #endif

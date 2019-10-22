@@ -74,12 +74,14 @@ uint32_t previous_scan = 0;
 uint32_t previous_key = 0;
 uint32_t current_key = 0;
 KEYSCAN current_scan;
-uint8_t     rot6_prev;
+
+uint8_t     rot0_prev;
 uint8_t     rot1_prev;
 uint8_t     rot2_prev;
 uint8_t     rot3_prev;
 uint8_t     rot4_prev;
 uint8_t     rot5_prev;
+uint8_t     rot6_prev;
 
 extern uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
 extern uint8_t LrE6Scene;
@@ -218,12 +220,12 @@ void EXTI0_1_IRQHandler(void)
 	  if (r5 == ENC_MOVE) {
 	      if( rot5_prev == ENC_MVCCW ){ //CCW
 	          keystat.nb.rot5 = ROT_MOVE_CCW;
-	          if (MIDI_CC_Value[LrE6Scene][5] >= 1 ) MIDI_CC_Value[LrE6Scene][5]--;
+	          if (MIDI_CC_Value[LrE6Scene][4] >= 1 ) MIDI_CC_Value[LrE6Scene][4]--;
 	          isKeyPressed = true;
 	          isKeyRelaseSent = false;
 	      }else if( rot5_prev == ENC_MVCW ){ //CW
 	          keystat.nb.rot5 = ROT_MOVE_CW;
-	          if (MIDI_CC_Value[LrE6Scene][5] < 127 ) MIDI_CC_Value[LrE6Scene][5]++;
+	          if (MIDI_CC_Value[LrE6Scene][4] < 127 ) MIDI_CC_Value[LrE6Scene][4]++;
 	          isKeyPressed = true;
 	          isKeyRelaseSent = false;
 	      }
@@ -290,12 +292,12 @@ void EXTI4_15_IRQHandler(void)
 		if ( r1 == ENC_MOVE ) {
 			if( rot1_prev == ENC_MVCCW ){ //CCW
 				keystat.nb.rot1 = ROT_MOVE_CCW;
-		        if (MIDI_CC_Value[LrE6Scene][1] >= 1 ) MIDI_CC_Value[LrE6Scene][1]--;
+		        if (MIDI_CC_Value[LrE6Scene][0] >= 1 ) MIDI_CC_Value[LrE6Scene][0]--;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}else if( rot1_prev == ENC_MVCW ){ //CW
 				keystat.nb.rot1 = ROT_MOVE_CW;
-		        if (MIDI_CC_Value[LrE6Scene][1] < 127 ) MIDI_CC_Value[LrE6Scene][1]++;
+		        if (MIDI_CC_Value[LrE6Scene][0] < 127 ) MIDI_CC_Value[LrE6Scene][0]++;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}
@@ -346,12 +348,12 @@ void EXTI4_15_IRQHandler(void)
 #else
 		if ( r2 == ENC_MOVE ) {
 			if( rot2_prev == ENC_MVCCW ){ //CCW
-		        if (MIDI_CC_Value[LrE6Scene][2] >= 1 ) MIDI_CC_Value[LrE6Scene][2]--;
+		        if (MIDI_CC_Value[LrE6Scene][1] >= 1 ) MIDI_CC_Value[LrE6Scene][1]--;
 				keystat.nb.rot2 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}else if( rot2_prev == ENC_MVCW ){ //CW
-		        if (MIDI_CC_Value[LrE6Scene][2] < 127 ) MIDI_CC_Value[LrE6Scene][2]++;
+		        if (MIDI_CC_Value[LrE6Scene][1] < 127 ) MIDI_CC_Value[LrE6Scene][1]++;
 				keystat.nb.rot2 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
@@ -404,12 +406,12 @@ void EXTI4_15_IRQHandler(void)
 #else
 		if ( r3 == ENC_MOVE ) {
 			if( rot3_prev == ENC_MVCCW ){ //CCW
-		        if (MIDI_CC_Value[LrE6Scene][3] >= 1 ) MIDI_CC_Value[LrE6Scene][3]--;
+		        if (MIDI_CC_Value[LrE6Scene][2] >= 1 ) MIDI_CC_Value[LrE6Scene][2]--;
 				keystat.nb.rot3 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}else if( rot3_prev == ENC_MVCW ){ //CW
-		        if (MIDI_CC_Value[LrE6Scene][3] < 127 ) MIDI_CC_Value[LrE6Scene][3]++;
+		        if (MIDI_CC_Value[LrE6Scene][2] < 127 ) MIDI_CC_Value[LrE6Scene][2]++;
 				keystat.nb.rot3 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
@@ -462,12 +464,12 @@ void EXTI4_15_IRQHandler(void)
 #else
 		if ( r4 == ENC_MOVE ) {
 			if( rot4_prev == ENC_MVCCW ){ //CCW
-		        if (MIDI_CC_Value[LrE6Scene][4] >= 1 ) MIDI_CC_Value[LrE6Scene][4]--;
+		        if (MIDI_CC_Value[LrE6Scene][3] >= 1 ) MIDI_CC_Value[LrE6Scene][3]--;
 				keystat.nb.rot4 = ROT_MOVE_CCW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}else if( rot4_prev == ENC_MVCW ){ //CW
-		        if (MIDI_CC_Value[LrE6Scene][4] < 127 ) MIDI_CC_Value[LrE6Scene][4]++;
+		        if (MIDI_CC_Value[LrE6Scene][3] < 127 ) MIDI_CC_Value[LrE6Scene][3]++;
 				keystat.nb.rot4 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
@@ -521,11 +523,11 @@ void EXTI4_15_IRQHandler(void)
     	if ( rs == ENC_MOVE ) {
 			if( rot6_prev == ENC_MVCCW ){ //CCW
 				keystat.nb.rot6 = ROT_MOVE_CCW;
-		        if (MIDI_CC_Value[LrE6Scene][6] >= 1 ) MIDI_CC_Value[LrE6Scene][6]--;
+		        if (MIDI_CC_Value[LrE6Scene][5] >= 1 ) MIDI_CC_Value[LrE6Scene][5]--;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;
 			}else if( rot6_prev == ENC_MVCW ){ //CW
-		        if (MIDI_CC_Value[LrE6Scene][6] < 127 ) MIDI_CC_Value[LrE6Scene][6]++;
+		        if (MIDI_CC_Value[LrE6Scene][5] < 127 ) MIDI_CC_Value[LrE6Scene][5]++;
 				keystat.nb.rot6 = ROT_MOVE_CW;
 				isKeyPressed = true;
 				isKeyRelaseSent = false;

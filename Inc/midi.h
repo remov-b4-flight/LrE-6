@@ -48,5 +48,6 @@
 #define	MIDI_CC_OFF		0x00
 
 //Others
-
+#define MIDI_CCCH_SW_BASE	0x40
+#define MIDI_CCCH_ROT_BASE	0x00
 #endif /* INC_MIDI_NOTE_H_ */

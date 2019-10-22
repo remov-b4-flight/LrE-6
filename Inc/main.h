@@ -233,8 +233,8 @@ enum {
 	};
 
 	#define SCENE_COUNT	4
-	#define CABLE_NUM	0
-	#define MODE_SW_BIT	9
+	#define ROTPERSCENE	8
+	#define SCENE_BIT	9
 #endif
 
 #define LxMASK 0x0F
