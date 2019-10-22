@@ -81,9 +81,9 @@ bool        lcd_flag;
 bool		lcd_1stflag;
 #ifdef MIDI
 uint8_t		LrE6State;
+uint8_t		LrE6Scene;
 bool		isPrev_key;
 #endif
-uint8_t		LrE6Scene;
 bool		isWROOMDataExists;
 bool		led_sendpulse;
 bool		led_timer_update;
@@ -95,11 +95,13 @@ extern	USBD_HandleTypeDef hUsbDeviceFS;
 extern	uint8_t	LEDColor[];
 extern	uint8_t	LEDTimer[LED_COUNT];
 const uint8_t up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
+#ifdef MIDI
 const char* mode_string[SCENE_COUNT] ={"Scene0","Scene1","Scene2","Scene3"};
 uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
 uint8_t prev_ch;
 uint8_t	USBMIDI_Event[4];
 extern USBD_HandleTypeDef *pInstance;
+#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -114,9 +116,10 @@ static void MX_ADC_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
+#ifdef MIDI
 void midiGenerateUsbPacket(uint8_t cable_num);
 void MIDI_Tx_Event(uint8_t *buff);
-
+#endif
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -140,9 +143,11 @@ inline void Start_LCDTimer(uint32_t tick){
 	lcd_timer_enable = true;
 }
 
+#ifdef MIDI
 void MIDI_Tx_Event(uint8_t *buff){
     USBD_LL_Transmit (pInstance, MIDI_IN_EP,buff,4);
 }
+#endif
 
 bool EmulateKeyboard(void){
     uint32_t rkey;
@@ -304,7 +309,11 @@ int main(void)
   lcd_1stflag = true;
 
   LrE6State = LRE6_RESET;
+
+#ifdef MIDI
   LrE6Scene	= LrE6_SCENE0;
+  isPrev_key = false;
+#endif
 
   isKeyRelaseSent = true;
   led_sendpulse = false;
