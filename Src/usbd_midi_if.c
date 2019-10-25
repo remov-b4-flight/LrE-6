@@ -28,21 +28,21 @@ static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length);
 
 // for Cure Series
 #define MIDI_BUFFER_SIZ (512)//FIFO buffer byte size for midi message buffer
-
-RingBufferU8 rbuf_usb_rx[MIDI_OUT_JACK_NUM]; //for input from USB
 #if 0
+RingBufferU8 rbuf_usb_rx[MIDI_OUT_JACK_NUM]; //for input from USB
 RingBufferU8 rbuf_jack_rx[MIDI_IN_JACK_NUM];  //for input from MIDI-IN jack
 #endif
 
 //for receiving midi data from jack
 MidiAnalysisStatus analyzed_status[MIDI_IN_JACK_NUM];
+#if 0
 MIDIEvent midi_event[MIDI_IN_JACK_NUM];	//received midi data
-
 uint8_t rx_midi_msg[MIDI_IN_JACK_NUM];
-
+#endif
 
 FUNC_STATUS midiInit()
 {
+#if 0
 	uint32_t i,j;
 
 	for(i=0; i<MIDI_OUT_JACK_NUM; i++){
@@ -51,14 +51,13 @@ FUNC_STATUS midiInit()
 			return FUNC_ERROR;
 		}
 	}
-#if 0
 	for(i=0; i<MIDI_IN_JACK_NUM; i++){
 		if(BUFFER_SUCCESS != cureRingBufferU8Init(&rbuf_jack_rx[i], MIDI_BUFFER_SIZ))
 		{
 			return FUNC_ERROR;
 		}
 	}
-#endif
+
 	//Init RX
 	for(i=0; i<MIDI_IN_JACK_NUM; i++){
 
@@ -70,7 +69,7 @@ FUNC_STATUS midiInit()
 			midi_event[i].midi_byte[j] = 0x00;
 		}
 	}
-
+#endif
 	return FUNC_SUCCESS;
 }
 #if 0

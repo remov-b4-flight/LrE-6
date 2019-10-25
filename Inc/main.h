@@ -67,10 +67,15 @@ void Error_Handler(void);
 #define TIM_PERIOD_1SEC 10000
 #define TIM_PERIOD_125uS 125
 #define TIM_PERIOD_10mS 10000
-#define LrE6_PID 0x0001
-#define LrE6_PRODUCT "LrE-6"
+#ifdef MIDI
+	#define LrE6_PID 0xA320
+	#define LrE6_PRODUCT "LrE-6"
+#else
+	#define	LrE6_PID 0xB737
+	#define LrE6_PRODUCT "LrE-6(HID)"
+#endif
 #define LrE6_VENDOR "Ruffles Inc."
-//#define ENC_9R5KQ	1	//reverse encoders
+//#define ENC_9R5KQ	1	//Use alternate signaling
 #define LrE6_WIN	1	//Use windows shortcut.
 #if ENC_9R5KQ
 	#define ENC_MV3		3
@@ -176,35 +181,38 @@ void Error_Handler(void);
 typedef union {
     uint32_t wd;
     struct{
-        unsigned char n0:4;
-        unsigned char n1:4;
-        unsigned char n2:4;
-		unsigned char n3:4;
-		unsigned char rot1:2;	//Selector
-		unsigned char rot2:2;	//Selector
-		unsigned char rot3:2;	//Selector
-		unsigned char rot4:2;	//Selector
-		unsigned char rot5:2;	//Selector
-		unsigned char rot6:2;	//Selector
-        unsigned int  uu:4;	//dummy
+        unsigned char n0:4;		//Switch Line0
+        unsigned char n1:4;		//Switch Line1
+        unsigned char n2:4;		//Switch Line2
+		unsigned char n3:4;		//Switch Line3
+		unsigned char rot0:2;	//Rotary encoder
+		unsigned char rot1:2;	//Rotary encoder
+		unsigned char rot2:2;	//Rotary encoder
+		unsigned char rot3:2;	//Rotary encoder
+		unsigned char rot4:2;	//Rotary encoder
+		unsigned char rot5:2;	//Rotary encoder
+        unsigned int  uu:4;		//dummy
     } nb;
 } KEYSCAN;
 
 typedef struct {
-    uint8_t modifier;
-    uint8_t keycode;
-    char	*message;
+#ifdef MIDI
+	uint8_t color;
+	uint8_t duration;
+	char	*message;
+#else
+	uint8_t modifier;
+	uint8_t keycode;
+	char	*message;
+#endif
 } KEY_DEFINE;
 
+#ifndef MIDI
 typedef struct {
 	uint8_t element[4];
 } KEY_MODIFIER;
+#endif
 
-//Moved From Harmony keyboard.h
-typedef struct {
-	uint8_t	modifier;
-	uint8_t keys[4];
-} KEYBOARD_INPUT_REPORT;
 
 //
 enum {
@@ -231,34 +239,55 @@ enum {
 		LrE6_SCENE2 = 2,
 		LrE6_SCENE3 = 3,
 	};
-
+	enum {
+		LrE6_ROT0 = 0,
+		LrE6_ROT1 = 1,
+		LrE6_ROT2 = 2,
+		LrE6_ROT3 = 3,
+		LrE6_ROT4 = 4,
+		LrE6_ROT5 = 5,
+	};
+	enum{
+		MIDI_EV_IDX_HEADER = 0,
+		MIDI_EV_IDX_STATUS = 1,
+		MIDI_EV_IDX_CHANNEL = 2,
+		MIDI_EV_IDX_VALUE = 3,
+	};
 	#define SCENE_COUNT	4
 	#define ROTPERSCENE	8
 	#define SCENE_BIT	9
+#else
+	#define HID_RPT_KEY_IDX		1
+
+	//Moved From Harmony keyboard.h
+	typedef struct {
+		uint8_t	modifier;
+		uint8_t keys[4];
+	} KEYBOARD_INPUT_REPORT;
 #endif
 
 #define LxMASK 0x0F
 #define MOD_SW_BIT_MASK    0x0fffffff
 //
+#define PRMASK_R0	0x3000
 #define PRMASK_R1	0x0030
 #define PRMASK_R2	0x0300
 #define PRMASK_R3	0x0C00
 #define PRMASK_R4	0xC000
 #define PRMASK_R5	0x0003
-#define PRMASK_R6	0x3000
 
 //other definitions
 #define LCD_TIMER_DEFAULT   500		//2 sec (1tick=4ms)
 #define LCD_TIMER_INIT      10      //40m sec initialze time
 #define LCD_TIMER_UPDATE	250		//1 sec (LCD update in non HID)
+//
+#define LED_TIMER_DEFAULT	25
 
 #define ROT_NOT_MOVE        0
 #define ROT_MOVE_CW         1
 #define ROT_MOVE_CCW        2
 #define ROT_MASK			0x03
 #define	ROT_COUNT			6
-
-#define HID_RPT_KEY_IDX		1
 
 void Delay_us(uint32_t microsec);
 void Start_LCDTimer(uint32_t tick);

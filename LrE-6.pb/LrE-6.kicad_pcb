@@ -1,4 +1,4 @@
-(kicad_pcb (version 20171130) (host pcbnew "(5.1.2)-1")
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.2)-2")
 
   (general
     (thickness 1.2)
@@ -5299,11 +5299,11 @@
   (gr_text "UART\nDL" (at 123.952 79.629) (layer F.SilkS) (tstamp 5C92C5E3)
     (effects (font (size 0.8 0.8) (thickness 0.15)))
   )
-  (gr_line (start 154.8 146.6) (end 148.4 146.6) (layer F.SilkS) (width 0.2))
-  (gr_line (start 154.8 149.2) (end 154.8 146.6) (layer F.SilkS) (width 0.2))
-  (gr_line (start 148.4 149.2) (end 154.8 149.2) (layer F.SilkS) (width 0.2))
-  (gr_line (start 148.4 146.6) (end 148.4 149.2) (layer F.SilkS) (width 0.2))
-  (gr_text "Mode\n" (at 151.52 147.95) (layer F.SilkS)
+  (gr_line (start 155 146.6) (end 148 146.6) (layer F.SilkS) (width 0.2))
+  (gr_line (start 155 149.2) (end 155 146.6) (layer F.SilkS) (width 0.2))
+  (gr_line (start 148 149.2) (end 155 149.2) (layer F.SilkS) (width 0.2))
+  (gr_line (start 148 146.6) (end 148 149.2) (layer F.SilkS) (width 0.2))
+  (gr_text Scene (at 151.52 147.95) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.2)))
   )
   (gr_text USB (at 109.86 62.59) (layer F.SilkS) (tstamp 5C8F471D)
