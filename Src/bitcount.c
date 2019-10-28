@@ -1,3 +1,7 @@
+/**
+ * @file bitcount.c
+ * @brief bit count functions
+ */
 #include "bitcount.h"
 
 uint8_t bitcount8(uint8_t b8){

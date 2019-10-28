@@ -156,12 +156,12 @@ __ALIGN_BEGIN uint8_t USBD_FS_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END =
   USB_DESC_TYPE_DEVICE,       /*bDescriptorType*/
   0x00,                       /*bcdUSB */
   0x02,
-#if 0 //HID 
-  0x00,                       /*bDeviceClass*/
-  0x00,                       /*bDeviceSubClass*/
-#else //MIDI
+#ifdef MIDI
   0x02,                       /*bDeviceClass = CDC */
   0x02,                       /*bDeviceSubClass = ACM */
+#else //HID
+  0x00,                       /*bDeviceClass*/
+  0x00,                       /*bDeviceSubClass*/
 #endif
   0x00,                       /*bDeviceProtocol*/
   USB_MAX_EP0_SIZE,           /*bMaxPacketSize*/

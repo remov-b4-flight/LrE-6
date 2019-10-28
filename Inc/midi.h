@@ -10,7 +10,7 @@
 
 //Commonly used
 #define MIDI_UNUSED		0x00
-
+#define MIDI_EVENT_LENGTH	4
 //Descriptor types
 #define CONFIG			0x02
 #define INTERFACE		0x04
@@ -48,6 +48,6 @@
 #define	MIDI_CC_OFF		0x00
 
 //Others
-#define MIDI_CCCH_SW_BASE	0x40
+#define MIDI_CCCH_SW_BASE	0x20
 #define MIDI_CCCH_ROT_BASE	0x00
 #endif /* INC_MIDI_NOTE_H_ */

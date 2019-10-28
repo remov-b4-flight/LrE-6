@@ -19,13 +19,13 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "midi.h"
 #include "main.h"
 #include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
+#include "midi.h"
 #include "usbd_hid.h"
 #include "led.h"
 #include "i2c-lcd.h"
@@ -71,9 +71,6 @@ DMA_HandleTypeDef hdma_usart1_rx;
 
 bool		isKeyPressed;
 KEYSCAN     keystat;
-#if 0
-uint8_t     keymouse;
-#endif
 uint8_t		keyline;
 bool		isKeyRelaseSent;
 
@@ -82,28 +79,31 @@ bool		lcd_timer_enable;
 bool        lcd_off_flag;
 bool		lcd_1stflag;
 uint8_t		LrE6State;
+uint8_t		LrE6Scene;
 
 #ifdef MIDI
-uint8_t		LrE6Scene;
 bool		isPrev_sw;	//MIDI event previous sent is switch(true) or rotator(false)
 #endif
-
+#if 0
 bool		isWROOMDataExists;
+#endif
 bool		led_sendpulse;
 bool		led_timer_update;
 
 #ifdef MIDI
 	extern	KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT];
-#else
+	extern	char *scene_name[SCENE_COUNT];
+#else //HID
 	extern	KEY_DEFINE keytable[];
 	KEY_MODIFIER modifiers[KEY_COUNT];
 	KEYBOARD_INPUT_REPORT	In_Report;
 #endif
 
+extern	uint8_t	LED_Scene[SCENE_COUNT][LED_COUNT];
 extern	USBD_HandleTypeDef hUsbDeviceFS;
 extern	uint8_t	LEDColor[];
 extern	uint8_t	LEDTimer[LED_COUNT];
-const uint8_t up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
+const	uint8_t	up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
 
 #ifdef MIDI
 	uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
@@ -125,9 +125,7 @@ static void MX_ADC_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
-#ifdef MIDI
-void MIDI_Tx_Event(uint8_t *buff);
-#endif
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -151,78 +149,93 @@ inline void Start_LCDTimer(uint32_t tick){
 	lcd_timer_enable = true;
 }
 
-#ifdef MIDI
-void MIDI_Tx_Event(uint8_t *buff){
-    USBD_LL_Transmit (pInstance, MIDI_IN_EP,buff,4);
+void LED_SetScene(uint8_t scene){
+	memcpy(LEDColor,LED_Scene[scene],LED_COUNT);
+	SendPulse();
 }
-#endif
 
 #ifdef MIDI
+/**
+ *	@brief	Generate MIDI event and Send to host from User interaction.
+ */
 bool EmulateMIDI(){
-    char lcd_string[32];
+	char lcd_string2[10];
 
-    if(isKeyPressed) {
+    if (isKeyPressed) {
         uint8_t		bitpos = ntz32(keystat.wd);
         uint32_t	rkey = (keystat.wd & MOD_SW_BIT_MASK);
         bool 		isKeyReport = false;
 
-        if( bitpos < KEY_COUNT ){//Matrix switches
-            //Print Message to LCD & LED
-            if (keytable[LrE6Scene][bitpos].message != NULL) {
-        		LCD_Locate(0,0);
-            	lcd_off_flag = false;
-        		lcd_timer_enable = true;
-            	lcd_timer = LCD_TIMER_DEFAULT;
-            	LCD_SetBackLight(LCD_BL_ON);
-            	LCD_Print(keytable[LrE6Scene][bitpos].message);
-            }
-            uint8_t axis = (bitpos < 11) ? LED_IDX_SELECTOR:(bitpos - 11);
-            LED_SetPulse(axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
-
-            if (bitpos == SCENE_BIT){//[SCENE] switch
+        if ( bitpos < KEY_PER_SCENE ) { //Matrix switches
+        	uint8_t	ch = MIDI_CCCH_SW_BASE + (LrE6Scene * KEY_PER_SCENE) + bitpos;
+            uint8_t axis = ((bitpos < 10) || (KEY_COUNT <= bitpos))? LED_IDX_SELECTOR : (bitpos - 10);
+            if (bitpos == SCENE_BIT) { //[SCENE] switch?
+            	//Move to next Scene.
         		LrE6Scene++;
         		if(LrE6Scene >= SCENE_COUNT){
         			LrE6Scene = LrE6_SCENE0;
         		}
+        		LED_SetScene(LrE6Scene);
+        		strcpy(lcd_string2, scene_name[LrE6Scene]);
         		isKeyPressed = false;
-        		return false;
+        		isKeyReport = false;
+        	}else{
+        		sprintf(lcd_string2, ((ch > 99)? "C%3d=%3d":"Ch%02d=%3d"), ch, MIDI_CC_ON);
+                isKeyReport = true;
         	}
 
-            isKeyReport = true;
+            //Print Message to LCD & LED
+            if (keytable[LrE6Scene][bitpos].message != NULL) {
+        		LCD_Locate(0, LCD_LINE0);
+            	LCD_Print(keytable[LrE6Scene][bitpos].message);
+        		LCD_Locate(0, LCD_LINE1);
+        		LCD_Print(lcd_string2);
 
-            //Set 'Control change'(Switch ON)
-            USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
-            USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
-            USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = MIDI_CCCH_SW_BASE + (LrE6Scene * KEY_COUNT) + bitpos;
-            USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_CC_ON;
-            prev_ch = USBMIDI_Event[MIDI_EV_IDX_CHANNEL];
-            isPrev_sw = true;
+            	lcd_off_flag = false;
+        		lcd_timer_enable = true;
+            	lcd_timer = LCD_TIMER_DEFAULT;
+            	LCD_SetBackLight(LCD_BL_ON);
+            }
+            LED_SetPulse(axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
 
-        }else if( KEY_COUNT <= bitpos && bitpos < KEY_COUNT + (2 * ROT_COUNT) )   { //rotator
+            if (isKeyReport == true) {
+				//Set 'Control change'(Switch ON)
+				USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
+				USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
+				USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = ch;
+				USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_CC_ON;
+				prev_ch = USBMIDI_Event[MIDI_EV_IDX_CHANNEL];
+				isPrev_sw = true;
+            }
+        }else if( KEY_PER_SCENE <= bitpos && bitpos < KEY_COUNT + (2 * ROT_COUNT) )   { //rotator
         	uint8_t axis = (bitpos - KEY_COUNT) / 2;
         	uint8_t val = MIDI_CC_Value[LrE6Scene][axis];
+        	uint8_t ch = MIDI_CCCH_ROT_BASE + (ROT_PER_SCENE * LrE6Scene) + axis;
 
             USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
             USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
-            USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = MIDI_CCCH_ROT_BASE + (ROTPERSCENE * LrE6Scene) + axis;
+            USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = ch;
             USBMIDI_Event[MIDI_EV_IDX_VALUE] = val;
             isPrev_sw = false;
 
             //Print Message to LCD & LED
             if (keytable[LrE6Scene][bitpos].message != NULL) {
-        		LCD_Locate(0,0);
-                sprintf(lcd_string,"%s        Val: %d",keytable[LrE6Scene][bitpos].message, val);
+                sprintf(lcd_string2, ((ch > 99)? "C%3d=%3d":"Ch%2d=%3d"), ch, val);
+        		LCD_Locate(0, LCD_LINE0);
+            	LCD_Print(keytable[LrE6Scene][bitpos].message);
+        		LCD_Locate(0, LCD_LINE1);
+            	LCD_Print(lcd_string2);
+
             	lcd_off_flag = false;
         		lcd_timer_enable = true;
             	lcd_timer = LCD_TIMER_DEFAULT;
             	LCD_SetBackLight(LCD_BL_ON);
-            	LCD_Print(lcd_string);
             }
 
             LED_SetPulse(axis,keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
             isKeyReport = true;
 
-        }else if(isPrev_sw == true && rkey == 0) {// Switch is released
+        }/*else if(isPrev_sw == true && rkey == 0) {// Switch is released
 			//Set 'Control Change'(Switch OFF)
             USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
             USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
@@ -230,11 +243,11 @@ bool EmulateMIDI(){
             USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_CC_OFF;
 			isKeyReport = true;
 			isPrev_sw = false;
-        }
+        }*/
 
         if(isKeyReport == true){
 			//Send MIDI event via USB
-			MIDI_Tx_Event(USBMIDI_Event);
+		    USBD_LL_Transmit (pInstance, MIDI_IN_EP, USBMIDI_Event, MIDI_EVENT_LENGTH);
 			isKeyReport = false;
         }
 
@@ -244,16 +257,19 @@ bool EmulateMIDI(){
     } else
         return false;
 }
-#else
-bool EmulateKeyboard(void){
+#else //HID
+/**
+ *	@brief	Generate HID packet and Send to host from User interaction.
+ */
+bool EmulateKeyboard(void) {
     uint32_t rkey;
     uint8_t bitpos;
     bool isKeyReport;
 
-    if(isKeyPressed) {
+    if (isKeyPressed) {
         bitpos = ntz32(keystat.wd);
         rkey = (keystat.wd & MOD_SW_BIT_MASK);
-        if( bitpos < KEY_COUNT + (2 * ROT_COUNT) ){
+        if ( bitpos < KEY_COUNT + (2 * ROT_COUNT) ){
 #if 0
         	if(modifiers[bitpos].element[0] != HID_NONM) SendModifiers(bitpos);
 #endif
@@ -271,15 +287,15 @@ bool EmulateKeyboard(void){
             LED_SetPulse(LED_IDX_SELECTOR,LED_COLOR_YELLOW,25);
 
             isKeyReport = true;
-		}else if(rkey == 0) {// Keys are released
+		}else if (rkey == 0) {// Keys are released
 			In_Report.modifier = In_Report.keys[HID_RPT_KEY_IDX] = HID_NONE;
 			isKeyReport = true;
         }else
         	isKeyReport = false;
 
-        if(isKeyReport){
+        if (isKeyReport) {
         	USBD_HID_HandleTypeDef *hhid = hUsbDeviceFS.pClassData;
-        	while( hhid->state != HID_IDLE ){
+        	while ( hhid->state != HID_IDLE ){
         		Delay_us(100);
         	}
 			USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t *)&In_Report,sizeof(KEYBOARD_INPUT_REPORT) );
@@ -318,9 +334,9 @@ int main(void)
   lcd_1stflag = true;
 
   LrE6State = LRE6_RESET;
+  LrE6Scene	= LrE6_SCENE0;
 
 #ifdef MIDI
-  LrE6Scene	= LrE6_SCENE0;
   isPrev_sw = false;
 #endif
 
@@ -351,9 +367,9 @@ int main(void)
   MX_ADC_Init();
   MX_TIM16_Init();
   MX_USART1_UART_Init();
-#ifdef MIDI //HID
+#ifdef MIDI
   MX_USB_MIDI_INIT();
-#else //MIDI
+#else //HID
   MX_USB_DEVICE_Init();
 #endif
   /* USER CODE BEGIN 2 */
@@ -397,19 +413,20 @@ int main(void)
   lcd_off_flag = false;
   //lcd_timer_enable = true;
   LrE6State = LRE6_USB_NOLINK;
+  LED_SetScene(LrE6Scene);
 
   while (1) {
-	if(LrE6State == LRE6_USB_LINKUP){
+	if (LrE6State == LRE6_USB_LINKUP) {
 		//USB device configured by host
 		LED_Set_Quick(LED_IDX_SELECTOR,LED_COLOR_RED);
 		LCD_SetBackLight(LCD_BL_ON);
 		LCD_Print(LrE6_PRODUCT);
 		sprintf(lcdmsg,"%2x.%02x",USBD_DEVICE_VER_MAJ,USBD_DEVICE_VER_MIN);
-		LCD_Locate(3,1);
+		LCD_Locate(3, LCD_LINE1);
 		LCD_Print(lcdmsg);
 		LrE6State = LRE6_USB_LINKED;
 
-	} else if (LrE6State == LRE6_USB_LINKED){
+	} else if (LrE6State == LRE6_USB_LINKED) {
 #ifdef MIDI //HID
 		//Operate as MIDI Instruments.
 		EmulateMIDI();
@@ -418,13 +435,13 @@ int main(void)
 		EmulateKeyboard();
 #endif
 
-	} else if(LrE6State == LRE6_USB_LINK_LOST){
+	} else if(LrE6State == LRE6_USB_LINK_LOST) {
 		LED_TestPattern();
 		lcd_1stflag = false;
 		lcd_timer_enable = true;
 		LrE6State = LRE6_USB_NOLINK;
 
-	} else if(LrE6State == LRE6_USB_NOLINK){
+	} else if(LrE6State == LRE6_USB_NOLINK) {
 		//USB Not initially configured.
 		if (lcd_off_flag) {
 			if (lcd_1stflag) {
@@ -447,7 +464,7 @@ int main(void)
 				sprintf(lcdmsg,"%02d.%02dC\xdf",temp_i,temp_s);
 				//sprintf(lcdmsg,"%04X",inner_sensor_val);
 
-				LCD_Locate(0,0);
+				LCD_Locate(0, LCD_LINE0);
 				LCD_Print(lcdmsg);
 
 				//Restart LCD timer.
@@ -482,7 +499,7 @@ int main(void)
 		for (uint8_t i = LED_IDX_SELECTOR; i < LED_COUNT ; i++){
 			if (LEDTimer[i] != LED_TIMER_CONSTANT) {
 				if (--LEDTimer[i] == 0) {
-					LED_SetPulse(i,LED_COLOR_OFF,LED_TIMER_CONSTANT);
+					LED_SetPulse(i,LED_Scene[LrE6Scene][i],LED_TIMER_CONSTANT);
 				}
 		 	}
 		}

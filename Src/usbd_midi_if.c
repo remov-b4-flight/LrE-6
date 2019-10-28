@@ -17,32 +17,39 @@
   ******************************************************************************
  */
 
+/**
+*	@brief This file is modified by jenoki for use with LrE-6.
+*	Original headers are up.
+*	Unneeded parts of original source are excluded by #if 0
+*/
+
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_midi_if.h"
 #include "stm32f0xx_hal.h"
+#include "midi.h"
 
-
-// basic midi rx/tx functions
+// basic MIDI RX/TX functions
 static uint16_t MIDI_DataRx(uint8_t *msg, uint16_t length);
 static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length);
 
+extern uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
+extern uint8_t LrE6Scene;
+
 // for Cure Series
-#define MIDI_BUFFER_SIZ (512)//FIFO buffer byte size for midi message buffer
 #if 0
+#define MIDI_BUFFER_SIZ (512)//FIFO buffer byte size for midi message buffer
 RingBufferU8 rbuf_usb_rx[MIDI_OUT_JACK_NUM]; //for input from USB
 RingBufferU8 rbuf_jack_rx[MIDI_IN_JACK_NUM];  //for input from MIDI-IN jack
-#endif
+
 
 //for receiving midi data from jack
+
 MidiAnalysisStatus analyzed_status[MIDI_IN_JACK_NUM];
-#if 0
 MIDIEvent midi_event[MIDI_IN_JACK_NUM];	//received midi data
 uint8_t rx_midi_msg[MIDI_IN_JACK_NUM];
-#endif
 
 FUNC_STATUS midiInit()
 {
-#if 0
 	uint32_t i,j;
 
 	for(i=0; i<MIDI_OUT_JACK_NUM; i++){
@@ -69,10 +76,9 @@ FUNC_STATUS midiInit()
 			midi_event[i].midi_byte[j] = 0x00;
 		}
 	}
-#endif
 	return FUNC_SUCCESS;
 }
-#if 0
+
 FUNC_STATUS midiGetFromUsbRx(uint8_t cable_num, uint8_t* dat)
 {
 	if(BUFFER_SUCCESS != cureRingBufferU8Dequeue(&rbuf_usb_rx[cable_num], dat))
@@ -142,92 +148,38 @@ bool isRxBufEmpty()
 	return true;
 }
 #endif
-
+/**
+ *	@brief	Array of callback function pointer with MIDI.
+ */
 USBD_MIDI_ItfTypeDef USBD_Interface_fops_FS =
 {
   MIDI_DataRx,
   MIDI_DataTx
 };
 
-
+/**
+ *	@brief	MIDI event receive callback function.
+ *	@param	*msg	Pointer to received MIDI event.
+ *	@param	length	Length of received data.
+ */
 static uint16_t MIDI_DataRx(uint8_t *msg, uint16_t length){
-  uint16_t cnt;
-  uint16_t msgs = length / 4;
-  uint16_t chk = length % 4;
-  uint8_t u8b;
-  uint8_t midi_size;
+  uint8_t code_idx_num = msg[MIDI_EV_IDX_HEADER] & 0x0F;
+  uint8_t channel = msg[MIDI_EV_IDX_CHANNEL];
+  uint8_t value = msg[MIDI_EV_IDX_VALUE];
 
-  if(0 != chk)
-  {
+  if(length % MIDI_EVENT_LENGTH != 0){
 	  return 0;
   }
 
-  for(uint32_t cnt_msgs = 0; cnt_msgs < msgs; cnt_msgs++){
-
-	  uint8_t cable_num = (msg[0 + 4*cnt_msgs] & 0xF0) >> 4;
-	  uint8_t code_idx_num = msg[0 + 4*cnt_msgs] & 0x0F;
-
-	  switch (code_idx_num) {
-
-	  	  //not defined
-		  case 0x0:
-		  case 0x1:
-			  midi_size = 0;
-			  break;
-
-		  //1byte message
-		  case 0x5:
-		  case 0xF:
-			  midi_size = 1;
-			  break;
-
-		  //2byte message
-		  case 0x2:
-		  case 0x6:
-		  case 0xC:
-		  case 0xD:
-			  midi_size = 2;
-			  break;
-
-		  //3byte message
-		  case 0x3:
-		  case 0x4:
-		  case 0x7:
-		  case 0x8:
-		  case 0x9:
-		  case 0xA:
-		  case 0xB:
-		  case 0xE:
-			  midi_size = 3;
-			  break;
-
-		  default:
-			  midi_size = 0;
-			  break;
-	  }
-
-	  for(cnt = 0;cnt < midi_size;cnt ++){
-		  u8b = *(msg + 4*cnt_msgs + cnt + 1);
-#if 0
-		  cureRingBufferU8Enqueue(&rbuf_usb_rx[cable_num], &u8b);
-#endif
-	  }
+  if (code_idx_num == MIDI_CC_HEADER){
+	  MIDI_CC_Value[LrE6Scene][channel] = value;
   }
-
   return 0;
 }
 
-void sendMidiMessage(uint8_t *msg, uint16_t size){
-  if(size == 4){
-//	APP_Rx_Buffer[0] = msg[0];
-//	APP_Rx_Buffer[1] = msg[1];
-//	APP_Rx_Buffer[2] = msg[2];
-//	APP_Rx_Buffer[3] = msg[3];
-//    USBD_MIDI_SendData(&hUsbDeviceFS, APP_Rx_Buffer, size);
-    MIDI_DataTx(msg, size);
-  }
-}
-
+/**
+ * @brief Unused callback function
+ */
 static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length){
 #if 0
 	uint32_t i = 0;
@@ -242,7 +194,18 @@ static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length){
 #endif
   return USBD_OK;
 }
+
 #if 0
+void sendMidiMessage(uint8_t *msg, uint16_t size){
+  if(size == 4){
+//	APP_Rx_Buffer[0] = msg[0];
+//	APP_Rx_Buffer[1] = msg[1];
+//	APP_Rx_Buffer[2] = msg[2];
+//	APP_Rx_Buffer[3] = msg[3];
+//    USBD_MIDI_SendData(&hUsbDeviceFS, APP_Rx_Buffer, size);
+    MIDI_DataTx(msg, size);
+  }
+}
 bool midiEventIsGenerated(uint8_t cable_num)
 {
 	uint8_t upper_half_byte= (rx_midi_msg[cable_num]) & 0xF0;

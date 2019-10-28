@@ -1,24 +1,10 @@
-/* ************************************************************************** */
-/** Descriptive File Name
-
-  @Company
-    Company Name
-
-  @File Name
-    filename.c
-
-  @Summary
-    Brief description of the file.
-
-  @Description
-    Describe the purpose of this file.
+/**
+ * 	@file i2c-lcd.c
+ *	@brief LCD control functions connected via I2C
  */
-/* ************************************************************************** */
 
-/* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
-/* ************************************************************************** */
 /* ************************************************************************** */
 #include <stdint.h>
 /* This section lists the other files that are included in this file.
@@ -32,16 +18,16 @@
 extern I2C_HandleTypeDef hi2c1;
 
 /* ************************************************************************** */
-/* ************************************************************************** */
-// Section: Interface Functions                                               */
-/* ************************************************************************** */
+/* Section: Interface Functions                                               */
 /* ************************************************************************** */
 
 /*  A brief description of a section can be given directly below the section
     banner.
  */
 
-
+/**
+ * @brief	Initialize of LCD
+ */
 void LCD_Initialize(){
     uint8_t buf[2];
     
@@ -86,19 +72,10 @@ void LCD_Initialize(){
 
 }
 
-// *****************************************************************************
-
-/** 
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
-
-  @Summary
-    Brief one-line description of the function.
-
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
+/*
+ *	@brief Clear LCD
+ *	@param	none.
  */
-
 void LCD_Clear(){
     uint8_t buf[2];
     buf[0] = LCD_I2C_TAIL | LCD_I2C_INST | LCD_I2C_WRITE;
@@ -107,7 +84,11 @@ void LCD_Clear(){
     Delay_us(LCD_CMD_WAIT_US);
 }
 
-//line 0:upper 1:lower
+/**
+ * 	@brief Locate cursor
+ * 	@param	uint8_t	column
+ * 	@param	uint8_t	line 0:upper 1:lower
+ */
 void LCD_Locate(uint8_t column,uint8_t line){
     uint8_t buf[2];
     uint8_t ddadr = (line * LCD_DD_PER_LINE) + column;
@@ -125,6 +106,10 @@ void LCD_SetDisplay(bool on, bool cursor, bool blink){
     Delay_us(LCD_CMD_WAIT_US);
 }
 
+/**
+ *	@brief Put string on LCD
+ *	@param	char c	character to print.
+ */
 void LCD_Putchar(char c){
     uint8_t buf[2];
     buf[0] = LCD_I2C_TAIL | LCD_I2C_DATA | LCD_I2C_WRITE;
@@ -133,6 +118,10 @@ void LCD_Putchar(char c){
     Delay_us(LCD_DAT_WAIT_US);
 }
 
+/**
+ *	@brief Put string on LCD
+ *	@param	char *str	string to print.
+ */
 void LCD_Print(const char *str){
     size_t len = strlen(str);
 
@@ -157,10 +146,18 @@ void LCD_Print(const char *str){
 #endif
 }
 
+/**
+ *	@brief	Set LCD Back-light status wheather ON or OFF.
+ */
 void LCD_SetBackLight(bool light){
 	HAL_GPIO_WritePin(BL_ON_GPIO_Port,BL_ON_Pin,(light)?GPIO_PIN_SET:GPIO_PIN_RESET);
 }
 
+/**
+ *	@brief Set CGRAM content to use 'user defined' character
+ *	@param uint8_t	code	character code set to CGRAM.
+ *	@param uint8_t	*pattern	bitmap pattern
+ */
 void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
 	if(code <= LCD_CGRAM_MAX){
 		uint8_t buf[LCD_CGRAM_BYTES * 2], *p = buf;
@@ -184,6 +181,10 @@ void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
 	}
 }
 
+/**
+ *	@brief	Set DDRAM address to set location
+ *	@param	uint8_t	address	Data Display RAM address to print character
+ */
 void LCD_SetDDADR(uint8_t address){
     uint8_t buf[2];
     buf[0] = LCD_I2C_TAIL | LCD_I2C_INST | LCD_I2C_WRITE;

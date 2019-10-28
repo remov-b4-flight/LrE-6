@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x22
+#define USBD_DEVICE_VER_MIN	0x23
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -72,7 +72,7 @@ void Error_Handler(void);
 	#define LrE6_PRODUCT "LrE-6"
 #else
 	#define	LrE6_PID 0xB737
-	#define LrE6_PRODUCT "LrE-6(HID)"
+	#define LrE6_PRODUCT "LrE-6HID"
 #endif
 #define LrE6_VENDOR "Ruffles Inc."
 //#define ENC_9R5KQ	1	//Use alternate signaling
@@ -231,14 +231,19 @@ enum {
 	L3
 };
 
-//
+enum {
+	LCD_LINE0 = 0,
+	LCD_LINE1 = 1,
+};
+
+enum {
+	LrE6_SCENE0 = 0,
+	LrE6_SCENE1 = 1,
+	LrE6_SCENE2 = 2,
+	LrE6_SCENE3 = 3,
+};
+
 #ifdef MIDI
-	enum {
-		LrE6_SCENE0 = 0,
-		LrE6_SCENE1 = 1,
-		LrE6_SCENE2 = 2,
-		LrE6_SCENE3 = 3,
-	};
 	enum {
 		LrE6_ROT0 = 0,
 		LrE6_ROT1 = 1,
@@ -254,9 +259,17 @@ enum {
 		MIDI_EV_IDX_VALUE = 3,
 	};
 	#define SCENE_COUNT	4
-	#define ROTPERSCENE	8
 	#define SCENE_BIT	9
+	#define ROT_PER_SCENE	8
+
+#ifdef ROT0_AS_KEY //use Rotator0 as keys
+	#define KEY_PER_SCENE	(KEY_COUNT+2)
+#else //normally use this
+	#define KEY_PER_SCENE	(KEY_COUNT)
+#endif
+
 #else
+	#define SCENE_COUNT	1
 	#define HID_RPT_KEY_IDX		1
 
 	//Moved From Harmony keyboard.h

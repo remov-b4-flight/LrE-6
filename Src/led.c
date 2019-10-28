@@ -1,24 +1,10 @@
-/* ************************************************************************** */
-/** Descriptive File Name
+/**
+*	@file led.c
+*	@brief LED control functions
+*/
 
-  @Company
-    Company Name
-
-  @File Name
-    filename.c
-
-  @Summary
-    Brief description of the file.
-
-  @Description
-    Describe the purpose of this file.
- */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
-/* ************************************************************************** */
 /* ************************************************************************** */
 #include "led.h"
 /* This section lists the other files that are included in this file.
@@ -28,9 +14,7 @@
 #include "main.h"
 #include <string.h>
 /* ************************************************************************** */
-/* ************************************************************************** */
 // Section: Interface Functions                                               */
-/* ************************************************************************** */
 /* ************************************************************************** */
 
 /*  A brief description of a section can be given directly below the section
@@ -64,7 +48,9 @@ void LED_Initialize(){
 	SendPulse();
 	return;
 }
-
+/**
+ *	@brief	Sets decorative color pattern to LEDs.
+ */
 void LED_TestPattern(){
 	LEDColor[0]=LED_COLOR_WHITE;
 	LEDColor[1]=LED_COLOR_RED;
@@ -74,27 +60,44 @@ void LED_TestPattern(){
 	LEDColor[5]=LED_COLOR_BLUE;
 	SendPulse();
 }
-
-//Flush LEDs immediately with LEDColor[]
+/**
+ *	@brief	Flush LEDs immediately with LEDColor[]
+ *	@param	index	index of LEDs.
+ *	@param	color	color of LED.
+ */
 void LED_Set_Quick(uint8_t index,uint8_t color){
 	LEDColor[index] = color;
 	SendPulse();
 }
 
-//Flush LEDs at loop in main()
+/**
+ *	@brief	Flush LEDs at loop in main()
+ *	@param	index	index of LEDs.
+ *	@param	color	color of LED
+ * 	@attention	Difference of LED_Set() and LED_Set_Quick() is
+ * 	Using LED_Set(), Real flash LED point is pended until return to main().
+ * 	Using LED_Set_Quick() , It flashes LEDs immediately.
+ */
 inline void LED_Set(uint8_t index,uint8_t color){
 	LEDColor[index] = color;
 	led_sendpulse = true;
 }
 
-//Flash one LED once.
+/**
+ *	@brief	Make LED pulses.
+ *	@param	index	index of LEDs.
+ *	@param	color	color of LED.
+ *	@param	pulse	duration of pulse in 4ms unit(i.e. pulse=25 => 100ms).
+ */
 inline void LED_SetPulse(uint8_t index,uint8_t color,uint8_t pulse){
 	LEDColor[index] = color;
     LEDTimer[index] = pulse;	// 4ms unit (i.e. pulse=25 => 100ms)
 	led_sendpulse = true;
 }
 
-//make LEDPulse[] from LEDColor[]
+/**
+ *	@brief	make LEDPulse[] from LEDColor[]
+ */
 void Color2Pulse(){
 	uint8_t	pulse = 0;
 	LEDDATA	leddata;
@@ -108,7 +111,10 @@ void Color2Pulse(){
 	}
 }
 
-// Send pulses to LEDs rely on LEDColor[] array
+/**
+ *	@brief	Send pulses to LEDs rely on LEDColor[] array
+ *	@param	none.
+ */
 void SendPulse(){
 
 	//Convert LEDColor[] to LEDPulse[]
