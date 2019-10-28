@@ -235,7 +235,7 @@ bool EmulateMIDI(){
             LED_SetPulse(axis,keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
             isKeyReport = true;
 
-        }/*else if(isPrev_sw == true && rkey == 0) {// Switch is released
+        }else if(isPrev_sw == true && rkey == 0) {// Switch is released
 			//Set 'Control Change'(Switch OFF)
             USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
             USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
@@ -243,7 +243,7 @@ bool EmulateMIDI(){
             USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_CC_OFF;
 			isKeyReport = true;
 			isPrev_sw = false;
-        }*/
+        }
 
         if(isKeyReport == true){
 			//Send MIDI event via USB
