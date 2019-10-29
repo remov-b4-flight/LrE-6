@@ -67,27 +67,6 @@ void Error_Handler(void);
 #define TIM_PERIOD_1SEC 10000
 #define TIM_PERIOD_125uS 125
 #define TIM_PERIOD_10mS 10000
-#ifdef MIDI
-	#define LrE6_PID 0xA320
-	#define LrE6_PRODUCT "LrE-6"
-#else
-	#define	LrE6_PID 0xB737
-	#define LrE6_PRODUCT "LrE-6HID"
-#endif
-#define LrE6_VENDOR "Ruffles Inc."
-//#define ENC_9R5KQ	1	//Use alternate signaling
-#define LrE6_WIN	1	//Use windows shortcut.
-#if ENC_9R5KQ
-	#define ENC_MV3		3
-	#define ENC_MV2		2
-	#define ENC_MV1		1
-	#define ENC_MV0		0
-#else //Standard EC11 type
-	#define ENC_MOVE	0
-	#define ENC_MVCCW	2
-	#define ENC_MVCW	1
-	#define ENC_NOMV	3
-#endif
 #define PWM_PERIOD 59
 #define PWM_HI 29
 #define PWM_LO 14
@@ -166,6 +145,30 @@ void Error_Handler(void);
 #define ENC_2B_GPIO_Port GPIOB
 #define ENC_2B_EXTI_IRQn EXTI4_15_IRQn
 /* USER CODE BEGIN Private defines */
+#undef		LrE6_PID
+#undef		LrE6_PRODUCT
+#ifdef MIDI
+	#define LrE6_PID 0xA320
+	#define LrE6_PRODUCT "LrE-6"
+#else
+	#define	LrE6_PID 0xB737
+	#define LrE6_PRODUCT "LrE-6HID"
+#endif
+#define LrE6_VENDOR "Ruffles Inc."
+//#define ENC_9R5KQ	1	//Use alternate signaling
+//!
+#define LrE6_WIN	1	//Use windows shortcut.
+
+//! 9R5KQ type Encoder
+#define ENC_MV3		3
+#define ENC_MV2		2
+#define ENC_MV1		1
+#define ENC_MV0		0
+//! Standard EC11 type Encoder
+#define ENC_MOVE	0
+#define ENC_MVCCW	2
+#define ENC_MVCW	1
+#define ENC_NOMV	3
 
 //LrE-6 Ports on Board
 #define Mx_GPIO_Port GPIOA

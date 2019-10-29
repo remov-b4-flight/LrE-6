@@ -58,7 +58,6 @@ ADC_HandleTypeDef hadc;
 I2C_HandleTypeDef hi2c1;
 
 TIM_HandleTypeDef htim1;
-TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim16;
 DMA_HandleTypeDef hdma_tim3_ch1_trig;
@@ -68,6 +67,7 @@ DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
+TIM_HandleTypeDef htim3;
 
 bool		isKeyPressed;
 KEYSCAN     keystat;
@@ -84,7 +84,7 @@ uint8_t		LrE6Scene;
 #ifdef MIDI
 bool		isPrev_sw;	//MIDI event previous sent is switch(true) or rotator(false)
 #endif
-#if 0
+#if WROOM_ENABLE
 bool		isWROOMDataExists;
 #endif
 bool		led_sendpulse;
@@ -149,14 +149,20 @@ inline void Start_LCDTimer(uint32_t tick){
 	lcd_timer_enable = true;
 }
 
+#ifdef MIDI
+/**
+ * @brief alter LED contents by scene
+ * @param scene	Scene No
+ */
 void LED_SetScene(uint8_t scene){
 	memcpy(LEDColor,LED_Scene[scene],LED_COUNT);
 	SendPulse();
 }
+#endif
 
 #ifdef MIDI
 /**
- *	@brief	Generate MIDI event and Send to host from User interaction.
+ *	@brief	Generate MIDI event and Send to host by User interaction.
  */
 bool EmulateMIDI(){
 	char lcd_string2[10];
@@ -168,7 +174,7 @@ bool EmulateMIDI(){
 
         if ( bitpos < KEY_PER_SCENE ) { //Matrix switches
         	uint8_t	ch = MIDI_CCCH_SW_BASE + (LrE6Scene * KEY_PER_SCENE) + bitpos;
-            uint8_t axis = ((bitpos < 10) || (KEY_COUNT <= bitpos))? LED_IDX_SELECTOR : (bitpos - 10);
+            uint8_t axis = ((bitpos < 10) || (KEY_COUNT <= bitpos))? LED_IDX_SELECTOR : (bitpos - 10);	//Limit LED boundary
             if (bitpos == SCENE_BIT) { //[SCENE] switch?
             	//Move to next Scene.
         		LrE6Scene++;
@@ -259,7 +265,7 @@ bool EmulateMIDI(){
 }
 #else //HID
 /**
- *	@brief	Generate HID packet and Send to host from User interaction.
+ *	@brief	Generate HID packet and Send to host by User interaction.
  */
 bool EmulateKeyboard(void) {
     uint32_t rkey;

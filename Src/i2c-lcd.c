@@ -1,6 +1,7 @@
 /**
  * 	@file i2c-lcd.c
  *	@brief LCD control functions connected via I2C
+ *	@copyright	GPLv3
  */
 
 /* ************************************************************************** */

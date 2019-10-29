@@ -1,6 +1,8 @@
 /**
- * @file bitcount.c
- * @brief bit count functions
+ *	@file bitcount.c
+ *	@brief 'bit count' functions
+ *	@copyright	GPLv3
+ *
  */
 #include "bitcount.h"
 

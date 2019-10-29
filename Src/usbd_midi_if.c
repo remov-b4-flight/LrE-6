@@ -21,6 +21,8 @@
 *	@brief This file is modified by jenoki for use with LrE-6.
 *	Original headers are up.
 *	Unneeded parts of original source are excluded by #if 0
+*	@author jenoki
+*	@copyright CC BY 4.0
 */
 
 /* Includes ------------------------------------------------------------------*/

@@ -1,6 +1,7 @@
 /**
 *	@file led.c
-*	@brief LED control functions
+*	@brief Array of Color LEDs control functions
+ *	@copyright	GPLv3
 */
 
 /* ************************************************************************** */
@@ -40,7 +41,10 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 	{.rgbw = {.r=LMAX,.g=LHLF,.b=LOFF}},//COLOR_ORANGE,
 };
 
-
+/**
+ * @brief	Sets all LEDs to 'OFF'
+ * @param	none
+ */
 void LED_Initialize(){
 	memset(LEDColor,LED_COLOR_OFF,LED_COUNT);
 	memset(LEDTimer,LED_TIMER_CONSTANT,LED_COUNT);
@@ -50,6 +54,7 @@ void LED_Initialize(){
 }
 /**
  *	@brief	Sets decorative color pattern to LEDs.
+ *	@param	none
  */
 void LED_TestPattern(){
 	LEDColor[0]=LED_COLOR_WHITE;
@@ -97,6 +102,7 @@ inline void LED_SetPulse(uint8_t index,uint8_t color,uint8_t pulse){
 
 /**
  *	@brief	make LEDPulse[] from LEDColor[]
+ *	@pre	LEDColor[] contains LED color setting.
  */
 void Color2Pulse(){
 	uint8_t	pulse = 0;
@@ -114,6 +120,7 @@ void Color2Pulse(){
 /**
  *	@brief	Send pulses to LEDs rely on LEDColor[] array
  *	@param	none.
+ *	@pre	LEDColor[] contains LED color setting.
  */
 void SendPulse(){
 

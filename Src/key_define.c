@@ -1,6 +1,23 @@
 /**
 * @file key_define.c
 * @brief HID key definition & MIDI channel definition
+* @details This file defines 'key code' sent to PC on HID mode OR MIDI Control Change(CC) event on MIDI mode.
+* LrE-6 has 6 rotator as rot0~5, and 10 individual switch(SW) as SW1~10 and SW on rotator as 'rot0~5 push'
+* In MIDI use , users can send individual CC event channel per switch and rotator.
+* At switches, LrE-6 sends CC message has value = 127 when switch on and sends value = 0 when switch off.
+* At rotator, LrE-6 sends CC message every rotators move,values are increase/decrease by towards.
+* LrE-6 can use 'Scene'. Users can alter all SW/Rotator definition. To switch Scene, push SW10.
+* There is 4 Scenes. SW10 is fixed for Scene function.
+* Scene / CC event channel definition (by Rotator)
+* ch. 0-5	Scene0
+* ch. 8-15	Scene1
+* ch. 16-23	Scene2
+* ch. 24-31	Scene3
+* Scene / CC event channel definition (by SW)
+* ch. 32-47	Scene0
+* ch. 48-63	Scene1
+* ch. 64-79	Scene2
+* ch. 80-95	Scene3
 */
 
 #include "main.h"
@@ -13,10 +30,10 @@
 	//! @brief	LED patterns that set by switching scenes.
 	const uint8_t LED_Scene[SCENE_COUNT][LED_COUNT] ={
 			//		0				1				2				3				4				5
-			{LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF, },
-			{LED_COLOR_GREEN,LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_WHITE,LED_COLOR_OFF, },
-			{LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF, },
-			{LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF, },
+			{LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF, },//Scene0
+			{LED_COLOR_GREEN,LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_WHITE,LED_COLOR_OFF, },//Scene1
+			{LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF, },//Scene2
+			{LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF, },//Scene3
 	};
 	const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{	//Scene0 Button (Library Tab)
