@@ -62,5 +62,4 @@ dkms.conf
 /.settings/
 /.code_review_properties
 *.launch
-*.zip
 *.bak
