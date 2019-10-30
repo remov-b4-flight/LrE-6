@@ -3,31 +3,19 @@
  *	@brief LCD control functions connected via I2C
  *	@copyright	GPLv3
  */
-
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
+/* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
-/* This section lists the other files that are included in this file.
- */
-
-/* TODO:  Include other files here if needed. */
-#include "main.h"
 #include <string.h>
+#include "main.h"
 #include "i2c-lcd.h"
 
+/* Variables -----------------------------------------------------------------*/
 extern I2C_HandleTypeDef hi2c1;
 
-/* ************************************************************************** */
-/* Section: Interface Functions                                               */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
-
+/* User code -----------------------------------------------------------------*/
 /**
  * @brief	Initialize of LCD
+ * @param	none.
  */
 void LCD_Initialize(){
     uint8_t buf[2];
@@ -73,7 +61,7 @@ void LCD_Initialize(){
 
 }
 
-/*
+/**
  *	@brief Clear LCD
  *	@param	none.
  */
@@ -149,6 +137,7 @@ void LCD_Print(const char *str){
 
 /**
  *	@brief	Set LCD Back-light status wheather ON or OFF.
+ *	@param	bool	light	true:backlight on	false:off
  */
 void LCD_SetBackLight(bool light){
 	HAL_GPIO_WritePin(BL_ON_GPIO_Port,BL_ON_Pin,(light)?GPIO_PIN_SET:GPIO_PIN_RESET);
@@ -156,8 +145,8 @@ void LCD_SetBackLight(bool light){
 
 /**
  *	@brief Set CGRAM content to use 'user defined' character
- *	@param uint8_t	code	character code set to CGRAM.
- *	@param uint8_t	*pattern	bitmap pattern
+ *	@param uint8_t	code		character code set to CGRAM.
+ *	@param uint8_t	*pattern	bitmap character pattern.
  */
 void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
 	if(code <= LCD_CGRAM_MAX){
@@ -193,6 +182,4 @@ void LCD_SetDDADR(uint8_t address){
     HAL_I2C_Master_Transmit(&hi2c1,LCD_I2C_ADDR,buf,2,500);
     Delay_us(LCD_CMD_WAIT_US);
 }
-/* *****************************************************************************
- End of File
- */
+/* ******************************************************* **** END OF FILE****/

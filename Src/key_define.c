@@ -1,29 +1,31 @@
 /**
 * @file key_define.c
 * @brief HID key definition & MIDI channel definition
-* @details This file defines 'key code' sent to PC on HID mode OR MIDI Control Change(CC) event on MIDI mode.
+* @details This file defines 'key code' sent to PC on HID mode OR MIDI Control Change(CC) event on MIDI build.
 * LrE-6 has 6 rotator as rot0~5, and 10 individual switch(SW) as SW1~10 and SW on rotator as 'rot0~5 push'
 * In MIDI use , users can send individual CC event channel per switch and rotator.
-* At switches, LrE-6 sends CC message has value = 127 when switch on and sends value = 0 when switch off.
+* At switches, LrE-6 sends CC message has value = 127 when switch on, and sends value = 0 when switch off.
 * At rotator, LrE-6 sends CC message every rotators move,values are increase/decrease by towards.
-* LrE-6 can use 'Scene'. Users can alter all SW/Rotator definition. To switch Scene, push SW10.
-* There is 4 Scenes. SW10 is fixed for Scene function.
-* Scene / CC event channel definition (by Rotator)
+* LrE-6 MIDI can use 'Scene'. Users can alter all SW/Rotator definition. To alter Scene, push SW10.
+* Users can use up to 4 Scenes. SW10 is fixed for Scene function.
+* Scene / CC event channel definition (by Rotators)
 * ch. 0-5	Scene0
 * ch. 8-15	Scene1
 * ch. 16-23	Scene2
 * ch. 24-31	Scene3
-* Scene / CC event channel definition (by SW)
+* Scene / CC event channel definition (by SWs)
 * ch. 32-47	Scene0
 * ch. 48-63	Scene1
 * ch. 64-79	Scene2
 * ch. 80-95	Scene3
 */
 
+/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "key_define.h"
 #include "led.h"
 
+/* Variables ----------------------------------------------------------------*/
 #ifdef MIDI
 	//! @brief	User-friendly scene names appears on LCD.
 	const char *scene_name[SCENE_COUNT] = { "Library ", "TonCurve",  "ColorBal", "Unused  ", };
@@ -233,3 +235,5 @@
 		{HID_NONM,			HID_NONE,	NULL},	//padding
 	};
 #endif
+/* ******************************************************* **** END OF FILE****/
+

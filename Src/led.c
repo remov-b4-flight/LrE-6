@@ -1,26 +1,15 @@
 /**
-*	@file led.c
-*	@brief Array of Color LEDs control functions
+ *	@file led.c
+ *	@brief Array of Color LEDs control functions
  *	@copyright	GPLv3
 */
-
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
+/* Includes ------------------------------------------------------------------*/
 #include "led.h"
-/* This section lists the other files that are included in this file.
- */
 
-/* TODO:  Include other files here if needed. */
 #include "main.h"
 #include <string.h>
-/* ************************************************************************** */
-// Section: Interface Functions                                               */
-/* ************************************************************************** */
 
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
+/* Variables -----------------------------------------------------------------*/
 extern TIM_HandleTypeDef htim3;
 extern bool	led_sendpulse;
 uint32_t period;
@@ -41,6 +30,7 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 	{.rgbw = {.r=LMAX,.g=LHLF,.b=LOFF}},//COLOR_ORANGE,
 };
 
+/* User code ----------------------------------------------------------------*/
 /**
  * @brief	Sets all LEDs to 'OFF'
  * @param	none
@@ -65,10 +55,11 @@ void LED_TestPattern(){
 	LEDColor[5]=LED_COLOR_BLUE;
 	SendPulse();
 }
+
 /**
  *	@brief	Flush LEDs immediately with LEDColor[]
- *	@param	index	index of LEDs.
- *	@param	color	color of LED.
+ *	@param	uint8_t	index	index of LEDs.
+ *	@param	uint8_t	color	color of LED.
  */
 void LED_Set_Quick(uint8_t index,uint8_t color){
 	LEDColor[index] = color;
@@ -77,8 +68,8 @@ void LED_Set_Quick(uint8_t index,uint8_t color){
 
 /**
  *	@brief	Flush LEDs at loop in main()
- *	@param	index	index of LEDs.
- *	@param	color	color of LED
+ *	@param	uint8_t	index	index of LEDs.
+ *	@param	uint8_t	color	color of LED
  * 	@attention	Difference of LED_Set() and LED_Set_Quick() is
  * 	Using LED_Set(), Real flash LED point is pended until return to main().
  * 	Using LED_Set_Quick() , It flashes LEDs immediately.
@@ -90,9 +81,9 @@ inline void LED_Set(uint8_t index,uint8_t color){
 
 /**
  *	@brief	Make LED pulses.
- *	@param	index	index of LEDs.
- *	@param	color	color of LED.
- *	@param	pulse	duration of pulse in 4ms unit(i.e. pulse=25 => 100ms).
+ *	@param	uint8_t	index	index of LEDs.
+ *	@param	uint8_t	color	color of LED.
+ *	@param	uint8_t	pulse	duration of pulse in 4ms unit(i.e. pulse=25 => 100ms).
  */
 inline void LED_SetPulse(uint8_t index,uint8_t color,uint8_t pulse){
 	LEDColor[index] = color;
@@ -136,7 +127,4 @@ void SendPulse(){
 	HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_1,(uint32_t *) LEDPulse, TOTAL_BITS);
 }
 
-
-/* *****************************************************************************
- End of File
- */
+/* ******************************************************* **** END OF FILE****/
