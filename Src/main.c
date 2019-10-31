@@ -422,7 +422,9 @@ int main(void)
   lcd_off_flag = false;
   //lcd_timer_enable = true;
   LrE6State = LRE6_USB_NOLINK;
+#ifdef MIDI
   LED_SetScene(LrE6Scene);
+#endif
 
   while (1) {
 	if (LrE6State == LRE6_USB_LINKUP) {

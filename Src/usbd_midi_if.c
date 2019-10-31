@@ -31,8 +31,10 @@
 #include "midi.h"
 
 // basic MIDI RX/TX functions
+#ifdef MIDI
 static uint16_t MIDI_DataRx(uint8_t *msg, uint16_t length);
 static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length);
+#endif
 
 extern uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
 extern uint8_t LrE6Scene;
@@ -150,6 +152,8 @@ bool isRxBufEmpty()
 	return true;
 }
 #endif
+
+#ifdef MIDI
 /**
  *	@brief	Array of callback function pointer with MIDI.
  */
@@ -196,6 +200,7 @@ static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length){
 #endif
   return USBD_OK;
 }
+#endif //MIDI
 
 #if 0
 void sendMidiMessage(uint8_t *msg, uint16_t size){
