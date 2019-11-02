@@ -58,6 +58,8 @@ extern "C" {
 #define LCD_CLR_WAIT_US		1100
 #define LCD_PWRUP_WAIT_MS	45
 #define LCD_FLW_WAIT_MS		220
+
+#define	LCD_TRANSMIT_TO		250
 //******************** LCD Commands **************
 //********** NORMAL instruction
 

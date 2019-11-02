@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x23
+#define USBD_DEVICE_VER_MIN	0x24
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -67,6 +67,9 @@ void Error_Handler(void);
 #define TIM_PERIOD_1SEC 10000
 #define TIM_PERIOD_125uS 125
 #define TIM_PERIOD_10mS 10000
+#define LrE6_PID 0x0BEA
+#define LrE6_PRODUCT "LrE-6"
+#define LrE6_VENDOR "Ruffles Inc."
 #define PWM_PERIOD 59
 #define PWM_HI 29
 #define PWM_LO 14
@@ -264,12 +267,7 @@ enum {
 	#define SCENE_COUNT	4
 	#define SCENE_BIT	9
 	#define ROT_PER_SCENE	8
-
-#ifdef ROT0_AS_KEY //use Rotator0 as keys
-	#define KEY_PER_SCENE	(KEY_COUNT+2)
-#else //normally use this
 	#define KEY_PER_SCENE	(KEY_COUNT)
-#endif
 
 #else
 	#define SCENE_COUNT	1

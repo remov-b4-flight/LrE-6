@@ -59,8 +59,10 @@
 ADC_HandleTypeDef hadc;
 
 I2C_HandleTypeDef hi2c1;
+DMA_HandleTypeDef hdma_i2c1_tx;
 
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim14;
 TIM_HandleTypeDef htim16;
 DMA_HandleTypeDef hdma_tim3_ch1_trig;
@@ -319,6 +321,7 @@ bool EmulateKeyboard(void) {
 }
 #endif
 /* USER CODE END 0 */
+
 /**
   * @brief  The application entry point.
   * @retval int
