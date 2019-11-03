@@ -63,16 +63,28 @@
   * @{
   */
 
-#define USBD_VID     0x1209
+#define USBD_VID     1155
 #define USBD_LANGID_STRING     1033
-#define USBD_MANUFACTURER_STRING     LrE6_VENDOR
+#define USBD_MANUFACTURER_STRING     "LrE6_VENDOR"
 #define USBD_PID_FS     LrE6_PID
-#define USBD_PRODUCT_STRING_FS     LrE6_PRODUCT
+#define USBD_PRODUCT_STRING_FS     "LrE6_PRODUCT"
 #define USBD_CONFIGURATION_STRING_FS     "HID Config"
 #define USBD_INTERFACE_STRING_FS     "HID Interface"
 
 /* USER CODE BEGIN PRIVATE_DEFINES */
-
+#undef	USBD_VID
+#undef	USBD_MANUFACTURER_STRING
+#undef	USBD_PRODUCT_STRING_FS
+#define USBD_VID     0x1209
+#define USBD_MANUFACTURER_STRING	LrE6_VENDOR
+#define USBD_PRODUCT_STRING_FS		LrE6_PRODUCT
+#ifdef MIDI
+	#define	DEVICE_CLASS	0x02	/*bDeviceClass = CDC */
+	#define	DEVICE_SUBCLASS	0x02	/*bDeviceSubClass = ACM */
+#else //HID
+	#define	DEVICE_CLASS	0x00	/*bDeviceClass (I/F desc.)*/
+	#define	DEVICE_SUBCLASS	0x00	/*bDeviceSubClass (I/F desc.)*/
+#endif
 /* USER CODE END PRIVATE_DEFINES */
 
 /**
@@ -156,13 +168,10 @@ __ALIGN_BEGIN uint8_t USBD_FS_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END =
   USB_DESC_TYPE_DEVICE,       /*bDescriptorType*/
   0x00,                       /*bcdUSB */
   0x02,
-#ifdef MIDI
-  0x02,                       /*bDeviceClass = CDC */
-  0x02,                       /*bDeviceSubClass = ACM */
-#else //HID
-  0x00,                       /*bDeviceClass*/
-  0x00,                       /*bDeviceSubClass*/
-#endif
+/* USER CODE BEGIN DESC. */
+  DEVICE_CLASS,
+  DEVICE_SUBCLASS,
+/* USER CODE END DESC. */
   0x00,                       /*bDeviceProtocol*/
   USB_MAX_EP0_SIZE,           /*bMaxPacketSize*/
   LOBYTE(USBD_VID),           /*idVendor*/

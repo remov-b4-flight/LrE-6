@@ -25,10 +25,10 @@
 #include "usbd_def.h"
 #include "usbd_core.h"
 #include "usbd_hid.h"
-#include "usbd_cdc.h"
 
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
+#include "usbd_cdc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

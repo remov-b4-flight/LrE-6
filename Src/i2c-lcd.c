@@ -11,6 +11,7 @@
 
 /* Variables -----------------------------------------------------------------*/
 extern I2C_HandleTypeDef hi2c1;
+extern TIM_HandleTypeDef htim2;
 
 /* User code -----------------------------------------------------------------*/
 /**
@@ -139,8 +140,28 @@ void LCD_Print(const char *str){
  *	@brief	Set LCD Back-light status wheather ON or OFF.
  *	@param	bool	light	true:backlight on	false:off
  */
-void LCD_SetBackLight(bool light){
-	HAL_GPIO_WritePin(BL_ON_GPIO_Port, BL_ON_Pin, (light)? GPIO_PIN_SET:GPIO_PIN_RESET);
+void LCD_SetBackLight(bool light, uint16_t cycle){
+//	HAL_GPIO_WritePin(BL_ON_GPIO_Port, BL_ON_Pin, (light)? GPIO_PIN_SET:GPIO_PIN_RESET);
+	TIM_OC_InitTypeDef sConfigOC;
+	sConfigOC.OCMode = TIM_OCMODE_PWM2;
+	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+
+	if (light){
+    	if (cycle == LED_BL_STATIC){
+    		sConfigOC.Pulse = 0; //always on
+    	}else{
+    		htim2.Init.Period = cycle;
+			sConfigOC.Pulse = cycle / 2;
+		}
+		HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
+		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+	}else{
+		sConfigOC.OCMode = TIM_OCMODE_FORCED_INACTIVE;
+		HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
+		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+	}
+
 }
 
 /**

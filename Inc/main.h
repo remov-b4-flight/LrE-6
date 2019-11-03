@@ -115,12 +115,6 @@ void Error_Handler(void);
 #define ENC_6B_Pin GPIO_PIN_13
 #define ENC_6B_GPIO_Port GPIOB
 #define ENC_6B_EXTI_IRQn EXTI4_15_IRQn
-#define WL_RST_Pin GPIO_PIN_8
-#define WL_RST_GPIO_Port GPIOA
-#define STM_TX_Pin GPIO_PIN_9
-#define STM_TX_GPIO_Port GPIOA
-#define STM_RX_Pin GPIO_PIN_10
-#define STM_RX_GPIO_Port GPIOA
 #define USB_DM_Pin GPIO_PIN_11
 #define USB_DM_GPIO_Port GPIOA
 #define USB_DP_Pin GPIO_PIN_12

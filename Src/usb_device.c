@@ -24,10 +24,10 @@
 #include "usb_device.h"
 #include "usbd_core.h"
 #include "usbd_desc.h"
-#include "usbd_cdc.h"
 #include "usbd_hid.h"
 
 /* USER CODE BEGIN Includes */
+#include "usbd_cdc.h"
 #include "usbd_midi.h"
 #include "usbd_midi_if.h"
 
