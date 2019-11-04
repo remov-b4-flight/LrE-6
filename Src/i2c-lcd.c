@@ -141,7 +141,6 @@ void LCD_Print(const char *str){
  *	@param	bool	light	true:backlight on	false:off
  */
 void LCD_SetBackLight(bool light, uint16_t cycle){
-//	HAL_GPIO_WritePin(BL_ON_GPIO_Port, BL_ON_Pin, (light)? GPIO_PIN_SET:GPIO_PIN_RESET);
 	TIM_OC_InitTypeDef sConfigOC;
 	sConfigOC.OCMode = TIM_OCMODE_PWM2;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
@@ -154,11 +153,11 @@ void LCD_SetBackLight(bool light, uint16_t cycle){
     		htim2.Init.Period = cycle;
 			sConfigOC.Pulse = cycle / 2;
 		}
+    	htim2.Instance->CNT = 0;
 		HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
 		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
 	}else{
-		sConfigOC.OCMode = TIM_OCMODE_FORCED_INACTIVE;
-		HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
+    	htim2.Instance->CNT = 0;
 		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
 	}
 

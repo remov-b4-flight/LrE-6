@@ -192,6 +192,7 @@ bool EmulateMIDI(){
 
             //Print Message to LCD & LED
             if (keytable[LrE6Scene][bitpos].message != NULL) {
+            	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
         		LCD_Locate(0, LCD_LINE0);
             	LCD_Print(keytable[LrE6Scene][bitpos].message);
         		LCD_Locate(0, LCD_LINE1);
@@ -200,7 +201,6 @@ bool EmulateMIDI(){
             	lcd_off_flag = false;
         		lcd_timer_enable = true;
             	lcd_timer = LCD_TIMER_DEFAULT;
-            	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
             }
             LED_SetPulse(axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
 
@@ -226,6 +226,7 @@ bool EmulateMIDI(){
 
             //Print Message to LCD & LED
             if (keytable[LrE6Scene][bitpos].message != NULL) {
+            	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
                 sprintf(lcd_string2, ((ch > 99)? "C%3d=%3d":"Ch%2d=%3d"), ch, val);
         		LCD_Locate(0, LCD_LINE0);
             	LCD_Print(keytable[LrE6Scene][bitpos].message);
@@ -235,7 +236,6 @@ bool EmulateMIDI(){
             	lcd_off_flag = false;
         		lcd_timer_enable = true;
             	lcd_timer = LCD_TIMER_DEFAULT;
-            	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
             }
 
             LED_SetPulse(axis,keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
