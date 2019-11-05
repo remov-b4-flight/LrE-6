@@ -455,7 +455,7 @@ int main(void)
 			if (lcd_1stflag) {
 				LrE6State = LRE6_USB_LINK_LOST;
 			} else {
-				LCD_SetBackLight(LCD_BL_ON,LED_BL_STATIC);
+				LCD_SetBackLight(LCD_BL_ON,100);
 
 				HAL_ADC_Start(&hadc);
 				//get value from ADC and display it...

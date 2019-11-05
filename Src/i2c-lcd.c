@@ -146,19 +146,18 @@ void LCD_SetBackLight(bool light, uint16_t cycle){
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 
-	if (light){
+	if (light == true ){
     	if (cycle == LED_BL_STATIC){
-    		sConfigOC.Pulse = 0; //always on
+    		sConfigOC.OCMode = TIM_OCMODE_ACTIVE;
     	}else{
     		htim2.Init.Period = cycle;
 			sConfigOC.Pulse = cycle / 2;
 		}
-    	htim2.Instance->CNT = 0;
-		HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
+ 		HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
 		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
 	}else{
     	htim2.Instance->CNT = 0;
-		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+		HAL_TIM_PWM_Stop(&htim2,TIM_CHANNEL_1);
 	}
 
 }
