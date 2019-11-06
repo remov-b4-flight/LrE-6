@@ -150,11 +150,12 @@ void Error_Handler(void);
 #else
 	#define	LrE6_PID 0xB737
 	#define LrE6_PRODUCT "LrE-6HID"
+	#define LrE6_WIN	1	//Use windows shortcut.
 #endif
 #define LrE6_VENDOR "Ruffles Inc."
 //#define ENC_9R5KQ	1	//Use alternate signaling
-//!
-#define LrE6_WIN	1	//Use windows shortcut.
+
+#define	TIM_PWM_50PER (TIM_PERIOD_4mS / 2)
 
 //! 9R5KQ type Encoder
 #define ENC_MV3		3
@@ -285,7 +286,7 @@ enum {
 #define PRMASK_R5	0x0003
 
 //other definitions
-#define LCD_TIMER_DEFAULT   500		//2 sec (1tick=4ms)
+#define LCD_TIMER_DEFAULT   1000	//4 sec (1tick=4ms)
 #define LCD_TIMER_INIT      10      //40m sec initialze time
 #define LCD_TIMER_UPDATE	250		//1 sec (LCD update in non HID)
 //

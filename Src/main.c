@@ -35,9 +35,6 @@
 #include "bitcount.h"
 #include "key_define.h"
 #include "usbd_midi_if.h"
-#if WROOM_ENABLE
-#include "wroom.h"
-#endif
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -85,9 +82,7 @@ uint8_t		LrE6Scene;
 #ifdef MIDI
 bool		isPrev_sw;	//MIDI event previous sent is switch(true) or rotator(false)
 #endif
-#if WROOM_ENABLE
-bool		isWROOMDataExists;
-#endif
+
 bool		led_sendpulse;
 bool		led_timer_update;
 
@@ -349,9 +344,6 @@ int main(void)
 
   isKeyRelaseSent = true;
   led_sendpulse = false;
-#if WROOM_ENABLE
-  isWROOMDataExists = false;
-#endif
 #if 0
   ExpandModifiers();
 #endif
@@ -382,14 +374,6 @@ int main(void)
   HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);
 
-#if WROOM_ENABLE
-  //WROOM Hardware Reset
-  HAL_GPIO_WritePin(WL_EN_GPIO_Port,WL_EN_Pin,GPIO_PIN_SET);	//Enable Wifi module
-  WROOM_Reset(true);
-  HAL_Delay(1);
-  WROOM_Reset(false);
-#endif
-
   LED_Initialize();	//Set all LEDs 'OFF'
 
   //Initialize LCD
@@ -397,12 +381,6 @@ int main(void)
   LCD_Initialize();
   LCD_SetCGRAM(5,up_arrow);			//Set user defined 'up aroow' character.
   LCD_SetDDADR(0);
-
-#if WROOM_ENABLE
-  //WROOM boot-up sequence
-  WROOM_Initialize();
-  WROOM_SetState(WROOM_INIT);
-#endif
 
   /* USER CODE END 2 */
 
@@ -412,12 +390,12 @@ int main(void)
   const uint16_t ts_cal30 = *TEMP30_CAL_ADDR;
   const float k = (110.0 - 30.0) / (ts_cal110 - ts_cal30);
 
-  char lcdmsg[12];
+  char lcdmsg[LCD_WIDTH + 4];
 
   //lcd_timer = LCD_TIMER_DEFAULT;
   Start_LCDTimer(LCD_TIMER_DEFAULT);
   lcd_off_flag = false;
-  //lcd_timer_enable = true;
+  lcd_timer_enable = true;
   LrE6State = LRE6_USB_NOLINK;
 #ifdef MIDI
   LED_SetScene(LrE6Scene);
@@ -442,7 +420,11 @@ int main(void)
 		//Operates as USB Keyboards.
 		EmulateKeyboard();
 #endif
-
+		if(lcd_off_flag){
+			lcd_off_flag = false;
+			LCD_SetBackLight(LCD_BL_OFF, LED_BL_STATIC);
+			LCD_Clear();
+		}
 	} else if(LrE6State == LRE6_USB_LINK_LOST) {
 		LED_TestPattern();
 		lcd_1stflag = false;
@@ -455,7 +437,7 @@ int main(void)
 			if (lcd_1stflag) {
 				LrE6State = LRE6_USB_LINK_LOST;
 			} else {
-				LCD_SetBackLight(LCD_BL_ON,100);
+				LCD_SetBackLight(LCD_BL_ON,3500);
 
 				HAL_ADC_Start(&hadc);
 				//get value from ADC and display it...
@@ -491,20 +473,13 @@ int main(void)
 
 				led_sendpulse = true;
 			}
-		}// lcdflag
+		}// lcd_off_flag
 	}// LrE6State
 
-	if(lcd_off_flag){
-		LED_Set(LED_IDX_SELECTOR,LED_COLOR_OFF);
-
-		lcd_off_flag = false;
-		LCD_SetBackLight(LCD_BL_OFF, LED_BL_STATIC);
-		LCD_Clear();
-	}
 
 	//LED Timer
 	if (led_timer_update){ //4x4ms = 16ms interval
-		for (uint8_t i = LED_IDX_SELECTOR; i < LED_COUNT ; i++){
+		for (uint8_t i = 0; i < LED_COUNT ; i++){
 			if (LEDTimer[i] != LED_TIMER_CONSTANT) {
 				if (--LEDTimer[i] == 0) {
 					LED_SetPulse(i,LED_Scene[LrE6Scene][i],LED_TIMER_CONSTANT);
@@ -519,13 +494,6 @@ int main(void)
 		SendPulse();
 		led_sendpulse = false;
 	}
-#if WROOM_ENABLE
-	//Process WROOM receiving data.
-	if (isWROOMDataExists){
-		WROOM_Dispatch();
-		isWROOMDataExists = false;
-	}
-#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -743,7 +711,7 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = TIM_PRESC_100uS;
+  htim2.Init.Prescaler = TIM_PRESC_1uS;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = TIM_PERIOD_4mS;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;

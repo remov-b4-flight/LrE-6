@@ -147,7 +147,8 @@ void LCD_SetBackLight(bool light, uint16_t cycle){
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 
 	if (light == true ){
-    	if (cycle == LED_BL_STATIC){
+#if 0
+		if (cycle == LED_BL_STATIC){
     		sConfigOC.OCMode = TIM_OCMODE_ACTIVE;
     	}else{
     		htim2.Init.Period = cycle;
@@ -155,6 +156,16 @@ void LCD_SetBackLight(bool light, uint16_t cycle){
 		}
  		HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
 		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+#else
+		if (cycle == LED_BL_STATIC){
+			//sConfigOC.OCMode = TIM_OCMODE_ACTIVE;
+			sConfigOC.Pulse = 0;
+		}else{
+			sConfigOC.Pulse = cycle;
+		}
+		HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
+		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+#endif
 	}else{
     	htim2.Instance->CNT = 0;
 		HAL_TIM_PWM_Stop(&htim2,TIM_CHANNEL_1);
@@ -171,6 +182,7 @@ void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
 	if(code <= LCD_CGRAM_MAX){
 		uint8_t buf[LCD_CGRAM_BYTES * 2], *p = buf;
 		uint8_t offset = code * 8;
+
 		//Set CGRAM address
 	    buf[0] = LCD_I2C_TAIL | LCD_I2C_INST | LCD_I2C_WRITE;
 	    buf[1] = LCD_CMD_CGADR + offset;
@@ -178,7 +190,8 @@ void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
 	    Delay_us(LCD_CMD_WAIT_US);
 
 	    uint8_t cmd= LCD_I2C_CONTINUE | LCD_I2C_DATA | LCD_I2C_WRITE;    // =0xC0;
-		for(uint8_t i = 0; i < (LCD_CGRAM_BYTES-1); i++ ){
+
+	    for(uint8_t i = 0; i < (LCD_CGRAM_BYTES-1); i++ ){
 			*p++ = cmd;
 			*p++ = pattern[i] & LCD_CGRAM_MASK;
 		}
@@ -197,6 +210,7 @@ void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
  */
 void LCD_SetDDADR(uint8_t address){
     uint8_t buf[2];
+
     buf[0] = LCD_I2C_TAIL | LCD_I2C_INST | LCD_I2C_WRITE;
     buf[1] = LCD_CMD_DDADR + address;
     HAL_I2C_Master_Transmit(&hi2c1, LCD_I2C_ADDR, buf, 2, LCD_TRANSMIT_TO);

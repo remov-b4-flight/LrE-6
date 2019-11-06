@@ -75,8 +75,9 @@ enum{   //constants for expressing color.
 	LED_COLOR_MAGENTA,
 	LED_COLOR_CYAN,
 	LED_COLOR_ORANGE,
+	LED_COLOR_GLAY,
 };
-#define COLOR_MAX 9
+#define COLOR_MAX 10
 
 #define LED_COUNT		6
 #define BITS_PER_LED    24  // (RGB) 4 * 8bit
