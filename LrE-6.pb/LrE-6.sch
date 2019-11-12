@@ -831,9 +831,9 @@ Wire Wire Line
 Wire Wire Line
 	7800 5050 7300 5050
 Text Label 7300 4950 0    50   ~ 0
-ENC6-A
+ENC0-A
 Text Label 7300 5050 0    50   ~ 0
-ENC6-B
+ENC0-B
 $Comp
 L LrE-6-rescue:Rotary_Encoder_Switch-Device SW11
 U 1 1 5C6AAF87

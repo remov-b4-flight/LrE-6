@@ -243,16 +243,16 @@ enum {
 	LrE6_SCENE2 = 2,
 	LrE6_SCENE3 = 3,
 };
+enum {
+	LrE6_ROT0 = 0,
+	LrE6_ROT1,
+	LrE6_ROT2,
+	LrE6_ROT3,
+	LrE6_ROT4,
+	LrE6_ROT5,
+};
 
 #ifdef MIDI
-	enum {
-		LrE6_ROT0 = 0,
-		LrE6_ROT1 = 1,
-		LrE6_ROT2 = 2,
-		LrE6_ROT3 = 3,
-		LrE6_ROT4 = 4,
-		LrE6_ROT5 = 5,
-	};
 	enum{
 		MIDI_EV_IDX_HEADER = 0,
 		MIDI_EV_IDX_STATUS = 1,
@@ -286,11 +286,13 @@ enum {
 #define PRMASK_R5	0x0003
 
 //other definitions
-#define LCD_TIMER_DEFAULT   1000	//4 sec (1tick=4ms)
+#define LCD_TIMER_DEFAULT   1000	//4 sec (1 tick=4ms)
 #define LCD_TIMER_INIT      10      //40m sec initialze time
 #define LCD_TIMER_UPDATE	250		//1 sec (LCD update in non HID)
 //
-#define LED_TIMER_DEFAULT	25
+#define LED_TIMER_DEFAULT	25		//400ms (1 tick=16ms)
+#define LED_TIMER_HALF		12		//192ms
+#define LED_TIMER_LONG		35		//560ms
 
 #define ROT_NOT_MOVE        0
 #define ROT_MOVE_CW         1

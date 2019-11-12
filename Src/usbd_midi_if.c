@@ -26,6 +26,7 @@
 */
 
 /* Includes ------------------------------------------------------------------*/
+#include "main.h"
 #include "usbd_midi_if.h"
 #include "stm32f0xx_hal.h"
 #include "midi.h"
@@ -175,6 +176,10 @@ static uint16_t MIDI_DataRx(uint8_t *msg, uint16_t length){
 
   if(length % MIDI_EVENT_LENGTH != 0){
 	  return 0;
+  }
+
+  if (LrE6Scene > SCENE_COUNT){
+	  LrE6Scene = 0;
   }
 
   if (code_idx_num == MIDI_CC_HEADER){

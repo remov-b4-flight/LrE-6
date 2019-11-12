@@ -29,6 +29,7 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 	{.rgbw = {.r=LOFF,.g=LHLF,.b=LHLF}},//COLOR_CYAN,
 	{.rgbw = {.r=LMAX,.g=LHLF,.b=LOFF}},//COLOR_ORANGE,
 	{.rgbw = {.r=LQTR,.g=LQTR,.b=LQTR}},//COLOR_GLAY,
+	{.rgbw = {.r=LDRK,.g=LDRK,.b=LDRK}},//COLOR_DARK,
 };
 
 /* User code ----------------------------------------------------------------*/
@@ -119,8 +120,8 @@ void SendPulse(){
 	//Convert LEDColor[] to LEDPulse[]
 	Color2Pulse();
 
-	//Send 'RESET' signal(80us > low data) for LEDs
-	Delay_us(280);
+	//Send 'RESET' signal(280us > low data) for LEDs
+	Delay_us(LED_RESET_WIDTH);
 	//End of RESET
 
 	//Start DMA

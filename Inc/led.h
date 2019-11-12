@@ -76,8 +76,9 @@ enum{   //constants for expressing color.
 	LED_COLOR_CYAN,
 	LED_COLOR_ORANGE,
 	LED_COLOR_GLAY,
+	LED_COLOR_DARK,
 };
-#define COLOR_MAX 10
+#define COLOR_MAX 11
 
 #define LED_COUNT		6
 #define BITS_PER_LED    24  // (RGB) 4 * 8bit
@@ -89,12 +90,14 @@ enum{   //constants for expressing color.
 #define LMAX	0x78
 #define L43		0x58
 #define LHLF	0x38
-#define LQTR	0x10
+#define LQTR	0x20
+#define LDRK	0x10
 #define LMIN	0x08
 #define LOFF	0x00
 
 #define LED_TIMER_CONSTANT	0xFF
-#define	LED_IDX_SELECTOR	0
+#define	LED_IDX_ENC0	0
+#define LED_RESET_WIDTH	280	//in usec.
 
     // *****************************************************************************
     // *****************************************************************************
