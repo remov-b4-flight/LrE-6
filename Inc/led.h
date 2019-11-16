@@ -200,7 +200,7 @@ typedef union leddata_t {
     void LED_Set_Quick(uint8_t index, uint8_t color);
     void LED_Set(uint8_t index, uint8_t color);
     void LED_SetPulse(uint8_t index, uint8_t color,uint8_t pulse);
-    void SendPulse();
+    void LED_SendPulse();
     /* Provide C++ Compatibility */
 #ifdef __cplusplus
 }

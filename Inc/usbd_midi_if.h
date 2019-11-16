@@ -15,9 +15,9 @@
 #include "usbd_midi.h"
 #include "usbd_desc.h"
 #include "curemisc.h"
-
+#if 0
 #include "curebuffer.h"
-
+#endif
 #define MIDI_BUFFER_LENGTH (1024)
 #define MIDI_SENDDATA_MAX (64)
 

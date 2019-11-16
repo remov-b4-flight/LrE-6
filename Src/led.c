@@ -11,7 +11,7 @@
 
 /* Variables -----------------------------------------------------------------*/
 extern TIM_HandleTypeDef htim3;
-extern bool	led_sendpulse;
+extern bool	isLEDsendpulse;
 uint32_t period;
 uint8_t	LEDColor[LED_COUNT];
 uint8_t	LEDPulse[TOTAL_BITS];	//Data formed PWM width send to LED
@@ -41,7 +41,7 @@ void LED_Initialize(){
 	memset(LEDColor,LED_COLOR_OFF,LED_COUNT);
 	memset(LEDTimer,LED_TIMER_CONSTANT,LED_COUNT);
 
-	SendPulse();
+	LED_SendPulse();
 	return;
 }
 /**
@@ -55,7 +55,7 @@ void LED_TestPattern(){
 	LEDColor[3]=LED_COLOR_YELLOW;
 	LEDColor[4]=LED_COLOR_GREEN;
 	LEDColor[5]=LED_COLOR_BLUE;
-	SendPulse();
+	LED_SendPulse();
 }
 
 /**
@@ -65,7 +65,7 @@ void LED_TestPattern(){
  */
 void LED_Set_Quick(uint8_t index,uint8_t color){
 	LEDColor[index] = color;
-	SendPulse();
+	LED_SendPulse();
 }
 
 /**
@@ -78,7 +78,7 @@ void LED_Set_Quick(uint8_t index,uint8_t color){
  */
 inline void LED_Set(uint8_t index,uint8_t color){
 	LEDColor[index] = color;
-	led_sendpulse = true;
+	isLEDsendpulse = true;
 }
 
 /**
@@ -90,7 +90,7 @@ inline void LED_Set(uint8_t index,uint8_t color){
 inline void LED_SetPulse(uint8_t index,uint8_t color,uint8_t pulse){
 	LEDColor[index] = color;
     LEDTimer[index] = pulse;	// 4ms unit (i.e. pulse=25 => 100ms)
-	led_sendpulse = true;
+	isLEDsendpulse = true;
 }
 
 /**
@@ -115,7 +115,7 @@ void Color2Pulse(){
  *	@param	none.
  *	@pre	LEDColor[] contains LED color setting.
  */
-void SendPulse(){
+void LED_SendPulse(){
 
 	//Convert LEDColor[] to LEDPulse[]
 	Color2Pulse();

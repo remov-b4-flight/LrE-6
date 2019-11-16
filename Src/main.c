@@ -44,7 +44,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define UP_ARROW_CHAR	5
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -73,8 +73,8 @@ uint8_t		LrE6Scene;
 
 //! keyboard variable
 bool		isKeyPressed;
-KEYSCAN     keystat;
-uint8_t		keyline;
+KEYSCAN     Key_Stat;
+uint8_t		Key_Line;
 bool		isKeyRelaseSent;
 #ifdef MIDI
 bool		isPrev_sw;	//MIDI event previous sent is switch(true) or rotator(false)
@@ -83,14 +83,14 @@ uint32_t	MaskRot[SCENE_COUNT];
 #endif
 
 //! LCD variables
-int32_t     lcd_timer;
-bool		lcd_timer_enable;
-bool        lcd_off_flag;
+int32_t     LCD_Timer_Count;
+bool		LCD_Timer_Enable;
+bool        LCD_Off_Flag;
 bool		lcd_1stflag;
 
 //! LED variables
-bool		led_sendpulse;
-bool		led_timer_update;
+bool		isLEDsendpulse;
+bool		LED_Timer_Update;
 
 #ifdef MIDI
 	extern	KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT];
@@ -151,8 +151,8 @@ void Delay_us(uint32_t microsec){
 }
 
 inline void Start_LCDTimer(uint32_t tick){
-	lcd_timer = tick;
-	lcd_timer_enable = true;
+	LCD_Timer_Count = tick;
+	LCD_Timer_Enable = true;
 }
 
 #ifdef MIDI
@@ -162,7 +162,7 @@ inline void Start_LCDTimer(uint32_t tick){
  */
 static void LED_SetScene(uint8_t scene){
 	memcpy(LEDColor,LED_Scene[scene],LED_COUNT);
-	SendPulse();
+	LED_SendPulse();
 }
 /**
  * @brief Make MaskKey[],MaskRot[] from keytable
@@ -180,7 +180,6 @@ static bool	MakeMasks(){
 	}
 	return ret;
 }
-
 #endif
 
 #ifdef MIDI
@@ -191,11 +190,11 @@ static bool EmulateMIDI(){
 	char lcd_string2[10];
 
     if (isKeyPressed) {
-        uint8_t		bitpos = ntz32(keystat.wd);
-        uint32_t	rkey = (keystat.wd & MOD_SW_BIT_MASK);
+        uint8_t		bitpos = ntz32(Key_Stat.wd);
+        uint32_t	rkey = (Key_Stat.wd & MOD_SW_BIT_MASK);
         bool 		isKeyReport = false;
 
-        if ( keystat.wd & MaskKey[LrE6Scene] ) { //Matrix switches
+        if ( Key_Stat.wd & MaskKey[LrE6Scene] ) { //Matrix switches
         	uint8_t	ch = (LrE6Scene * CC_CH_PER_SCENE) + bitpos;
             //uint8_t led_axis = ((bitpos < 10) || (KEY_COUNT <= bitpos))? LED_IDX_ENC0 : (bitpos - 10);	//Limit LED boundary
         	uint8_t led_axis;
@@ -229,9 +228,9 @@ static bool EmulateMIDI(){
         		LCD_Locate(0, LCD_LINE1);
         		LCD_Print(lcd_string2);
 
-            	lcd_off_flag = false;
-        		lcd_timer_enable = true;
-            	lcd_timer = LCD_TIMER_DEFAULT;
+            	LCD_Off_Flag = false;
+        		LCD_Timer_Enable = true;
+            	LCD_Timer_Count = LCD_TIMER_DEFAULT;
             }
             LED_SetPulse(led_axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
 
@@ -252,7 +251,7 @@ static bool EmulateMIDI(){
 				prev_ch = ch;
 				isPrev_sw = true;
             }
-        }else if( keystat.wd & MaskRot[LrE6Scene] )   { //rotator
+        }else if( Key_Stat.wd & MaskRot[LrE6Scene] )   { //rotator
         	uint8_t axis = (bitpos - KEY_COUNT) / 2;
         	uint8_t val = MIDI_CC_Value[LrE6Scene][axis];
         	uint8_t ch = (LrE6Scene * CC_CH_PER_SCENE) + (KEY_COUNT + axis);
@@ -272,9 +271,9 @@ static bool EmulateMIDI(){
         		LCD_Locate(0, LCD_LINE1);
             	LCD_Print(lcd_string2);
 
-            	lcd_off_flag = false;
-        		lcd_timer_enable = true;
-            	lcd_timer = LCD_TIMER_DEFAULT;
+            	LCD_Off_Flag = false;
+        		LCD_Timer_Enable = true;
+            	LCD_Timer_Count = LCD_TIMER_DEFAULT;
             }
 
             LED_SetPulse(axis,keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
@@ -320,8 +319,8 @@ static bool EmulateKeyboard(void) {
     bool isKeyReport;
 
     if (isKeyPressed) {
-        bitpos = ntz32(keystat.wd);
-        rkey = (keystat.wd & MOD_SW_BIT_MASK);
+        bitpos = ntz32(Key_Stat.wd);
+        rkey = (Key_Stat.wd & MOD_SW_BIT_MASK);
         if ( bitpos < KEY_COUNT + (2 * ROT_COUNT) ){
 #if 0
         	if(modifiers[bitpos].element[0] != HID_NONM) SendModifiers(bitpos);
@@ -331,9 +330,9 @@ static bool EmulateKeyboard(void) {
             In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
             if (keytable[bitpos].message != NULL) {
         		LCD_Locate(0,0);
-            	lcd_off_flag = false;
-        		lcd_timer_enable = true;
-            	lcd_timer = LCD_TIMER_DEFAULT;
+            	LCD_Off_Flag = false;
+        		LCD_Timer_Enable = true;
+            	LCD_Timer_Count = LCD_TIMER_DEFAULT;
             	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
             	LCD_Print(keytable[bitpos].message);
             }
@@ -381,10 +380,10 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  keyline = L0;
-  lcd_off_flag = false;
-  lcd_timer_enable = false;
-  lcd_timer = LCD_TIMER_DEFAULT;
+  Key_Line = L0;
+  LCD_Off_Flag = false;
+  LCD_Timer_Enable = false;
+  LCD_Timer_Count = LCD_TIMER_DEFAULT;
   lcd_1stflag = true;
 
   LrE6State = LRE6_RESET;
@@ -395,7 +394,7 @@ int main(void)
 #endif
 
   isKeyRelaseSent = true;
-  led_sendpulse = false;
+  isLEDsendpulse = false;
 #if 0
   ExpandModifiers();
 #endif
@@ -423,7 +422,7 @@ int main(void)
 #endif
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin,GPIO_PIN_SET);	//Initialize Switch matrix.
+  HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);
 
   LED_Initialize();	//Set all LEDs 'OFF'
@@ -431,9 +430,8 @@ int main(void)
   //Initialize LCD
   HAL_Delay(LCD_PWRUP_WAIT_MS);		//Wait for LCD module power up.
   LCD_Initialize();
-  LCD_SetCGRAM(5,up_arrow);			//Set user defined 'up aroow' character.
+  LCD_SetCGRAM(UP_ARROW_CHAR, up_arrow);		//Set user defined 'up arrow' character.
   LCD_SetDDADR(0);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -444,10 +442,10 @@ int main(void)
 
   char lcdmsg[LCD_WIDTH + 4];
 
-  lcd_timer = LCD_TIMER_DEFAULT;
+  LCD_Timer_Count = LCD_TIMER_DEFAULT;
   Start_LCDTimer(LCD_TIMER_DEFAULT);
-  lcd_off_flag = false;
-  lcd_timer_enable = true;
+  LCD_Off_Flag = false;
+  LCD_Timer_Enable = true;
   LrE6State = LRE6_USB_NOLINK;
 #ifdef MIDI
   LED_SetScene(LrE6Scene);
@@ -457,7 +455,7 @@ int main(void)
   while (1) {
 	if (LrE6State == LRE6_USB_LINKUP) {
 		//USB device configured by host
-		LED_Set_Quick(LED_IDX_ENC0,LED_COLOR_RED);
+		LED_Set_Quick(LED_IDX_ENC0, LED_COLOR_RED);
 		LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
 		LCD_Print(LrE6_PRODUCT);
 		sprintf(lcdmsg,"%2x.%02x",USBD_DEVICE_VER_MAJ,USBD_DEVICE_VER_MIN);
@@ -473,20 +471,20 @@ int main(void)
 		//Operates as USB Keyboards.
 		EmulateKeyboard();
 #endif
-		if(lcd_off_flag){
-			lcd_off_flag = false;
+		if(LCD_Off_Flag){
+			LCD_Off_Flag = false;
 			LCD_SetBackLight(LCD_BL_OFF, LED_BL_STATIC);
 			LCD_Clear();
 		}
 	} else if(LrE6State == LRE6_USB_LINK_LOST) {
 		LED_TestPattern();
 		lcd_1stflag = false;
-		lcd_timer_enable = true;
+		LCD_Timer_Enable = true;
 		LrE6State = LRE6_USB_NOLINK;
 
 	} else if(LrE6State == LRE6_USB_NOLINK) {
 		//USB Not initially configured.
-		if (lcd_off_flag) {
+		if (LCD_Off_Flag) {
 			if (lcd_1stflag) {
 				LrE6State = LRE6_USB_LINK_LOST;
 			} else {
@@ -511,9 +509,9 @@ int main(void)
 				LCD_Print(lcdmsg);
 
 				//Restart LCD timer.
-				lcd_off_flag = false;
-				lcd_timer = LCD_TIMER_UPDATE;
-				lcd_timer_enable = true;
+				LCD_Off_Flag = false;
+				LCD_Timer_Count = LCD_TIMER_UPDATE;
+				LCD_Timer_Enable = true;
 
 				//Rotate LED colors
 				uint8_t	tempcolor = LEDColor[5];
@@ -524,14 +522,14 @@ int main(void)
 				LEDColor[1] = LEDColor[0];
 				LEDColor[0] = tempcolor;
 
-				led_sendpulse = true;
+				isLEDsendpulse = true;
 			}
 		}// lcd_off_flag
 	}// LrE6State
 
 
 	//LED Timer
-	if (led_timer_update){ //4x4ms = 16ms interval
+	if (LED_Timer_Update){ //4x4ms = 16ms interval
 		for (uint8_t i = 0; i < LED_COUNT ; i++){
 			if (LEDTimer[i] != LED_TIMER_CONSTANT) {
 				if (--LEDTimer[i] == 0) {
@@ -539,13 +537,13 @@ int main(void)
 				}
 		 	}
 		}
-		led_timer_update = false;
+		LED_Timer_Update = false;
 	}
 
 	//Flashing LEDs
-	if (led_sendpulse) {
-		SendPulse();
-		led_sendpulse = false;
+	if (isLEDsendpulse == true) {
+		LED_SendPulse();
+		isLEDsendpulse = false;
 	}
     /* USER CODE END WHILE */
 
