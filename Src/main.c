@@ -195,10 +195,17 @@ static bool EmulateMIDI(){
         uint32_t	rkey = (keystat.wd & MOD_SW_BIT_MASK);
         bool 		isKeyReport = false;
 
-        //if ( bitpos < KEY_PER_SCENE ) { //Matrix switches
         if ( keystat.wd & MaskKey[LrE6Scene] ) { //Matrix switches
         	uint8_t	ch = (LrE6Scene * CC_CH_PER_SCENE) + bitpos;
-            uint8_t led_axis = ((bitpos < 10) || (KEY_COUNT <= bitpos))? LED_IDX_ENC0 : (bitpos - 10);	//Limit LED boundary
+            //uint8_t led_axis = ((bitpos < 10) || (KEY_COUNT <= bitpos))? LED_IDX_ENC0 : (bitpos - 10);	//Limit LED boundary
+        	uint8_t led_axis;
+            if (bitpos < 10){
+            	led_axis = LED_IDX_ENC0;
+            } else if (KEY_COUNT <= bitpos){
+            	led_axis = ((bitpos/2) - (KEY_COUNT/2));
+            }else{
+            	led_axis = (bitpos - 10);
+            }
             if (bitpos == SCENE_BIT) { //[SCENE] switch?
             	//Move to next Scene.
         		LrE6Scene++;
@@ -210,7 +217,7 @@ static bool EmulateMIDI(){
         		isKeyPressed = false;
         		isKeyReport = false;
         	}else{
-        		sprintf(lcd_string2, ((ch > 99)? "C%3d=%3d":"Ch%02d=%3d"), ch, MIDI_CC_ON);
+        		sprintf(lcd_string2, "Note %3d", ch);
                 isKeyReport = true;
         	}
 
@@ -245,8 +252,7 @@ static bool EmulateMIDI(){
 				prev_ch = ch;
 				isPrev_sw = true;
             }
-        //}else if( KEY_PER_SCENE <= bitpos && bitpos < KEY_COUNT + (2 * ROT_COUNT) )   { //rotator
-          }else if( keystat.wd & MaskRot[LrE6Scene] )   { //rotator
+        }else if( keystat.wd & MaskRot[LrE6Scene] )   { //rotator
         	uint8_t axis = (bitpos - KEY_COUNT) / 2;
         	uint8_t val = MIDI_CC_Value[LrE6Scene][axis];
         	uint8_t ch = (LrE6Scene * CC_CH_PER_SCENE) + (KEY_COUNT + axis);

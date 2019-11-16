@@ -58,10 +58,10 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		//Scence0 Rotators
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = NULL},			//rot0 CW cursor right
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = NULL},			//rot0 CCW cursor left
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Rate \x5  "},	//rot1 CW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Rate \x6  "},	//rot1 CCW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_HALF,		.message = "Flag \x5  "},	//rot2 CW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_HALF,		.message = "Flag \x6  "},	//rot2 CCW
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Rate \x5  "},	//rot1 CW
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Rate \x6  "},	//rot1 CCW
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_HALF,		.message = "Flag \x5  "},	//rot2 CW
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_HALF,		.message = "Flag \x6  "},	//rot2 CCW
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Rotate \x7"},	//rot3 CW
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Rotate \x8"},	//rot3 CCW
 		{.type = TYPE_ROTARY,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Scroll \x5"},	//rot4 CW
