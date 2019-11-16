@@ -66,23 +66,29 @@ DMA_HandleTypeDef hdma_tim3_ch1_trig;
 
 /* USER CODE BEGIN PV */
 TIM_HandleTypeDef htim3;
+extern	USBD_HandleTypeDef hUsbDeviceFS;
 
+uint8_t		LrE6State;
+uint8_t		LrE6Scene;
+
+//! keyboard variable
 bool		isKeyPressed;
 KEYSCAN     keystat;
 uint8_t		keyline;
 bool		isKeyRelaseSent;
+#ifdef MIDI
+bool		isPrev_sw;	//MIDI event previous sent is switch(true) or rotator(false)
+uint32_t	MaskKey[SCENE_COUNT];
+uint32_t	MaskRot[SCENE_COUNT];
+#endif
 
+//! LCD variables
 int32_t     lcd_timer;
 bool		lcd_timer_enable;
 bool        lcd_off_flag;
 bool		lcd_1stflag;
-uint8_t		LrE6State;
-uint8_t		LrE6Scene;
 
-#ifdef MIDI
-bool		isPrev_sw;	//MIDI event previous sent is switch(true) or rotator(false)
-#endif
-
+//! LED variables
 bool		led_sendpulse;
 bool		led_timer_update;
 
@@ -96,10 +102,8 @@ bool		led_timer_update;
 #endif
 
 extern	uint8_t	LED_Scene[SCENE_COUNT][LED_COUNT];
-extern	USBD_HandleTypeDef hUsbDeviceFS;
-extern	uint8_t	LEDColor[];
+extern	uint8_t	LEDColor[LED_COUNT];
 extern	uint8_t	LEDTimer[LED_COUNT];
-const	uint8_t	up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
 
 #ifdef MIDI
 	uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
@@ -107,6 +111,10 @@ const	uint8_t	up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x
 	uint8_t	USBMIDI_Event[4];
 	extern USBD_HandleTypeDef *pInstance;
 #endif
+
+//! constants
+const	uint8_t	up_arrow[LCD_CGRAM_BYTES] = {0x04,0x0E,0x15,0x04,0x04,0x04,0x04,0x00};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -126,7 +134,10 @@ static void MX_TIM2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-//Delay process in us unit.
+/**
+ * @brief Delay process in us unit.
+ * @param uint32_t microsec duration to wait.
+ */
 void Delay_us(uint32_t microsec){
 
 	htim14.Init.Period = microsec;
@@ -153,6 +164,23 @@ static void LED_SetScene(uint8_t scene){
 	memcpy(LEDColor,LED_Scene[scene],LED_COUNT);
 	SendPulse();
 }
+/**
+ * @brief Make MaskKey[],MaskRot[] from keytable
+ * @param none
+ * @return false:there is some configuration error.
+ */
+static bool	MakeMasks(){
+	bool ret = true;
+	for(uint8_t scn = 0; scn < SCENE_COUNT; scn++){
+		for(uint8_t bit = 0; bit < KEY_DEFINE_COUNT; bit++){
+			uint32_t	or_bit = (1 << bit);
+			MaskKey[scn] |= (keytable[scn][bit].type == TYPE_SWITCH)?	or_bit : 0;
+			MaskRot[scn] |= (keytable[scn][bit].type == TYPE_ROTARY)?	or_bit : 0;
+		}
+	}
+	return ret;
+}
+
 #endif
 
 #ifdef MIDI
@@ -167,8 +195,9 @@ static bool EmulateMIDI(){
         uint32_t	rkey = (keystat.wd & MOD_SW_BIT_MASK);
         bool 		isKeyReport = false;
 
-        if ( bitpos < KEY_PER_SCENE ) { //Matrix switches
-        	uint8_t	ch = (LrE6Scene * KEY_DEFINE_COUNT) + bitpos;
+        //if ( bitpos < KEY_PER_SCENE ) { //Matrix switches
+        if ( keystat.wd & MaskKey[LrE6Scene] ) { //Matrix switches
+        	uint8_t	ch = (LrE6Scene * CC_CH_PER_SCENE) + bitpos;
             uint8_t led_axis = ((bitpos < 10) || (KEY_COUNT <= bitpos))? LED_IDX_ENC0 : (bitpos - 10);	//Limit LED boundary
             if (bitpos == SCENE_BIT) { //[SCENE] switch?
             	//Move to next Scene.
@@ -200,18 +229,27 @@ static bool EmulateMIDI(){
             LED_SetPulse(led_axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
 
             if (isKeyReport == true) {
+#ifndef MIDI_NOTE
 				//Set 'Control change'(Switch ON)
 				USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
 				USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
 				USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = ch;
 				USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_CC_ON;
+#else
+				//Set 'Note ON
+				USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_NT_ON;
+				USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_NT_ON_S;
+				USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = ch;
+				USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_VELOCITY;
+#endif
 				prev_ch = ch;
 				isPrev_sw = true;
             }
-        }else if( KEY_PER_SCENE <= bitpos && bitpos < KEY_COUNT + (2 * ROT_COUNT) )   { //rotator
+        //}else if( KEY_PER_SCENE <= bitpos && bitpos < KEY_COUNT + (2 * ROT_COUNT) )   { //rotator
+          }else if( keystat.wd & MaskRot[LrE6Scene] )   { //rotator
         	uint8_t axis = (bitpos - KEY_COUNT) / 2;
         	uint8_t val = MIDI_CC_Value[LrE6Scene][axis];
-        	uint8_t ch = (LrE6Scene * KEY_DEFINE_COUNT) + (KEY_COUNT + axis);
+        	uint8_t ch = (LrE6Scene * CC_CH_PER_SCENE) + (KEY_COUNT + axis);
 
             USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
             USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
@@ -238,10 +276,18 @@ static bool EmulateMIDI(){
 
         }else if(isPrev_sw == true && rkey == 0) {// Switch is released
 			//Set 'Control Change'(Switch OFF)
+#ifndef MIDI_NOTE
             USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
             USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
             USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = prev_ch;
             USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_CC_OFF;
+#else
+			//Set 'Note OFF
+			USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_NT_OFF;
+			USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_NT_OFF_S;
+			USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = prev_ch;
+			USBMIDI_Event[MIDI_EV_IDX_VALUE] = 0;
+#endif
 			isKeyReport = true;
 			isPrev_sw = false;
         }
@@ -399,6 +445,7 @@ int main(void)
   LrE6State = LRE6_USB_NOLINK;
 #ifdef MIDI
   LED_SetScene(LrE6Scene);
+  MakeMasks();
 #endif
 
   while (1) {
@@ -437,7 +484,6 @@ int main(void)
 			if (lcd_1stflag) {
 				LrE6State = LRE6_USB_LINK_LOST;
 			} else {
-				LCD_SetBackLight(LCD_BL_ON,3500);
 
 				HAL_ADC_Start(&hadc);
 				//get value from ADC and display it...
@@ -454,6 +500,7 @@ int main(void)
 				sprintf(lcdmsg,"%02d.%02dC\xdf",temp_i,temp_s);
 				//sprintf(lcdmsg,"%04X",inner_sensor_val);
 
+				LCD_SetBackLight(LCD_BL_ON,inner_sensor_val);
 				LCD_Locate(0, LCD_LINE0);
 				LCD_Print(lcdmsg);
 

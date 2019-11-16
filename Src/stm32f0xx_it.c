@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "midi.h"
 #include "stm32f0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -90,13 +91,13 @@ extern uint8_t LrE6Scene;
 
 inline void MIDI_CC_Inc(uint8_t rot){
 #ifdef MIDI
-	if (MIDI_CC_Value[LrE6Scene][rot] < 127 ) MIDI_CC_Value[LrE6Scene][rot]++;
+	if (MIDI_CC_Value[LrE6Scene][rot] < MIDI_CC_MAX ) MIDI_CC_Value[LrE6Scene][rot]++;
 #endif
 }
 
 inline void MIDI_CC_Dec(uint8_t rot){
 #ifdef MIDI
-	if (MIDI_CC_Value[LrE6Scene][rot] >= 1 ) MIDI_CC_Value[LrE6Scene][rot]--;
+	if (MIDI_CC_Value[LrE6Scene][rot] >= (MIDI_CC_MIN+1) ) MIDI_CC_Value[LrE6Scene][rot]--;
 #endif
 }
 

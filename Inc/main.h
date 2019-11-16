@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x24
+#define USBD_DEVICE_VER_MIN	0x25
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -153,7 +153,6 @@ void Error_Handler(void);
 	#define LrE6_WIN	1	//Use windows shortcut.
 #endif
 #define LrE6_VENDOR "Ruffles Inc."
-//#define ENC_9R5KQ	1	//Use alternate signaling
 
 #define	TIM_PWM_50PER (TIM_PERIOD_4mS / 2)
 
@@ -174,10 +173,9 @@ void Error_Handler(void);
 #define ENC23S_GPIO_Port GPIOB
 #define ENC4_GPIO_Port GPIOC
 #define ENC5_GPIO_Port GPIOF
-#define KEY_COUNT 16
+#define KEY_COUNT	16
+#define	ROT_COUNT	6
 
-//Key define structure
-#define KEY_DEFINE_COUNT	32
 
 typedef union {
     uint32_t wd;
@@ -198,14 +196,15 @@ typedef union {
 
 typedef struct {
 #ifdef MIDI
+	uint8_t	type;
 	uint8_t color;
 	uint8_t duration;
-	char	*message;
 #else
+	uint8_t	type;
 	uint8_t modifier;
 	uint8_t keycode;
-	char	*message;
 #endif
+	char	*message;
 } KEY_DEFINE;
 
 #ifndef MIDI
@@ -259,13 +258,21 @@ enum {
 		MIDI_EV_IDX_CHANNEL = 2,
 		MIDI_EV_IDX_VALUE = 3,
 	};
-	#define SCENE_COUNT	4
-	#define SCENE_BIT	9
-	#define ROT_PER_SCENE	8
-	#define KEY_PER_SCENE	(KEY_COUNT)
 
+	enum{
+		TYPE_SWITCH = 0,
+		TYPE_ROTARY = 1,
+	};
+
+	#define SCENE_COUNT		4
+	#define SCENE_BIT		9
+	#define KEY_PER_SCENE	(KEY_COUNT)
+	#define	CC_CH_PER_SCENE	32
+	//Key define structure
+	#define KEY_DEFINE_COUNT	(KEY_COUNT+(ROT_COUNT*2))
 #else
-	#define SCENE_COUNT	1
+	#define KEY_DEFINE_COUNT	32
+	#define SCENE_COUNT			1
 	#define HID_RPT_KEY_IDX		1
 
 	//Moved From Harmony keyboard.h
@@ -275,8 +282,7 @@ enum {
 	} KEYBOARD_INPUT_REPORT;
 #endif
 
-#define LxMASK 0x0F
-#define MOD_SW_BIT_MASK    0x0fffffff
+#define LxMASK	0x0F
 //
 #define PRMASK_R0	0x3000
 #define PRMASK_R1	0x0030
@@ -298,7 +304,7 @@ enum {
 #define ROT_MOVE_CW         1
 #define ROT_MOVE_CCW        2
 #define ROT_MASK			0x03
-#define	ROT_COUNT			6
+#define MOD_SW_BIT_MASK    0x0fffffff
 
 void Delay_us(uint32_t microsec);
 void Start_LCDTimer(uint32_t tick);

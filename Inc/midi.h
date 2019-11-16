@@ -47,7 +47,16 @@
 #define	MIDI_CC_ON		0x7F
 #define	MIDI_CC_OFF		0x00
 
+#define	MIDI_NT_ON		0x09
+#define MIDI_NT_ON_S	0x90
+
+#define MIDI_NT_OFF		0x08
+#define MIDI_NT_OFF_S	0x80
+
+#define MIDI_CC_MAX		0x7F
+#define MIDI_CC_MIN		0x00
+
+#define MIDI_VELOCITY	0x7F
+
 //Others
-#define MIDI_CCCH_SW_BASE	0x20
-#define MIDI_CCCH_ROT_BASE	0x00
 #endif /* INC_MIDI_NOTE_H_ */
