@@ -95,6 +95,7 @@ bool		LED_Timer_Update;
 #ifdef MIDI
 	extern	KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT];
 	extern	char *scene_name[SCENE_COUNT];
+	extern uint8_t	led_axis_table[KEY_DEFINE_COUNT];
 #else //HID
 	extern	KEY_DEFINE keytable[];
 	KEY_MODIFIER modifiers[KEY_COUNT];
@@ -196,15 +197,8 @@ static bool EmulateMIDI(){
 
         if ( Key_Stat.wd & MaskKey[LrE6Scene] ) { //Matrix switches
         	uint8_t	ch = (LrE6Scene * CC_CH_PER_SCENE) + bitpos;
-            //uint8_t led_axis = ((bitpos < 10) || (KEY_COUNT <= bitpos))? LED_IDX_ENC0 : (bitpos - 10);	//Limit LED boundary
-        	uint8_t led_axis;
-            if (bitpos < 10){
-            	led_axis = LED_IDX_ENC0;
-            } else if (KEY_COUNT <= bitpos){
-            	led_axis = ((bitpos/2) - (KEY_COUNT/2));
-            }else{
-            	led_axis = (bitpos - 10);
-            }
+        	uint8_t led_axis = led_axis_table[bitpos];
+
             if (bitpos == SCENE_BIT) { //[SCENE] switch?
             	//Move to next Scene.
         		LrE6Scene++;
