@@ -68,8 +68,8 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_HALF,		.message = "Flag \x6  "},	//rot2 CCW
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Rotate \x7"},	//rot3 CW
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Rotate \x8"},	//rot3 CCW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Scroll \x5"},	//rot4 CW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Scroll \x6"},	//rot4 CCW
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Scroll \x5"},	//rot4 CW
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Scroll \x6"},	//rot4 CCW
 		{.type = TYPE_ROTARY,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_HALF,		.message = "Zoom In "},		//rot5 CW
 		{.type = TYPE_ROTARY,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_HALF,		.message = "Zoom Out"},		//rot5 CCW
 	},{	//Scene1 Button
@@ -116,8 +116,8 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "ClrSatCY"},	//L2M2	rot4 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "ClrSatBL"},	//L2M3	rot5 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "ClrSatOR"},	//L3M0	rot1 push
-		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "ClrSatRD"},	//L3M1	rot2 push
-		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "ClrSatYW"},	//L3M2	rot3 push
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "ClrSatYW"},	//L3M1	rot2 push
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "ClrSatGR"},	//L3M2	rot3 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "ClrSatRD"},	//L3M3	rot0 push
 		//Scence2 Rotators
 		{.type = TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Red\x5"},	//rot0 CW
@@ -156,8 +156,8 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "#Radius\x6"},	//rot1 CCW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_RED,		.duration = LED_TIMER_HALF,		.message = "#Detail\x5"},	//rot2 CW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_HALF,		.message = "#Detail\x6"},	//rot2 CCW
-		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},			//rot3 CW
-		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},			//rot3 CCW
+		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "De-Haze\x5"},	//rot3 CW
+		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "De-Haze\x6"},	//rot3 CCW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.All\x5"},	//rot4 CW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.All\x6"},	//rot4 CCW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "SatMgnt\x5"},	//rot5 CW

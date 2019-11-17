@@ -299,6 +299,7 @@ enum {
 #define LED_TIMER_DEFAULT	25		//400ms (1 tick=16ms)
 #define LED_TIMER_HALF		12		//192ms
 #define LED_TIMER_LONG		35		//560ms
+#define	LED_TIMER_CONNECT	150
 
 #define ROT_NOT_MOVE        0
 #define ROT_MOVE_CW         1

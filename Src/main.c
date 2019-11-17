@@ -450,6 +450,7 @@ int main(void)
 	if (LrE6State == LRE6_USB_LINKUP) {
 		//USB device configured by host
 		LED_Set_Quick(LED_IDX_ENC0, LED_COLOR_RED);
+		LEDTimer[LED_IDX_ENC0] = LED_TIMER_CONNECT;
 		LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
 		LCD_Print(LrE6_PRODUCT);
 		sprintf(lcdmsg,"%2x.%02x",USBD_DEVICE_VER_MAJ,USBD_DEVICE_VER_MIN);
