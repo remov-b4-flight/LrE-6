@@ -55,6 +55,7 @@
 
 #define MIDI_CC_MAX		0x7F
 #define MIDI_CC_MIN		0x00
+#define MIDI_CC_INITIAL	0x40
 
 #define MIDI_VELOCITY	0x7F
 

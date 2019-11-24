@@ -267,7 +267,8 @@ enum {
 	#define SCENE_COUNT		4
 	#define SCENE_BIT		9
 	#define KEY_PER_SCENE	(KEY_COUNT)
-	#define	CC_CH_PER_SCENE	32
+	#define	CC_CH_PER_SCENE	16
+	#define NOTES_PER_SCENE	32
 	//Key define structure
 	#define KEY_DEFINE_COUNT	(KEY_COUNT+(ROT_COUNT*2))
 #else
@@ -314,6 +315,8 @@ void Start_LCDTimer(uint32_t tick);
 #define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
 #define VDD_CALIB ((uint16_t) (330))
 #define VDD_APPLI ((uint16_t) (300))
+
+#define STRING_PAD	4
 
 /* USER CODE END Private defines */
 
