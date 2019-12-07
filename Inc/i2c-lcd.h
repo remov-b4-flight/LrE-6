@@ -124,6 +124,7 @@ extern "C" {
 //
 #define LCD_DD_PER_LINE     0x40
 #define LCD_WIDTH           8
+#define	LCD_LINE			2
 
 //LED BackLight
 #define LCD_BL_ON			true
@@ -135,6 +136,15 @@ extern "C" {
 #define LCD_CGRAM_BYTES		8
 #define	LCD_CGRAM_MASK		0x1F
 
+enum {
+	LCD_LINE0 = 0,
+	LCD_LINE1 = 1,
+};
+#define SPACE				0x20
+#define STRING_PAD			4
+
+#define	LCD_LINEBUF_SIZE	(LCD_WIDTH + STRING_PAD)
+
 //func prototype
 void LCD_Initialize();
 void LCD_Clear();
@@ -142,10 +152,11 @@ void LCD_Home();
 void LCD_SetDisplay(bool on, bool cursor, bool blink);
 void LCD_Locate(uint8_t column, uint8_t line);
 void LCD_Putchar(char c);
-void LCD_Print(const char *str);
 void LCD_SetBackLight(bool light, uint16_t cycle);
 void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern);
 void LCD_SetDDADR(uint8_t address);
+void LCD_Flash();
+void LCD_Print_Quick(const char *str);
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus

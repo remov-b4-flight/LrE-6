@@ -76,16 +76,13 @@
   */
 
 /** USB Device initialization function. */
-#ifdef MIDI
- void MX_USB_MIDI_INIT(void);
-#else //HID
- void MX_USB_DEVICE_Init(void);
-#endif
+void MX_USB_DEVICE_Init(void);
+
 /*
  * -- Insert functions declaration here --
  */
 /* USER CODE BEGIN FD */
-
+ void MX_USB_MIDI_INIT(void);
 /* USER CODE END FD */
 /**
   * @}

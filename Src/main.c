@@ -87,6 +87,7 @@ int32_t     LCD_Timer_Count;
 bool		LCD_Timer_Enable;
 bool        LCD_Off_Flag;
 bool		lcd_1stflag;
+bool		lcd_flash;
 
 //! LED variables
 bool		isLEDsendpulse;
@@ -105,6 +106,7 @@ bool		LED_Timer_Update;
 extern	uint8_t	LED_Scene[SCENE_COUNT][LED_COUNT];
 extern	uint8_t	LEDColor[LED_COUNT];
 extern	uint8_t	LEDTimer[LED_COUNT];
+extern	char LCD_Buffer[LCD_LINE][LCD_LINEBUF_SIZE];
 
 #ifdef MIDI
 	uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
@@ -155,6 +157,9 @@ inline void Start_LCDTimer(uint32_t tick){
 	LCD_Timer_Count = tick;
 	LCD_Timer_Enable = true;
 }
+inline void LCD_Print(){
+	lcd_flash = true;
+}
 
 #ifdef MIDI
 /**
@@ -188,7 +193,7 @@ static bool	MakeMasks(){
  *	@brief	Generate MIDI event and Send to host by User interaction.
  */
 static bool EmulateMIDI(){
-	char lcd_string[LCD_WIDTH + STRING_PAD];
+	char lcd_string[LCD_LINEBUF_SIZE];
 
     if (isKeyPressed) {
     	//Send 'Note On' Event from key matrix
@@ -218,10 +223,10 @@ static bool EmulateMIDI(){
             //Print Message to LCD & LED
             if (keytable[LrE6Scene][bitpos].message != NULL) {
             	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
-        		LCD_Locate(0, LCD_LINE0);
-            	LCD_Print(keytable[LrE6Scene][bitpos].message);
-        		LCD_Locate(0, LCD_LINE1);
-        		LCD_Print(lcd_string);
+
+        		strcpy(LCD_Buffer[0], keytable[LrE6Scene][bitpos].message);
+        		strcpy(LCD_Buffer[1], lcd_string);
+        		LCD_Print();
 
             	LCD_Off_Flag = false;
         		LCD_Timer_Enable = true;
@@ -255,17 +260,17 @@ static bool EmulateMIDI(){
             if (keytable[LrE6Scene][bitpos].message != NULL) {
             	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
                 sprintf(lcd_string, ((channel > 99)? "C%3d=%3d":"Ch%2d=%3d"), channel, val);
-        		LCD_Locate(0, LCD_LINE0);
-            	LCD_Print(keytable[LrE6Scene][bitpos].message);
-        		LCD_Locate(0, LCD_LINE1);
-            	LCD_Print(lcd_string);
+
+                strcpy(LCD_Buffer[0], keytable[LrE6Scene][bitpos].message);
+            	strcpy(LCD_Buffer[1], lcd_string);
+            	LCD_Print();
 
             	LCD_Off_Flag = false;
         		LCD_Timer_Enable = true;
             	LCD_Timer_Count = LCD_TIMER_DEFAULT;
             }
 
-            LED_SetPulse(axis,keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
+            LED_SetPulse(axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
             isKeyReport = true;
 
         }else if(isPrev_sw == true && rkey == 0) {// Switch is released
@@ -404,7 +409,7 @@ int main(void)
 #endif
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(L0_GPIO_Port,L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
+  HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);
 
   LED_Initialize();	//Set all LEDs 'OFF'
@@ -421,8 +426,6 @@ int main(void)
   const uint16_t ts_cal110 = *TEMP110_CAL_ADDR;
   const uint16_t ts_cal30 = *TEMP30_CAL_ADDR;
   const float k = (110.0 - 30.0) / (ts_cal110 - ts_cal30);
-
-  char lcdmsg[LCD_WIDTH + STRING_PAD];
 
   LCD_Timer_Count = LCD_TIMER_DEFAULT;
   Start_LCDTimer(LCD_TIMER_DEFAULT);
@@ -442,10 +445,11 @@ int main(void)
 		LED_Set_Quick(LED_IDX_ENC0, LED_COLOR_RED);
 		LEDTimer[LED_IDX_ENC0] = LED_TIMER_CONNECT;
 		LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
-		LCD_Print(LrE6_PRODUCT);
-		sprintf(lcdmsg, "%2x.%02x", USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
-		LCD_Locate(3, LCD_LINE1);
-		LCD_Print(lcdmsg);
+
+		strcpy(LCD_Buffer[0], LrE6_PRODUCT);
+		sprintf(LCD_Buffer[1], "   %2x.%02x", USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
+		LCD_Print();
+
 		LrE6State = LRE6_USB_LINKED;
 
 	} else if (LrE6State == LRE6_USB_LINKED) {
@@ -486,12 +490,11 @@ int main(void)
 				int8_t temp_i = tempf / 100;
 				int8_t temp_s = tempf % 100;
 
-				sprintf(lcdmsg, "%02d.%02dC\xdf", temp_i, temp_s);
-				//sprintf(lcdmsg,"%04X",inner_sensor_val);
+				sprintf(LCD_Buffer[0], "%02d.%02dC\xdf", temp_i, temp_s);
+				//sprintf(LCD_Buffer[0],"%04X",inner_sensor_val);
 
 				LCD_SetBackLight(LCD_BL_ON, inner_sensor_val);
-				LCD_Locate(0, LCD_LINE0);
-				LCD_Print(lcdmsg);
+				LCD_Print();
 
 				//Restart LCD timer.
 				LCD_Off_Flag = false;
@@ -530,6 +533,13 @@ int main(void)
 		LED_SendPulse();
 		isLEDsendpulse = false;
 	}
+
+	//Flashing LCD.
+	if (lcd_flash == true) {
+		LCD_Flash();
+		lcd_flash = false;
+	}
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

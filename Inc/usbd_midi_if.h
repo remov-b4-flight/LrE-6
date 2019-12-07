@@ -14,10 +14,11 @@
 
 #include "usbd_midi.h"
 #include "usbd_desc.h"
-#include "curemisc.h"
 #if 0
+#include "curemisc.h"
 #include "curebuffer.h"
 #endif
+#include <stdbool.h>
 #define MIDI_BUFFER_LENGTH (1024)
 #define MIDI_SENDDATA_MAX (64)
 
@@ -53,6 +54,7 @@ typedef struct{
 extern USBD_MIDI_ItfTypeDef  USBD_Interface_fops_FS;
 
 //for cure series
+#if 0
 extern FUNC_STATUS midiInit();//call before use functions in this files.
 extern FUNC_STATUS midiGetFromUsbRx(uint8_t ch, uint8_t* dat);
 extern FUNC_STATUS midiGetFromJackRx(uint8_t cable_num);
@@ -60,7 +62,7 @@ extern FUNC_STATUS midiSetFromJackRx(uint8_t cable_num, uint8_t* dat);
 extern bool isUsbRxBufEmpty(uint8_t ch);
 extern bool isJackRxBufEmpty(uint8_t ch);
 extern bool isRxBufEmpty();
-
+#endif
 //USB function
 extern void sendMidiMessage(uint8_t *msg, uint16_t size);
 extern uint8_t USBD_MIDI_SendData (USBD_HandleTypeDef *pdev, uint8_t *pBuf, uint16_t length);

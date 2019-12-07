@@ -20,10 +20,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "midi.h"
 #include "stm32f0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "midi.h"
 #include <stdbool.h>
 #include "stm32f0xx_hal_tim.h"
 #include "i2c-lcd.h"
@@ -133,7 +133,7 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-  LCD_Print("HRDFAULT");
+  LCD_Print_Quick("HRDFAULT");
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {

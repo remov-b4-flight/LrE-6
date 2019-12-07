@@ -169,7 +169,7 @@ const uint8_t LED_Scene[SCENE_COUNT][LED_COUNT] ={
 		{LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF, },
 };
 
-const KEY_DEFINE keytable[CC_CH_PER_SCENE] = {
+const KEY_DEFINE keytable[KEY_DEFINE_COUNT] = {
 #if LrE6_WIN //Windows Key Table Definitions
 //Switch definitions
 	{HID_NONM,			HID_1,		"Rate 1  "},	//L0M0	SW1

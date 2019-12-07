@@ -12,7 +12,8 @@
 /* Variables -----------------------------------------------------------------*/
 extern I2C_HandleTypeDef hi2c1;
 extern TIM_HandleTypeDef htim2;
-
+char LCD_Buffer[LCD_LINE][LCD_LINEBUF_SIZE];
+uint8_t i2cbuf[LCD_LINEBUF_SIZE * 2];
 /* User code -----------------------------------------------------------------*/
 /**
  * @brief	Initialize of LCD
@@ -21,6 +22,8 @@ extern TIM_HandleTypeDef htim2;
 void LCD_Initialize(){
     uint8_t buf[2];
     
+    memset(LCD_Buffer, SPACE, (LCD_LINEBUF_SIZE * 2) );
+
     buf[0] = LCD_I2C_TAIL | LCD_I2C_INST | LCD_I2C_WRITE;
     buf[1] = LCD_CMD_FUNC | LCD_IF_8BIT | LCD_2LINE | LCD_NORMAL_INST;
     HAL_I2C_Master_Transmit(&hi2c1,LCD_I2C_ADDR,buf, sizeof(buf), LCD_TRANSMIT_TO);
@@ -97,7 +100,7 @@ void LCD_SetDisplay(bool on, bool cursor, bool blink){
 }
 
 /**
- *	@brief Put string on LCD
+ *	@brief Put character on LCD
  *	@param	char c	character to print.
  */
 void LCD_Putchar(char c){
@@ -109,31 +112,34 @@ void LCD_Putchar(char c){
 }
 
 /**
- *	@brief Put string on LCD
- *	@param	char *str	string to print.
+ * @brief Flash LCD screen.
+ * @param none.
  */
-void LCD_Print(const char *str){
-    size_t len = strlen(str);
+void LCD_Flash(){
+	LCD_Locate(0, LCD_LINE0);
+	LCD_Print_Quick(LCD_Buffer[LCD_LINE0]);
+	LCD_Locate(0, LCD_LINE1);
+	LCD_Print_Quick(LCD_Buffer[LCD_LINE1]);
+}
 
-    if(len > LCD_WIDTH) len = LCD_WIDTH;
-#if 0
-    for (uint8_t i = 0; i < len; i++){
-        LCD_Putchar(*(str+i));
-    }
-#else
-    uint8_t i2cbuf[LCD_WIDTH*2],*p = i2cbuf;
-    uint8_t cmd= LCD_I2C_CONTINUE | LCD_I2C_DATA | LCD_I2C_WRITE;    // =0xC0;
+/**
+ * @brief Print LCD Message Immediately
+ * @param string to print
+ */
+void LCD_Print_Quick(const char *str){
+	const uint8_t len = LCD_WIDTH;
+    const int8_t cmd= LCD_I2C_CONTINUE | LCD_I2C_DATA | LCD_I2C_WRITE;    // =0xC0;
+    uint8_t *p = i2cbuf;
 
-    for(uint8_t i = 0;i < (len-1) ; i++){
+    for(uint8_t i = 0; i < (len-1); i++){
         *p++ = cmd;
         *p++ = str[i];
     }
     *p++ = LCD_I2C_TAIL | LCD_I2C_DATA | LCD_I2C_WRITE;    // =0x40;
-    *p++ = str[len-1];
+    *p = str[len-1];
 
-    HAL_I2C_Master_Transmit(&hi2c1, LCD_I2C_ADDR, i2cbuf, (len*2), LCD_TRANSMIT_TO);
+    HAL_I2C_Master_Transmit(&hi2c1, LCD_I2C_ADDR, i2cbuf, (len * 2), LCD_TRANSMIT_TO);
     Delay_us(LCD_DAT_WAIT_US);
-#endif
 }
 
 /**
@@ -156,7 +162,7 @@ void LCD_SetBackLight(bool light, uint16_t cycle){
 		sConfigOC.OCMode = TIM_OCMODE_FORCED_INACTIVE;
 	}
 	HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 }
 
 /**
@@ -202,4 +208,5 @@ void LCD_SetDDADR(uint8_t address){
     HAL_I2C_Master_Transmit(&hi2c1, LCD_I2C_ADDR, buf, 2, LCD_TRANSMIT_TO);
     Delay_us(LCD_CMD_WAIT_US);
 }
+
 /* ******************************************************* **** END OF FILE****/

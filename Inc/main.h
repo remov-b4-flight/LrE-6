@@ -48,7 +48,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x25
+#define USBD_DEVICE_VER_MIN	0x27
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -200,7 +200,6 @@ typedef struct {
 	uint8_t color;
 	uint8_t duration;
 #else
-	uint8_t	type;
 	uint8_t modifier;
 	uint8_t keycode;
 #endif
@@ -231,10 +230,6 @@ enum {
 	L3
 };
 
-enum {
-	LCD_LINE0 = 0,
-	LCD_LINE1 = 1,
-};
 
 enum {
 	LrE6_SCENE0 = 0,
@@ -306,7 +301,7 @@ enum {
 #define ROT_MOVE_CW         1
 #define ROT_MOVE_CCW        2
 #define ROT_MASK			0x03
-#define MOD_SW_BIT_MASK    0x0fffffff
+#define MOD_SW_BIT_MASK		0x0fffffff
 
 void Delay_us(uint32_t microsec);
 void Start_LCDTimer(uint32_t tick);
@@ -315,8 +310,6 @@ void Start_LCDTimer(uint32_t tick);
 #define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
 #define VDD_CALIB ((uint16_t) (330))
 #define VDD_APPLI ((uint16_t) (300))
-
-#define STRING_PAD	4
 
 /* USER CODE END Private defines */
 
