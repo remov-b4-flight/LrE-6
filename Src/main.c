@@ -86,7 +86,7 @@ uint32_t	MaskRot[SCENE_COUNT];
 int32_t     LCD_Timer_Count;
 bool		LCD_Timer_Enable;
 bool        LCD_Off_Flag;
-bool		lcd_1stflag;
+bool		lcd_1st_timeout;
 bool		lcd_flash;
 
 //! LED variables
@@ -371,7 +371,7 @@ int main(void)
   LCD_Off_Flag = false;
   LCD_Timer_Enable = false;
   LCD_Timer_Count = LCD_TIMER_DEFAULT;
-  lcd_1stflag = true;
+  lcd_1st_timeout = true;
 
   LrE6State = LRE6_RESET;
   LrE6Scene	= LrE6_SCENE0;
@@ -467,14 +467,14 @@ int main(void)
 		}
 	} else if(LrE6State == LRE6_USB_LINK_LOST) {
 		LED_TestPattern();
-		lcd_1stflag = false;
+		lcd_1st_timeout = false;
 		LCD_Timer_Enable = true;
 		LrE6State = LRE6_USB_NOLINK;
 
 	} else if(LrE6State == LRE6_USB_NOLINK) {
 		//USB Not initially configured.
 		if (LCD_Off_Flag == true) {
-			if (lcd_1stflag == true) {
+			if (lcd_1st_timeout == true) {
 				LrE6State = LRE6_USB_LINK_LOST;
 			} else {
 
@@ -512,7 +512,7 @@ int main(void)
 
 				isLEDsendpulse = true;
 			}
-		}// lcd_off_flag
+		}// LCD_Off_Flag
 	}// LrE6State
 
 
