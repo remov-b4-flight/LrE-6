@@ -1,6 +1,6 @@
 /*
- * midi_note.h
- *
+ * @file midi.h
+ * @brief constants and defines for USB MIDI function.
  *  Created on: 2019/09/03
  *      Author: jenok
  */
@@ -8,31 +8,39 @@
 #ifndef INC_MIDI_NOTE_H_
 #define INC_MIDI_NOTE_H_
 
-//Commonly used
+//! MIDI event offsets
+enum{
+	MIDI_EV_IDX_HEADER = 0,
+	MIDI_EV_IDX_STATUS = 1,
+	MIDI_EV_IDX_CHANNEL = 2,
+	MIDI_EV_IDX_VALUE = 3,
+};
+
+//! Commonly used
 #define MIDI_UNUSED		0x00
 #define MIDI_EVENT_LENGTH	4
-//Descriptor types
+//! Descriptor types
 #define CONFIG			0x02
 #define INTERFACE		0x04
 #define CS_INTERFACE	0x24
 #define ENDPOINT		0x05
 #define	CS_ENDPOINT		0x25
 
-//Configuration descriptor
+//! Configuration descriptor
 #define CONFIG1			0x01
 #define BUSPOWERED		0x80
 #define MIDI_POWER		0x10 //=32mA
 
-//Interface descriptor
+//! Interface descriptor
 #define INTF0			0x00
 #define AUDIO			0x01
 #define AUDIO_CONTROL	0x01
 #define MIDI_STREAM		0x03
 
-//CS Interface descriptor
+//! CS Interface descriptor
 #define HEADER			0x01
 
-//defining Jacks
+//! defining Jacks
 #define MIDI_IN_JACK	0x02
 #define MIDI_OUT_JACK	0x03
 #define MIDI_JACK_ENB	0x01
@@ -59,5 +67,6 @@
 
 #define MIDI_VELOCITY	0x7F
 
-//Others
+//! Others
+
 #endif /* INC_MIDI_NOTE_H_ */

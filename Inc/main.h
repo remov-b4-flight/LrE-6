@@ -37,7 +37,29 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+typedef union {
+    uint32_t wd;
+    struct{
+        unsigned char n0:4;		//Switch Line0
+        unsigned char n1:4;		//Switch Line1
+        unsigned char n2:4;		//Switch Line2
+		unsigned char n3:4;		//Switch Line3
+		unsigned char rot0:2;	//Rotary encoder
+		unsigned char rot1:2;	//Rotary encoder
+		unsigned char rot2:2;	//Rotary encoder
+		unsigned char rot3:2;	//Rotary encoder
+		unsigned char rot4:2;	//Rotary encoder
+		unsigned char rot5:2;	//Rotary encoder
+        unsigned int  uu:4;		//dummy
+    } nb;
+} KEYSCAN;
 
+typedef struct {
+	uint8_t	type;
+	uint8_t color;
+	uint8_t duration;
+	char	*message;
+} KEY_DEFINE;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -57,7 +79,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void Delay_us(uint32_t microsec);
+void Start_LCDTimer(uint32_t tick);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -144,7 +167,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN Private defines */
 #undef		LrE6_PID
 #undef		LrE6_PRODUCT
-#ifdef MIDI
+#if MIDI
 	#define LrE6_PID 0xA320
 	#define LrE6_PRODUCT "LrE-6"
 #else
@@ -161,13 +184,14 @@ void Error_Handler(void);
 #define ENC_MV2		2
 #define ENC_MV1		1
 #define ENC_MV0		0
+
 //! Standard EC11 type Encoder
 #define ENC_MOVE	0
 #define ENC_MVCCW	2
 #define ENC_MVCW	1
 #define ENC_NOMV	3
 
-//LrE-6 Ports on Board
+//! LrE-6 Ports on Board
 #define Mx_GPIO_Port GPIOA
 #define ENC1_GPIO_Port GPIOA
 #define ENC23S_GPIO_Port GPIOB
@@ -176,44 +200,7 @@ void Error_Handler(void);
 #define KEY_COUNT	16
 #define	ROT_COUNT	6
 
-
-typedef union {
-    uint32_t wd;
-    struct{
-        unsigned char n0:4;		//Switch Line0
-        unsigned char n1:4;		//Switch Line1
-        unsigned char n2:4;		//Switch Line2
-		unsigned char n3:4;		//Switch Line3
-		unsigned char rot0:2;	//Rotary encoder
-		unsigned char rot1:2;	//Rotary encoder
-		unsigned char rot2:2;	//Rotary encoder
-		unsigned char rot3:2;	//Rotary encoder
-		unsigned char rot4:2;	//Rotary encoder
-		unsigned char rot5:2;	//Rotary encoder
-        unsigned int  uu:4;		//dummy
-    } nb;
-} KEYSCAN;
-
-typedef struct {
-#ifdef MIDI
-	uint8_t	type;
-	uint8_t color;
-	uint8_t duration;
-#else
-	uint8_t modifier;
-	uint8_t keycode;
-#endif
-	char	*message;
-} KEY_DEFINE;
-
-#ifndef MIDI
-typedef struct {
-	uint8_t element[4];
-} KEY_MODIFIER;
-#endif
-
-
-//
+//! LrE-6 States
 enum {
 	LRE6_RESET,
 	LRE6_USB_NOLINK,
@@ -222,7 +209,7 @@ enum {
 	LRE6_USB_LINK_LOST,
 };
 
-//Key matrix lines
+//! Key matrix lines
 enum {
 	L0 = 0,
 	L1,
@@ -230,13 +217,13 @@ enum {
 	L3
 };
 
-
 enum {
 	LrE6_SCENE0 = 0,
 	LrE6_SCENE1 = 1,
 	LrE6_SCENE2 = 2,
 	LrE6_SCENE3 = 3,
 };
+
 enum {
 	LrE6_ROT0 = 0,
 	LrE6_ROT1,
@@ -246,37 +233,13 @@ enum {
 	LrE6_ROT5,
 };
 
-#ifdef MIDI
-	enum{
-		MIDI_EV_IDX_HEADER = 0,
-		MIDI_EV_IDX_STATUS = 1,
-		MIDI_EV_IDX_CHANNEL = 2,
-		MIDI_EV_IDX_VALUE = 3,
-	};
-
-	enum{
-		TYPE_SWITCH = 0,
-		TYPE_ROTARY = 1,
-	};
-
-	#define SCENE_COUNT		4
-	#define SCENE_BIT		9
-	#define KEY_PER_SCENE	(KEY_COUNT)
-	#define	CC_CH_PER_SCENE	16
-	#define NOTES_PER_SCENE	32
-	//Key define structure
-	#define KEY_DEFINE_COUNT	(KEY_COUNT+(ROT_COUNT*2))
-#else
-	#define KEY_DEFINE_COUNT	32
-	#define SCENE_COUNT			1
-	#define HID_RPT_KEY_IDX		1
-
-	//Moved From Harmony keyboard.h
-	typedef struct {
-		uint8_t	modifier;
-		uint8_t keys[4];
-	} KEYBOARD_INPUT_REPORT;
-#endif
+#define SCENE_COUNT		4
+#define SCENE_BIT		9
+#define KEY_PER_SCENE	(KEY_COUNT)
+#define	CC_CH_PER_SCENE	16
+#define NOTES_PER_SCENE	32
+//! Key define structure
+#define KEY_DEFINE_COUNT	(KEY_COUNT+(ROT_COUNT*2))
 
 #define LxMASK	0x0F
 //
@@ -287,11 +250,12 @@ enum {
 #define PRMASK_R4	0xC000
 #define PRMASK_R5	0x0003
 
-//other definitions
+//! LCD timer definitions
 #define LCD_TIMER_DEFAULT   1000	//4 sec (1 tick=4ms)
 #define LCD_TIMER_INIT      10      //40m sec initialze time
 #define LCD_TIMER_UPDATE	250		//1 sec (LCD update in non HID)
-//
+
+//! LED timer definitions
 #define LED_TIMER_DEFAULT	25		//400ms (1 tick=16ms)
 #define LED_TIMER_HALF		12		//192ms
 #define LED_TIMER_LONG		35		//560ms
@@ -303,9 +267,7 @@ enum {
 #define ROT_MASK			0x03
 #define MOD_SW_BIT_MASK		0x0fffffff
 
-void Delay_us(uint32_t microsec);
-void Start_LCDTimer(uint32_t tick);
-
+//! For temperature calculator
 #define TEMP110_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7C2))
 #define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
 #define VDD_CALIB ((uint16_t) (330))

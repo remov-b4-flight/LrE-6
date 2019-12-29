@@ -1,34 +1,13 @@
-/* ************************************************************************** */
-/** Descriptive File Name
-
-  @Company
-    Company Name
-
-  @File Name
-    filename.h
-
-  @Summary
-    Brief description of the file.
-
-  @Description
-    Describe the purpose of this file.
+/**
+ * 	@file i2c-lcd.h
+ *	@brief LCD control functions connected via I2C
+ *	@copyright	GPLv3
  */
-/* ************************************************************************** */
 
 #ifndef I2C_LCD_H    /* Guard against multiple inclusion */
 #define _I2C_LCD_H
 
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/* This section lists the other files that are included in this file.
- */
-
-/* TODO:  Include other files here if needed. */
+/* Private includes ----------------------------------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>
 /* Provide C++ Compatibility */
@@ -36,15 +15,7 @@
 extern "C" {
 #endif
 
-    /* ************************************************************************** */
-    /* ************************************************************************** */
-    /* Section: Constants                                                         */
-    /* ************************************************************************** */
-    /* ************************************************************************** */
-
-    /*  A brief description of a section can be given directly below the section
-        banner.
-     */
+/* Exported macro ------------------------------------------------------------*/
 #define LCD_I2C_ADDR        0x7C    // write only
 #define LCD_I2C_INST        0
 #define LCD_I2C_DATA        0x40
@@ -60,8 +31,8 @@ extern "C" {
 #define LCD_FLW_WAIT_MS		220
 
 #define	LCD_TRANSMIT_TO		250
-//******************** LCD Commands **************
-//********** NORMAL instruction
+/***************************** LCD Commands ************************************/
+/* NORMAL instruction                                                          */
 
 //**** CLEAR DISPLAY
 #define LCD_CMD_CLEAR       0x01
@@ -99,8 +70,9 @@ extern "C" {
 //**** SET DDRAM ADDRESS
 #define LCD_CMD_DDADR       0x80
 
-//
-//********** EXTENDED instruction
+/*-----------------------------------------------------------------------------*/
+/* EXTENDED instruction                                                        */
+
 //**** SET LCD INTERNAL FREQ.
 #define LCD_CMD_FREQ        0x10
 //parameters    
@@ -145,7 +117,7 @@ enum {
 
 #define	LCD_LINEBUF_SIZE	(LCD_WIDTH + STRING_PAD)
 
-//func prototype
+/* Exported functions prototypes ---------------------------------------------*/
 void LCD_Initialize();
 void LCD_Clear();
 void LCD_Home();
@@ -163,7 +135,7 @@ void LCD_Print_Quick(const char *str);
 }
 #endif
 
-#endif /* _EXAMPLE_FILE_NAME_H */
+#endif /* _I2C_LCD_H */
 
 /* *****************************************************************************
  End of File

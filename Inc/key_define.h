@@ -1,6 +1,12 @@
 #ifndef _USB_HID_H
 #define _USB_HID_H
-	
+
+//Key define types
+enum{
+	TYPE_SWITCH = 0,
+	TYPE_ROTARY = 1,
+};
+
 //HID key codes HID 1.11
 
 //Not pressed

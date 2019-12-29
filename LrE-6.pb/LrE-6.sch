@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:LrE-6-cache
-EELAYER 29 0
+EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
@@ -523,72 +522,6 @@ F 3 "~" H 14800 7600 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	14800 7750 14800 7800
-$Comp
-L LrE-6-rescue:ESP-WROOM-02-RF_Module U2
-U 1 1 5C4D7323
-P 11750 4550
-F 0 "U2" H 11700 4550 50  0000 C CNN
-F 1 "ESP-WROOM-02" V 11850 4550 50  0000 C CNN
-F 2 "RF_Module:ESP-WROOM-02" H 12350 4000 50  0001 C CNN
-F 3 "https://www.espressif.com/sites/default/files/documentation/0c-esp-wroom-02_datasheet_en.pdf" H 11800 6050 50  0001 C CNN
-	1    11750 4550
-	1    0    0    -1  
-$EndComp
-$Comp
-L LrE-6-rescue:+3V3-power #PWR0116
-U 1 1 5C4D7409
-P 11750 3200
-F 0 "#PWR0116" H 11750 3050 50  0001 C CNN
-F 1 "+3V3" H 11765 3373 50  0000 C CNN
-F 2 "" H 11750 3200 50  0001 C CNN
-F 3 "" H 11750 3200 50  0001 C CNN
-	1    11750 3200
-	1    0    0    -1  
-$EndComp
-$Comp
-L LrE-6-rescue:GND-power #PWR0117
-U 1 1 5C4D74AF
-P 11750 5300
-F 0 "#PWR0117" H 11750 5050 50  0001 C CNN
-F 1 "GND" H 11755 5127 50  0000 C CNN
-F 2 "" H 11750 5300 50  0001 C CNN
-F 3 "" H 11750 5300 50  0001 C CNN
-	1    11750 5300
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	11750 5300 11750 5250
-$Comp
-L LrE-6-rescue:C-Device C20
-U 1 1 5C4DD242
-P 12100 3700
-F 0 "C20" V 12000 3500 50  0000 C CNN
-F 1 "0.1u" V 12000 3850 50  0000 C CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 12138 3550 50  0001 C CNN
-F 3 "~" H 12100 3700 50  0001 C CNN
-	1    12100 3700
-	0    1    1    0   
-$EndComp
-$Comp
-L LrE-6-rescue:GND-power #PWR0118
-U 1 1 5C4DD32C
-P 12350 3750
-F 0 "#PWR0118" H 12350 3500 50  0001 C CNN
-F 1 "GND" H 12350 3600 50  0000 C CNN
-F 2 "" H 12350 3750 50  0001 C CNN
-F 3 "" H 12350 3750 50  0001 C CNN
-	1    12350 3750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	12250 3700 12350 3700
-Wire Wire Line
-	12350 3700 12350 3750
-Wire Wire Line
-	11950 3700 11750 3700
-Connection ~ 11750 3700
-Wire Wire Line
-	11750 3700 11750 3450
 Wire Wire Line
 	8500 1600 8500 2450
 Connection ~ 8600 1900
@@ -716,10 +649,6 @@ Wire Wire Line
 Connection ~ 13100 8300
 Wire Wire Line
 	13450 8500 13800 8500
-Text Label 10700 4650 0    50   ~ 0
-WL_RXD
-Text Label 10700 4750 0    50   ~ 0
-WL_TXD
 Text Label 9200 3750 0    50   ~ 0
 M0
 Text Label 9200 3850 0    50   ~ 0
@@ -782,10 +711,6 @@ Text Label 7300 3450 0    50   ~ 0
 ENC4-A
 Text Label 7300 3550 0    50   ~ 0
 ENC4-B
-Text Label 9200 4750 0    50   ~ 0
-STM_RX
-Text Label 9200 4650 0    50   ~ 0
-STM_TX
 Wire Wire Line
 	9100 4850 9600 4850
 Wire Wire Line
@@ -1604,9 +1529,9 @@ ENC5-A
 Text Label 3350 3200 0    50   ~ 0
 ENC5-B
 Text Label 3400 4750 0    50   ~ 0
-ENC6-A
+ENC0-A
 Text Label 3400 4950 0    50   ~ 0
-ENC6-B
+ENC0-B
 $Comp
 L LrE-6-rescue:SW_Push_45deg-Switch SW1
 U 1 1 5CCE212B
@@ -2210,8 +2135,6 @@ Wire Wire Line
 	7000 2950 7000 2850
 Wire Wire Line
 	7000 2850 7800 2850
-Text Label 10550 4250 0    50   ~ 0
-WL_RST
 Wire Wire Line
 	1300 7100 1300 6750
 Connection ~ 1300 7100
@@ -2230,7 +2153,6 @@ Wire Wire Line
 	4550 4950 4350 4950
 NoConn ~ 15100 6550
 NoConn ~ 11950 1450
-Connection ~ 11750 3250
 Wire Wire Line
 	11550 1650 11550 1700
 Wire Wire Line
@@ -2238,91 +2160,14 @@ Wire Wire Line
 Connection ~ 11650 1700
 Wire Wire Line
 	11650 1700 11650 1650
-Wire Wire Line
-	9100 4650 9900 4650
-Wire Wire Line
-	9100 4750 9900 4750
-$Comp
-L LrE-6-rescue:Conn_02x03_Odd_Even-Connector_Generic J3
-U 1 1 5C5B1691
-P 10100 4750
-F 0 "J3" H 10150 5067 50  0000 C CNN
-F 1 "LP_Header_02x03" H 10150 5000 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical" H 10100 4750 50  0001 C CNN
-F 3 "~" H 10100 4750 50  0001 C CNN
-	1    10100 4750
-	1    0    0    -1  
-$EndComp
-$Comp
-L LrE-6-rescue:GND-power #PWR0142
-U 1 1 5C61D439
-P 10400 5000
-F 0 "#PWR0142" H 10400 4750 50  0001 C CNN
-F 1 "GND" H 10405 4827 50  0000 C CNN
-F 2 "" H 10400 5000 50  0001 C CNN
-F 3 "" H 10400 5000 50  0001 C CNN
-	1    10400 5000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	10400 5000 10400 4950
-$Comp
-L LrE-6-rescue:Conn_02x01-Connector_Generic J4
-U 1 1 5C7340D0
-P 12700 4950
-F 0 "J4" H 12750 5050 50  0000 C CNN
-F 1 "LP_Header_01x02" H 12750 5150 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 12700 4950 50  0001 C CNN
-F 3 "~" H 12700 4950 50  0001 C CNN
-	1    12700 4950
-	0    1    1    0   
-$EndComp
-$Comp
-L LrE-6-rescue:GND-power #PWR0143
-U 1 1 5C73432B
-P 12700 5300
-F 0 "#PWR0143" H 12700 5050 50  0001 C CNN
-F 1 "GND" H 12800 5200 50  0000 C CNN
-F 2 "" H 12700 5300 50  0001 C CNN
-F 3 "" H 12700 5300 50  0001 C CNN
-	1    12700 5300
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	12250 4150 12700 4150
 Text Notes 15150 9550 0    197  ~ 0
-R2.02
-Wire Wire Line
-	11750 3250 12700 3250
-Wire Wire Line
-	11750 3200 11750 3250
+R2.1\n
 Wire Wire Line
 	1200 10900 1700 10900
 Text Label 13550 8500 0    50   ~ 0
 BL_A
 Text Label 13550 8600 0    50   ~ 0
 BL_K
-$Comp
-L LrE-6-rescue:C-Device C28
-U 1 1 5C9CC5A1
-P 12100 3450
-F 0 "C28" V 12000 3250 50  0000 C CNN
-F 1 "10u" V 12000 3600 50  0000 C CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 12138 3300 50  0001 C CNN
-F 3 "~" H 12100 3450 50  0001 C CNN
-	1    12100 3450
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	11950 3450 11750 3450
-Connection ~ 11750 3450
-Wire Wire Line
-	11750 3450 11750 3350
-Wire Wire Line
-	12250 3450 12350 3450
-Wire Wire Line
-	12350 3450 12350 3700
-Connection ~ 12350 3700
 $Comp
 L LrE-6-rescue:TestPoint-Connector TP1
 U 1 1 5C9CF623
@@ -2347,29 +2192,6 @@ F 3 "" H 13350 2550 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	13350 2550 13350 2400
-NoConn ~ 11250 4450
-NoConn ~ 12250 4250
-NoConn ~ 12250 4950
-NoConn ~ 12250 4750
-NoConn ~ 12250 4650
-$Comp
-L LrE-6-rescue:R-Device R33
-U 1 1 5CD38E55
-P 12700 3700
-F 0 "R33" H 12770 3746 50  0000 L CNN
-F 1 "10K" H 12770 3655 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 12630 3700 50  0001 C CNN
-F 3 "~" H 12700 3700 50  0001 C CNN
-	1    12700 3700
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	12700 3850 12700 4150
-Connection ~ 12700 4150
-Wire Wire Line
-	12700 4150 12700 4750
-Wire Wire Line
-	12700 3550 12700 3250
 Wire Wire Line
 	14550 7300 14550 7350
 Wire Wire Line
@@ -2382,28 +2204,6 @@ Wire Wire Line
 Connection ~ 14800 7350
 Wire Wire Line
 	14800 7350 14550 7350
-Wire Wire Line
-	12250 4850 12350 4850
-Wire Wire Line
-	12350 4850 12350 4900
-Wire Wire Line
-	12350 5250 11750 5250
-Connection ~ 11750 5250
-Wire Wire Line
-	11750 5250 11750 5150
-$Comp
-L LrE-6-rescue:R-Device R34
-U 1 1 5CACAFCC
-P 12350 5050
-F 0 "R34" H 12420 5096 50  0000 L CNN
-F 1 "100" H 12420 5005 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 12280 5050 50  0001 C CNN
-F 3 "~" H 12350 5050 50  0001 C CNN
-	1    12350 5050
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	12350 5200 12350 5250
 $Comp
 L LrE-6-rescue:GND-power #PWR0111
 U 1 1 5C4AB9A8
@@ -2428,19 +2228,6 @@ F 3 "" H 14800 1000 50  0001 C CNN
 	1    14800 1000
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	10400 4650 11250 4650
-Wire Wire Line
-	10400 4750 11250 4750
-Wire Wire Line
-	9900 4850 9900 4950
-Wire Wire Line
-	9900 4950 10400 4950
-Connection ~ 10400 4950
-Wire Wire Line
-	10400 4950 10400 4850
-Wire Wire Line
-	12700 5250 12700 5300
 Text Label 14000 6050 0    50   ~ 0
 NRST
 Wire Wire Line
@@ -2645,24 +2432,6 @@ Wire Wire Line
 Connection ~ 2400 5200
 Wire Wire Line
 	2400 5200 2400 5250
-Text Notes 10000 5650 0    50   ~ 0
-TXD
-Text Notes 10000 5750 0    50   ~ 0
-RXD
-Text Notes 10000 5550 0    50   ~ 0
-GND
-Text Notes 10000 5450 0    50   ~ 0
-N.C.(5V)
-Wire Notes Line
-	10000 5350 10000 5800
-Wire Notes Line
-	10000 5800 10350 5800
-Wire Notes Line
-	10350 5800 10350 5350
-Wire Notes Line
-	10350 5350 10000 5350
-Text Notes 10000 5300 0    50   ~ 0
-FT234X
 Wire Wire Line
 	14250 7750 14250 7800
 Wire Wire Line
@@ -2736,7 +2505,7 @@ F 3 "https://cdn-shop.adafruit.com/product-files/2686/SK6812MINI_REV.01-1-2.pdf"
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR0122
+L LrE-6-rescue:GND-power #PWR0122
 U 1 1 5CFAF29C
 P 5700 8050
 F 0 "#PWR0122" H 5700 7800 50  0001 C CNN
@@ -2817,7 +2586,7 @@ Wire Wire Line
 NoConn ~ 11700 7650
 NoConn ~ 10400 7750
 $Comp
-L Device:C C31
+L LrE-6-rescue:C-Device C31
 U 1 1 5D7055E7
 P 6100 7350
 F 0 "C31" H 6215 7396 50  0000 L CNN
@@ -2831,7 +2600,7 @@ Connection ~ 6100 7200
 Wire Wire Line
 	6100 7200 5700 7200
 $Comp
-L Device:C C32
+L LrE-6-rescue:C-Device C32
 U 1 1 5D706229
 P 7150 7350
 F 0 "C32" H 7265 7396 50  0000 L CNN
@@ -2845,7 +2614,7 @@ Connection ~ 7150 7200
 Wire Wire Line
 	7150 7200 6800 7200
 $Comp
-L Device:C C33
+L LrE-6-rescue:C-Device C33
 U 1 1 5D706B4B
 P 8300 7350
 F 0 "C33" H 8415 7396 50  0000 L CNN
@@ -2862,7 +2631,7 @@ Connection ~ 9450 7200
 Wire Wire Line
 	9450 7200 9100 7200
 $Comp
-L Device:C C35
+L LrE-6-rescue:C-Device C35
 U 1 1 5D7076C0
 P 10650 7350
 F 0 "C35" H 10765 7396 50  0000 L CNN
@@ -2876,7 +2645,7 @@ Connection ~ 10650 7200
 Wire Wire Line
 	10650 7200 10250 7200
 $Comp
-L Device:C C36
+L LrE-6-rescue:C-Device C36
 U 1 1 5D708E26
 P 11850 7350
 F 0 "C36" H 11965 7396 50  0000 L CNN
@@ -2917,7 +2686,7 @@ Connection ~ 9450 8000
 Wire Wire Line
 	9450 8000 10250 8000
 $Comp
-L Device:C C34
+L LrE-6-rescue:C-Device C34
 U 1 1 5D707270
 P 9450 7350
 F 0 "C34" H 9565 7396 50  0000 L CNN
@@ -2944,22 +2713,12 @@ Text Label 9550 7650 0    50   ~ 0
 LED4OUT
 Text Label 10750 7650 0    50   ~ 0
 LED5OUT
-Wire Wire Line
-	10850 4250 11250 4250
-Wire Wire Line
-	11750 3700 11750 3950
-Text Label 11150 4050 1    50   ~ 0
-WL_EN
-Text Label 10850 3150 0    50   ~ 0
+Text Label 11300 4100 0    50   ~ 0
 LED_DOUT
-Text Label 9200 4550 0    50   ~ 0
-WL_RST
 NoConn ~ 7800 3350
 NoConn ~ 7800 3750
 NoConn ~ 7800 5150
 NoConn ~ 15250 8250
-Text Label 12400 4150 0    50   ~ 0
-WL_0
 Wire Wire Line
 	14200 1450 14200 1650
 Wire Wire Line
@@ -2975,115 +2734,61 @@ F 3 "~" H 14200 1300 50  0001 C CNN
 	1    14200 1300
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	9100 4550 9600 4550
 NoConn ~ 9100 4450
 Wire Wire Line
 	9100 5250 9600 5250
 $Comp
-L Transistor_FET:2N7002 Q1
+L LrE-6-rescue:2N7002-Transistor_FET Q1
 U 1 1 5D0213C1
-P 10200 3400
-F 0 "Q1" H 10406 3446 50  0000 L CNN
-F 1 "2N7002" H 10406 3355 50  0000 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-23" H 10400 3325 50  0001 L CIN
-F 3 "https://www.fairchildsemi.com/datasheets/2N/2N7002.pdf" H 10200 3400 50  0001 L CNN
-	1    10200 3400
+P 10650 4350
+F 0 "Q1" H 10856 4396 50  0000 L CNN
+F 1 "2N7002" H 10856 4305 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 10850 4275 50  0001 L CIN
+F 3 "https://www.fairchildsemi.com/datasheets/2N/2N7002.pdf" H 10650 4350 50  0001 L CNN
+	1    10650 4350
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR0121
+L LrE-6-rescue:GND-power #PWR0121
 U 1 1 5D0228D6
-P 10300 3600
-F 0 "#PWR0121" H 10300 3350 50  0001 C CNN
-F 1 "GND" H 10305 3427 50  0000 C CNN
-F 2 "" H 10300 3600 50  0001 C CNN
-F 3 "" H 10300 3600 50  0001 C CNN
-	1    10300 3600
+P 10750 4550
+F 0 "#PWR0121" H 10750 4300 50  0001 C CNN
+F 1 "GND" H 10755 4377 50  0000 C CNN
+F 2 "" H 10750 4550 50  0001 C CNN
+F 3 "" H 10750 4550 50  0001 C CNN
+	1    10750 4550
 	1    0    0    -1  
 $EndComp
 $Comp
-L Device:R R21
+L LrE-6-rescue:R-Device R21
 U 1 1 5D024220
-P 10300 2850
-F 0 "R21" H 10370 2896 50  0000 L CNN
-F 1 "4.7K" H 10370 2805 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 10230 2850 50  0001 C CNN
-F 3 "~" H 10300 2850 50  0001 C CNN
-	1    10300 2850
+P 10750 3800
+F 0 "R21" H 10820 3846 50  0000 L CNN
+F 1 "4.7K" H 10820 3755 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 10680 3800 50  0001 C CNN
+F 3 "~" H 10750 3800 50  0001 C CNN
+	1    10750 3800
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10300 3200 10300 3150
+	10750 4150 10750 4100
 Wire Wire Line
-	10000 2600 10300 2600
+	10450 3550 10750 3550
 Wire Wire Line
-	10300 2600 10300 2700
+	10750 3550 10750 3650
 Wire Wire Line
-	10300 3150 10850 3150
-Connection ~ 10300 3150
+	10750 4100 11300 4100
+Connection ~ 10750 4100
 Wire Wire Line
-	10300 3150 10300 3000
+	10750 4100 10750 3950
 Text Label 9200 4350 0    50   ~ 0
 LED_DON
-Wire Wire Line
-	9850 4350 9850 3400
-Wire Wire Line
-	9850 3400 10000 3400
-Wire Wire Line
-	9100 4350 9850 4350
-Text Label 10000 2600 0    50   ~ 0
+Text Label 10450 3550 0    50   ~ 0
 VBUS
 NoConn ~ 7800 3850
-$Comp
-L Device:R R36
-U 1 1 5D49D8EE
-P 11150 3600
-F 0 "R36" H 11220 3646 50  0000 L CNN
-F 1 "10K" H 11220 3555 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 11080 3600 50  0001 C CNN
-F 3 "~" H 11150 3600 50  0001 C CNN
-	1    11150 3600
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	11150 3750 11150 4150
-Wire Wire Line
-	11150 4150 11250 4150
-Wire Wire Line
-	11150 3450 11150 3350
-Wire Wire Line
-	11150 3350 11750 3350
-Connection ~ 11750 3350
-Wire Wire Line
-	11750 3350 11750 3250
 NoConn ~ 7800 5250
-Wire Wire Line
-	10850 3450 10850 3350
-Wire Wire Line
-	10850 3350 11150 3350
-Connection ~ 11150 3350
-Wire Wire Line
-	10850 4250 10550 4250
-Connection ~ 10850 4250
-Wire Wire Line
-	10850 3750 10850 4250
 $Comp
-L Device:R R37
-U 1 1 5D5A5DC1
-P 10850 3600
-F 0 "R37" H 10920 3646 50  0000 L CNN
-F 1 "10K" H 10920 3555 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 10780 3600 50  0001 C CNN
-F 3 "~" H 10850 3600 50  0001 C CNN
-	1    10850 3600
-	1    0    0    1   
-$EndComp
-NoConn ~ 12250 4550
-NoConn ~ 12250 4450
-NoConn ~ 12250 4350
-$Comp
-L Device:C C30
+L LrE-6-rescue:C-Device C30
 U 1 1 5D54B231
 P 5300 7350
 F 0 "C30" H 5050 7400 50  0000 L CNN
@@ -3102,4 +2807,9 @@ Wire Wire Line
 	4900 7650 5400 7650
 Wire Wire Line
 	4900 7200 5300 7200
+Wire Wire Line
+	9100 4350 10450 4350
+NoConn ~ 9100 4650
+NoConn ~ 9100 4750
+NoConn ~ 9100 4550
 $EndSCHEMATC

@@ -8,16 +8,17 @@
 * At rotator, LrE-6 sends CC message every rotators move,values are increase/decrease by towards.
 * LrE-6 MIDI can use 'Scene'. Users can alter all SW/Rotator definition. To alter Scene, push SW10.
 * Users can use up to 4 Scenes. SW10 is fixed for Scene function.
+*
 * Scene / CC event channel definition (by Rotators)
-* ch. 16~21		Scene0
-* ch. 48~53		Scene1
-* ch. 80~85		Scene2
-* ch. 112~117	Scene3
-* Scene / CC event channel definition (by SWs)
 * ch. 0~15		Scene0
-* ch. 32~47		Scene1
-* ch. 64~79		Scene2
-* ch. 96~111	Scene3
+* ch. 16~31		Scene1
+* ch. 32~47		Scene2
+* ch. 48~64		Scene3
+* Scene / Note definition (by SWs)
+* Note	0~15	Scene0
+* Note	16~31	Scene1
+* Note	32~47	Scene2
+* Note	48~64	Scene3
 */
 
 /* Includes ------------------------------------------------------------------*/
@@ -26,7 +27,7 @@
 #include "led.h"
 
 /* Variables ----------------------------------------------------------------*/
-#ifdef MIDI
+#if MIDI
 //! @brief	User-friendly scene names appears on LCD.
 const char *scene_name[SCENE_COUNT] = { "Library ", "TonCurve",  "ColorSat", "Sharpen ", };
 //! @brief	LED patterns that set by switching scenes.
@@ -169,7 +170,7 @@ const uint8_t LED_Scene[SCENE_COUNT][LED_COUNT] ={
 		{LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF,	LED_COLOR_OFF, },
 };
 
-const KEY_DEFINE keytable[KEY_DEFINE_COUNT] = {
+const HID_DEFINE keytable[HID_DEFINE_COUNT] = {
 #if LrE6_WIN //Windows Key Table Definitions
 //Switch definitions
 	{HID_NONM,			HID_1,		"Rate 1  "},	//L0M0	SW1

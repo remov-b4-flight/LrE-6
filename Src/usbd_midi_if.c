@@ -32,7 +32,7 @@
 #include "midi.h"
 
 // basic MIDI RX/TX functions
-#ifdef MIDI
+#if MIDI
 static uint16_t MIDI_DataRx(uint8_t *msg, uint16_t length);
 static uint16_t MIDI_DataTx(uint8_t *msg, uint16_t length);
 #endif
@@ -154,7 +154,7 @@ bool isRxBufEmpty()
 }
 #endif
 
-#ifdef MIDI
+#if MIDI
 /**
  *	@brief	Array of callback function pointer with MIDI.
  */

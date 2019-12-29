@@ -78,7 +78,7 @@
 #define USBD_VID     0x1209
 #define USBD_MANUFACTURER_STRING	LrE6_VENDOR
 #define USBD_PRODUCT_STRING_FS		LrE6_PRODUCT
-#ifdef MIDI
+#if MIDI
 	#define	DEVICE_CLASS	0x02	/*bDeviceClass = CDC */
 	#define	DEVICE_SUBCLASS	0x02	/*bDeviceSubClass = ACM */
 #else //HID

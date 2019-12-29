@@ -27,7 +27,6 @@
 #include "usbd_hid.h"
 
 /* USER CODE BEGIN Includes */
-#include "usbd_cdc.h"
 #include "usbd_midi.h"
 #include "usbd_midi_if.h"
 
