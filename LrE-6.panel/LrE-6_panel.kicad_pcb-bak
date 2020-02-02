@@ -102,7 +102,7 @@
   )
 
   (gr_text 4xR2.0 (at 38.3286 40.5638) (layer Dwgs.User)
-    (effects (font (size 1.5 1.5) (thickness 0.3)))
+    (effects (font (size 1.5 1.5) (thickness 0.15)))
   )
   (gr_line (start 41.8084 41.8084) (end 50.1904 50.2158) (layer Dwgs.User) (width 0.15))
   (gr_line (start 34.3154 41.8592) (end 41.8592 41.8592) (layer Dwgs.User) (width 0.15))
