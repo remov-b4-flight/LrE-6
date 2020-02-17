@@ -2041,7 +2041,7 @@ Connection ~ 11650 1700
 Wire Wire Line
 	11650 1700 11650 1650
 Text Notes 15300 9850 0    197  ~ 0
-R2.1\n
+R2.2\n
 Wire Wire Line
 	1200 10900 1700 10900
 $Comp

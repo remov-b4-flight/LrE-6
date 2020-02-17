@@ -5046,7 +5046,7 @@
   (gr_text Power (at 123.0771 59.492) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
-  (gr_text R2.1 (at 130 151.5) (layer F.SilkS)
+  (gr_text R2.2 (at 130 151.5) (layer F.SilkS)
     (effects (font (size 2.5 2) (thickness 0.3)))
   )
   (gr_line (start 163 55) (end 67 55) (layer Edge.Cuts) (width 0.15))
