@@ -228,8 +228,7 @@ static bool EmulateMIDI(){
         		LCD_Print();
 
             	LCD_Off_Flag = false;
-        		LCD_Timer_Enable = true;
-            	LCD_Timer_Count = LCD_TIMER_DEFAULT;
+            	Start_LCDTimer(LCD_TIMER_DEFAULT);
             }
             LED_SetPulse(led_axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
 
@@ -265,8 +264,7 @@ static bool EmulateMIDI(){
             	LCD_Print();
 
             	LCD_Off_Flag = false;
-        		LCD_Timer_Enable = true;
-            	LCD_Timer_Count = LCD_TIMER_DEFAULT;
+            	Start_LCDTimer(LCD_TIMER_DEFAULT);
             }
 
             LED_SetPulse(axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
@@ -375,10 +373,8 @@ int main(void)
   const uint16_t ts_cal30 = *TEMP30_CAL_ADDR;
   const float k = (110.0 - 30.0) / (ts_cal110 - ts_cal30);
 
-  LCD_Timer_Count = LCD_TIMER_DEFAULT;
   Start_LCDTimer(LCD_TIMER_DEFAULT);
   LCD_Off_Flag = false;
-  LCD_Timer_Enable = true;
   LrE6State = LRE6_USB_NOLINK;
 
 #if MIDI
@@ -416,7 +412,7 @@ int main(void)
 	} else if(LrE6State == LRE6_USB_LINK_LOST) {
 		LED_TestPattern();
 		lcd_1st_timeout = false;
-		LCD_Timer_Enable = true;
+		Start_LCDTimer(LCD_TIMER_DEFAULT);
 		LrE6State = LRE6_USB_NOLINK;
 
 	} else if(LrE6State == LRE6_USB_NOLINK) {
@@ -446,8 +442,7 @@ int main(void)
 
 				//Restart LCD timer.
 				LCD_Off_Flag = false;
-				LCD_Timer_Count = LCD_TIMER_UPDATE;
-				LCD_Timer_Enable = true;
+				Start_LCDTimer(LCD_TIMER_UPDATE);
 
 				//Rotate LED colors
 				uint8_t	tempcolor = LEDColor[5];
@@ -917,56 +912,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-#if 0
-void ExpandModifiers() {
-	uint8_t mod_index;
-	memset(modifiers, 0, sizeof(modifiers));
-	for (mod_index = 0; mod_index < KEY_COUNT; mod_index++) {
-		uint8_t modifier = keytable[mod_index].modifier;
-		uint8_t bitcount = bitcount8(modifier);
-		if (modifier != HID_NONM && bitcount > 1) {
-			uint8_t dst_index = 0;
-			uint8_t pattern = 0;
-			if (modifier & HID_GUIM) {
-				pattern += HID_GUIM;
-				modifiers[mod_index].element[dst_index] = pattern;
-				dst_index += 1;
-			}
-			if (modifier & HID_ALTM) {
-				pattern += HID_ALTM;
-				modifiers[mod_index].element[dst_index] = pattern;
-				dst_index += 1;
-			}
-			if (modifier & HID_SFTM) {
-				pattern += HID_SFTM;
-				modifiers[mod_index].element[dst_index] = pattern;
-				dst_index += 1;
-			}
-			if (modifier & HID_CTLM) {
-				pattern += HID_CTLM;
-				modifiers[mod_index].element[dst_index] = pattern;
-			}
-		}
-	}
-}
-void SendModifierElement(uint8_t mod) {
-	In_Report.modifier = mod;
-	In_Report.keys[0] =
-	In_Report.keys[1] =
-	In_Report.keys[2] =
-	In_Report.keys[3] = HID_NONE;
-    USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t *)&In_Report,sizeof(KEYBOARD_INPUT_REPORT) );
-}
-
-void SendModifiers(uint8_t bitpos) {
-	uint8_t i;
-	for (i = 0; i < 4; i++) {
-		uint8_t mod = modifiers[bitpos].element[i];
-		if (mod == HID_NONM) break;
-		SendModifierElement(mod);
-	}
-}
-#endif
 
 /* USER CODE END 4 */
 

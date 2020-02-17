@@ -70,7 +70,7 @@ typedef struct {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x27
+#define USBD_DEVICE_VER_MIN	0x28
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
