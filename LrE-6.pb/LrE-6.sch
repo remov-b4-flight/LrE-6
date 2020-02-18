@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:LrE-6-cache
-EELAYER 29 0
+EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
@@ -2040,8 +2039,8 @@ Wire Wire Line
 Connection ~ 11650 1700
 Wire Wire Line
 	11650 1700 11650 1650
-Text Notes 15300 9850 0    197  ~ 0
-R2.2\n
+Text Notes 15200 10450 0    197  ~ 0
+F2.2\n
 Wire Wire Line
 	1200 10900 1700 10900
 $Comp
