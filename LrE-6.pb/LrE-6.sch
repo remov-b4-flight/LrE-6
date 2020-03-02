@@ -2695,22 +2695,9 @@ Wire Wire Line
 	13900 8350 13000 8350
 Wire Wire Line
 	13000 8200 13000 8350
-$Comp
-L LrE-6-rescue:GND-power #PWR01
-U 1 1 5E527AC2
-P 13700 7850
-F 0 "#PWR01" H 13700 7600 50  0001 C CNN
-F 1 "GND" H 13850 7750 50  0000 C CNN
-F 2 "" H 13700 7850 50  0001 C CNN
-F 3 "" H 13700 7850 50  0001 C CNN
-	1    13700 7850
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	13450 7250 13900 7250
 Connection ~ 13450 7250
-Wire Wire Line
-	13900 7850 13700 7850
 Connection ~ 13450 6150
 $Comp
 L LrE-6-rescue:C-Device C28
@@ -2868,11 +2855,6 @@ Wire Wire Line
 Wire Wire Line
 	14650 6550 14750 6550
 NoConn ~ 9100 5250
-Wire Wire Line
-	13700 7850 13700 7000
-Wire Wire Line
-	13700 7000 13900 7000
-Connection ~ 13700 7850
 $Comp
 L LrE-6:OLED-0.91 U3
 U 1 1 5E1BA71E
@@ -2916,4 +2898,5 @@ Wire Wire Line
 Connection ~ 12800 7400
 Wire Wire Line
 	12800 7400 13200 7400
+NoConn ~ 15100 8150
 $EndSCHEMATC
