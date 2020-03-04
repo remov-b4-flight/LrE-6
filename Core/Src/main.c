@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -156,7 +156,7 @@ inline void Start_LCDTimer(uint32_t tick){
 	LCD_Timer_Enable = true;
 }
 
-inline void LCD_Print(){
+static inline void LCD_Print(){
 	isLCDflash = true;
 }
 
