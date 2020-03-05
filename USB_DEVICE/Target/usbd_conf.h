@@ -69,11 +69,11 @@
 /*---------- -----------*/
 #define USBD_MAX_STR_DESC_SIZ     512
 /*---------- -----------*/
-#define USBD_SUPPORT_USER_STRING     0
-/*---------- -----------*/
 #define USBD_DEBUG_LEVEL     0
 /*---------- -----------*/
 #define USBD_SELF_POWERED     1
+/*---------- -----------*/
+#define HID_FS_BINTERVAL     0xA
 
 /****************************************/
 /* #define for FS and HS identification */
