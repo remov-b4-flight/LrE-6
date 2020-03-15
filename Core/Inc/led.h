@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 /* Exported constants --------------------------------------------------------*/
-enum{   //constants for expressing color.
+enum led_color {   //constants for expressing color.
 	LED_COLOR_OFF = 0,
 	LED_COLOR_RED,
 	LED_COLOR_BLUE,
@@ -35,7 +35,7 @@ enum{   //constants for expressing color.
 #define BITS_PER_LED    24  // (RGB) 3 * 8bit
 #define TOTAL_BITS      (LED_COUNT * BITS_PER_LED)
 
-//LED intensity definition
+//! @def LED intensity definition
 #define LFFH	0xFF
 #define LBRIGHT	0x80
 #define LMAX	0x78

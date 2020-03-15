@@ -1,15 +1,15 @@
-/*
- * @file midi.h
- * @brief constants and defines for USB MIDI function.
- *  Created on: 2019/09/03
- *      Author: jenok
+/**
+ * @file	midi.h
+ * @brief	constants and defines for USB MIDI function.
+ * @author	jenoki
+ * @copyright GPLv3
  */
 
 #ifndef INC_MIDI_NOTE_H_
 #define INC_MIDI_NOTE_H_
 
 //! MIDI event offsets
-enum{
+enum midi_event_index {
 	MIDI_EV_IDX_HEADER = 0,
 	MIDI_EV_IDX_STATUS = 1,
 	MIDI_EV_IDX_CHANNEL = 2,

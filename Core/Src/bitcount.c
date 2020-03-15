@@ -1,5 +1,5 @@
 /**
- *	@file bitcount.c
+ *	@file	bitcount.c
  *	@brief 'bit count' functions
  *	@copyright	GPLv3
  *

@@ -1,6 +1,7 @@
 /**
  *	@file led.c
  *	@brief Array of Color LEDs control functions
+ *	@author jenoki
  *	@copyright	GPLv3
 */
 /* Includes ------------------------------------------------------------------*/

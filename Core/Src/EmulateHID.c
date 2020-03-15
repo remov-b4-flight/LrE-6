@@ -17,10 +17,10 @@
 
 //
 extern	bool	isKeyPressed;
-extern	int32_t	LCD_Timer_Count;
-extern	bool	LCD_Off_Flag;
-extern	bool	LCD_Timer_Enable;
-extern	bool	isLCDflash;
+extern	int32_t	Msg_Timer_Count;
+extern	bool	Msg_Off_Flag;
+extern	bool	Msg_Timer_Enable;
+extern	bool	isMsgFlash;
 extern	USBD_HandleTypeDef	hUsbDeviceFS;
 extern	KEYSCAN	Key_Stat;
 extern	char LCD_Buffer[LCD_LINE][LCD_LINEBUF_SIZE];
@@ -30,7 +30,7 @@ KEY_MODIFIER modifiers[KEY_COUNT];
 KEYBOARD_INPUT_REPORT	In_Report;
 
 inline void LCD_Print(){
-	isLCDflash = true;
+	isMsgFlash = true;
 }
 
 /**
@@ -53,9 +53,9 @@ bool EmulateKeyboard(void) {
             In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
             if (keytable[bitpos].message != NULL) {
         		LCD_Locate(0,0);
-            	LCD_Off_Flag = false;
-        		LCD_Timer_Enable = true;
-            	LCD_Timer_Count = LCD_TIMER_DEFAULT;
+            	Msg_Off_Flag = false;
+        		Msg_Timer_Enable = true;
+            	Msg_Timer_Count = MSG_TIMER_DEFAULT;
             	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
                 strcpy(LCD_Buffer[0], keytable[bitpos].message);
                 memset(LCD_Buffer[1],SPACE,LCD_WIDTH);

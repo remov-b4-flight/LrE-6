@@ -1,9 +1,11 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file           : main.h
-  * @brief          : Header for main.c file.
-  *                   This file contains the common defines of the application.
+  * @file	main.h
+  * @brief	Header for main.c file.
+  *         This file contains the common defines of the application.
+  * @author	jenoki
+  * @copyright GPLv3
   ******************************************************************************
   * @attention
   *
@@ -64,7 +66,8 @@ typedef struct {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+#define MSG_LINES	2
+#define MSG_WIDTH	16
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -250,10 +253,10 @@ enum {
 #define PRMASK_R4	0xC000
 #define PRMASK_R5	0x0003
 
-//! LCD timer definitions
-#define LCD_TIMER_DEFAULT   1000	//4 sec (1 tick=4ms)
-#define LCD_TIMER_INIT      10      //40m sec initialze time
-#define LCD_TIMER_UPDATE	250		//1 sec (LCD update in non HID)
+//! Screen timer definitions
+#define MSG_TIMER_DEFAULT	1000	//4 sec (1 tick=4ms)
+#define MSG_TIMER_INIT		10      //40m sec initialze time
+#define MSG_TIMER_UPDATE	250		//1 sec (LCD update in non HID)
 
 //! LED timer definitions
 #define LED_TIMER_DEFAULT	25		//400ms (1 tick=16ms)

@@ -25,8 +25,11 @@
 /* USER CODE BEGIN Includes */
 #include "midi.h"
 #include <stdbool.h>
+#include <string.h>
 #include "stm32f0xx_hal_tim.h"
 #include "i2c-lcd.h"
+#include "ssd1306.h"
+#include "ssd1306_fonts.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,9 +65,10 @@ extern bool		isKeyPressed;
 extern bool		isKeyRelaseSent;
 extern KEYSCAN	Key_Stat;
 
-extern bool		LCD_Off_Flag;
-extern bool		LCD_Timer_Enable;
-extern int32_t	LCD_Timer_Count;
+extern bool		Msg_Off_Flag;
+extern bool		Msg_Timer_Enable;
+extern int32_t	Msg_Timer_Count;
+extern char		*Msg_Buffer[];
 
 extern uint8_t	LEDColor[];
 extern uint8_t	LEDTimer[];
@@ -133,7 +137,9 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-  LCD_Print_Quick("HRDFAULT");
+  strcpy(Msg_Buffer[0],"Hard Fault");
+  SSD1306_Render2Buffer();
+  SSD1306_FlashScreen();
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -673,9 +679,9 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
     }
 
     //LCD timer
-    if(LCD_Timer_Enable == true && (--LCD_Timer_Count) <= 0){
-    	LCD_Timer_Enable = false;
-        LCD_Off_Flag = true;
+    if(Msg_Timer_Enable == true && (--Msg_Timer_Count) <= 0){
+    	Msg_Timer_Enable = false;
+        Msg_Off_Flag = true;
     }
 
 
