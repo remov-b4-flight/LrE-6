@@ -68,8 +68,8 @@ DMA_HandleTypeDef hdma_tim3_ch1_trig;
 TIM_HandleTypeDef htim3;
 extern	USBD_HandleTypeDef hUsbDeviceFS;
 
-uint8_t		LrE6State;
-uint8_t		LrE6Scene;
+uint8_t		LrE6State;	//! @var LrE-6 USB connection state
+uint8_t		LrE6Scene;	//! @var LrE-6 scene index
 
 //! keyboard variable
 bool		isKeyPressed;

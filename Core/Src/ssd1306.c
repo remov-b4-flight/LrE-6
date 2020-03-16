@@ -43,63 +43,61 @@ static inline void SSD1306_WriteData(uint8_t* buffer, size_t buff_size) {
  */
 void SSD1306_Initialize(void) {
 
-    SSD1306_WriteCommand(CMD_DISPLAY_OFF); //display off
+    SSD1306_WriteCommand(CMD_DISPLAY_OFF); 		// Display off
 
-    SSD1306_WriteCommand(CMD_SET_ADDRESS_MD); //Set Memory Addressing Mode
-    SSD1306_WriteCommand(VAL_HORIZON_ADDRSS); // 00b,Horizontal Addressing Mode; 01b,Vertical Addressing Mode;
-                                // 10b,Page Addressing Mode (RESET); 11b,Invalid
+    SSD1306_WriteCommand(CMD_SET_ADDRESS_MD); 	// Set Memory Addressing Mode
+    SSD1306_WriteCommand(VAL_HORIZON_ADDRSS);	// Horizontal paging mode
 
-    SSD1306_WriteCommand(CMD_SET_PAGE0); //Set Page Start Address for Page Addressing Mode,0-7
+    SSD1306_WriteCommand(CMD_SET_PAGE_RANGE);	// Set page range
+    SSD1306_WriteCommand(VAL_START_PAGE);		// Start page
+    SSD1306_WriteCommand(VAL_END_PAGE_32L);		// End page
 
 #ifdef SSD1306_MIRROR_VERT
-    SSD1306_WriteCommand(CMD_SET_NON_VMIRROR); // Mirror vertically
+    SSD1306_WriteCommand(CMD_SET_NON_VMIRROR);	// Mirror vertically
 #else
-    SSD1306_WriteCommand(CMD_SET_VMIRROR); //Set COM Output Scan Direction
+    SSD1306_WriteCommand(CMD_SET_VMIRROR);		// Set COM Output Scan Direction
 #endif
 
-    SSD1306_WriteCommand(0x00); //---set low column address
-    SSD1306_WriteCommand(0x10); //---set high column address
+    SSD1306_WriteCommand(CMD_SET_START_LINE);	// Set start line address
 
-    SSD1306_WriteCommand(CMD_SET_START_LINE); //--set start line address - CHECK
-
-    SSD1306_WriteCommand(CMD_SET_CONTRAST); //--set contrast control register - CHECK
+    SSD1306_WriteCommand(CMD_SET_CONTRAST);		// Set contrast control register
     SSD1306_WriteCommand(VAL_CONTRAST_MAX);
 
 #ifdef SSD1306_MIRROR_HORIZ
-    SSD1306_WriteCommand(CMD_NON_MIRROR); // Mirror horizontally
+    SSD1306_WriteCommand(CMD_NON_MIRROR);		// Mirror horizontally
 #else
-    SSD1306_WriteCommand(CMD_MIRROR); //--set segment re-map 0 to 127 - CHECK
+    SSD1306_WriteCommand(CMD_MIRROR);			// Set segment re-map 0 to 127 - CHECK
 #endif
 
 #ifdef SSD1306_INVERSE_COLOR
-    SSD1306_WriteCommand(CMD_INVERT); //--set inverse color
+    SSD1306_WriteCommand(CMD_INVERT);			// Set inverse color
 #else
-    SSD1306_WriteCommand(CMD_NON_INVERT); //--set normal color
+    SSD1306_WriteCommand(CMD_NON_INVERT);		// Set normal color
 #endif
 
-    SSD1306_WriteCommand(CMD_SET_MPX_RATIO); //--set multiplex ratio(1 to 64) - CHECK
-    SSD1306_WriteCommand(VAL_MPX_RATIO_32L); //
+    SSD1306_WriteCommand(CMD_SET_MPX_RATIO);	// Set multiplex ratio(1 to 64)
+    SSD1306_WriteCommand(VAL_MPX_RATIO_32L);
 
-    SSD1306_WriteCommand(CMD_REFLECT_FBUF); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
+    SSD1306_WriteCommand(CMD_REFLECT_FBUF);
 
-    SSD1306_WriteCommand(CMD_SET_VOFFSET); //-set display offset - CHECK
+    SSD1306_WriteCommand(CMD_SET_VOFFSET);		// Set display offset - CHECK
     SSD1306_WriteCommand(0x00); //-not offset
 
-    SSD1306_WriteCommand(CMD_SET_OSCDIV); //--set display clock divide ratio/oscillator frequency
-    SSD1306_WriteCommand(VAL_OSC_FREQ_MAX); //--set divide ratio
+    SSD1306_WriteCommand(CMD_SET_OSCDIV); 		// Set display clock divide ratio/oscillator frequency
+    SSD1306_WriteCommand(VAL_OSC_FREQ_MAX);
 
-    SSD1306_WriteCommand(CMD_SET_PRECHARGE); //--set pre-charge period
-    SSD1306_WriteCommand(VAL_PRECHG_DEFAULT); //
+    SSD1306_WriteCommand(CMD_SET_PRECHARGE);	// Set pre-charge period
+    SSD1306_WriteCommand(VAL_PRECHG_DEFAULT);
 
-    SSD1306_WriteCommand(CMD_SET_COMCONFIG); //--set com pins hardware configuration - CHECK
+    SSD1306_WriteCommand(CMD_SET_COMCONFIG);	// Set com pins hardware configuration
     SSD1306_WriteCommand(VAL_COM_CONFIG_32L);
 
-    SSD1306_WriteCommand(CMD_SET_VCOMH); //--set vcomh
-    SSD1306_WriteCommand(VAL_VCOMH_DEFAULT); //0x20,0.77xVcc
+    SSD1306_WriteCommand(CMD_SET_VCOMH);		// Set vcomh
+    SSD1306_WriteCommand(VAL_VCOMH_DEFAULT);	// 0x20,0.77xVcc
 
-    SSD1306_WriteCommand(CMD_SET_CHARGE_PUMP); //--set DC-DC enable
-    SSD1306_WriteCommand(VAL_CHG_PUMP_ENABLE); //
-    SSD1306_WriteCommand(CMD_DISPLAY_ON); //--turn on SSD1306 panel
+    SSD1306_WriteCommand(CMD_SET_CHARGE_PUMP); // Set DC-DC enable
+    SSD1306_WriteCommand(VAL_CHG_PUMP_ENABLE);
+    SSD1306_WriteCommand(CMD_DISPLAY_ON);		// Turn on SSD1306 panel
 
     // Clear frame buffer
     SSD1306_ClearBuffer();
@@ -124,7 +122,6 @@ void SSD1306_ClearBuffer() {
  */
 void SSD1306_FlashScreen(void) {
     SSD1306_WriteData(Frame_Buffer, FB_SIZE);
-    SSD1306_WriteData(Frame_Buffer, FB_SIZE);
 }
 
 /**
@@ -147,7 +144,7 @@ void SSD1306_Render2Buffer(void){
 			if (ch == '\0') continue;	//process next line.
 
 			uint8_t cindex = ch - FONT_PRINTABLE_START;
-			uint16_t fb_top = (column * FONT_WIDTH) + (line * SSD1306_WIDTH *2);
+			uint16_t fb_top = (column * FONT_WIDTH) + (line * SSD1306_WIDTH * 2);
 			uint16_t font_top = (cindex * BYTES_PER_CHAR_DATA);
 
 			for (uint8_t c = 0; c < FONT_WIDTH; c++){
@@ -157,6 +154,13 @@ void SSD1306_Render2Buffer(void){
 		}//Msg_Buffer column Loop
 	}//Msg_Buffer line Loop
 }
+
+/**
+ * @param string	: Message to screen
+ * @param x		: x coordinate to render
+ * @param y		: y coordinate to render
+ * @param op	: operator with frame buffer contents
+ */
 void SSD1306_RenderBanner(char *string, int x, int y ,uint8_t op){
 	uint8_t	page = y / BITS_PER_PAGE;
 	if (page == MAX_PAGE) {
@@ -186,4 +190,3 @@ void SSD1306_RenderBanner(char *string, int x, int y ,uint8_t op){
 		}//Frame Buffer column Loop
 	}//String Loop
 }
-

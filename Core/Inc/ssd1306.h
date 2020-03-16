@@ -13,6 +13,7 @@
 #define __SSD1306_H__
 
 #include <stddef.h>
+#include <stdbool.h>
 #include <_ansi.h>
 
 _BEGIN_STD_C
@@ -23,14 +24,20 @@ _BEGIN_STD_C
 //! @def LrE-6 I2C hardware
 #define SSD1306_I2C_PORT		hi2c1
 #define SSD1306_I2C_ADDR        (0x3C << 1)
-extern I2C_HandleTypeDef		SSD1306_I2C_PORT;
+extern	I2C_HandleTypeDef		SSD1306_I2C_PORT;
 #define SSD1306_PWRUP_WAIT		10	//(ms)
 
 #define SSD1306_CMD				0x00
 #define	SSD1306_DATA			0x40
 
+#define SSD1306_CONTINUE    	0x80
+#define SSD1306_TAIL        	0
+#define SSD1306_WRITE       	0
+#define	SSD1306_TRANSMIT_TO		250
+
 //! @def SSD1306 Commands
 #define	CMD_SET_ADDRESS_MD		0x20
+#define CMD_SET_PAGE_RANGE		0x22
 #define CMD_SET_START_LINE		0x40
 #define CMD_SET_CONTRAST		0x81
 #define CMD_SET_CHARGE_PUMP		0x8D
@@ -61,6 +68,8 @@ extern I2C_HandleTypeDef		SSD1306_I2C_PORT;
 
 #define VAL_MPX_RATIO_32L		0x1F
 #define VAL_COM_CONFIG_32L		0x02
+#define VAL_START_PAGE			0x00
+#define VAL_END_PAGE_32L		0x03
 
 //! @def SSD1306 OLED screen dimensions
 #define SSD1306_HEIGHT          32		// height
@@ -69,7 +78,7 @@ extern I2C_HandleTypeDef		SSD1306_I2C_PORT;
 //! @def SSD1306 OLED character rendering
 #define SCREEN_BLANK			0x00
 #define FONT_PRINTABLE_START	0x20
-#define FONT_PRINTABLE_END		0x7E
+#define FONT_PRINTABLE_END		0x83
 #define BYTES_PER_CHAR_DATA		16
 #define BITS_PER_PAGE			8
 #define MAX_PAGE				(SSD1306_HEIGHT / BITS_PER_PAGE)
