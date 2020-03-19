@@ -79,7 +79,7 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "W/B Auto"},			//L0M0	SW1
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Auto Tone"},		//L0M1	SW2
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_DEFAULT,	.message = "DayLight"},			//L0M2	SW3
-		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_DEFAULT,	.message = "Tangsten"},			//L0M3	SW4
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_DEFAULT,	.message = "Tungsten"},			//L0M3	SW4
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "W/B Cloud"},		//L1M0	SW6
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "W/B Shade"},		//L1M1	SW7
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L1M2	SW8

@@ -9,11 +9,11 @@
 #include "main.h"
 #include "usbd_hid.h"
 #include "led.h"
-#include "i2c-lcd.h"
 #include "usbd_hid.h"
 #include "bitcount.h"
 #include "key_define.h"
 #include "EmulateHID.h"
+#include "ssd1306.h"
 
 //
 extern	bool	isKeyPressed;
@@ -23,13 +23,13 @@ extern	bool	Msg_Timer_Enable;
 extern	bool	isMsgFlash;
 extern	USBD_HandleTypeDef	hUsbDeviceFS;
 extern	KEYSCAN	Key_Stat;
-extern	char LCD_Buffer[LCD_LINE][LCD_LINEBUF_SIZE];
+extern	char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 
 extern	HID_DEFINE keytable[];
 KEY_MODIFIER modifiers[KEY_COUNT];
 KEYBOARD_INPUT_REPORT	In_Report;
 
-inline void LCD_Print(){
+inline void Msg_Print(){
 	isMsgFlash = true;
 }
 
@@ -52,14 +52,13 @@ bool EmulateKeyboard(void) {
         	In_Report.modifier = keytable[bitpos].modifier;
             In_Report.keys[HID_RPT_KEY_IDX] = keytable[bitpos].keycode;
             if (keytable[bitpos].message != NULL) {
-        		LCD_Locate(0,0);
             	Msg_Off_Flag = false;
         		Msg_Timer_Enable = true;
             	Msg_Timer_Count = MSG_TIMER_DEFAULT;
-            	LCD_SetBackLight(LCD_BL_ON, LED_BL_STATIC);
-                strcpy(LCD_Buffer[0], keytable[bitpos].message);
-                memset(LCD_Buffer[1],SPACE,LCD_WIDTH);
-            	LCD_Print();
+            	SSD1306_SetScreen(ON);
+                strcpy(Msg_Buffer[0], keytable[bitpos].message);
+                memset(Msg_Buffer[1],' ',MSG_WIDTH);
+            	Msg_Print();
             }
             LED_SetPulse(LED_IDX_ENC0,LED_COLOR_YELLOW,25);
 

@@ -39,9 +39,9 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-typedef union {
+typedef union keyscan_t {
     uint32_t wd;
-    struct{
+    struct ks_bit_t {
         unsigned char n0:4;		//Switch Line0
         unsigned char n1:4;		//Switch Line1
         unsigned char n2:4;		//Switch Line2
@@ -56,7 +56,7 @@ typedef union {
     } nb;
 } KEYSCAN;
 
-typedef struct {
+typedef struct key_define_t {
 	uint8_t	type;
 	uint8_t color;
 	uint8_t duration;
@@ -73,7 +73,7 @@ typedef struct {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x32
+#define USBD_DEVICE_VER_MIN	0x33
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -149,8 +149,6 @@ void Start_LCDTimer(uint32_t tick);
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
 #define SWCLK_GPIO_Port GPIOA
-#define BL_ON_Pin GPIO_PIN_15
-#define BL_ON_GPIO_Port GPIOA
 #define L0_Pin GPIO_PIN_3
 #define L0_GPIO_Port GPIOB
 #define L1_Pin GPIO_PIN_4

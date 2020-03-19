@@ -5,10 +5,9 @@
  *	@copyright	GPLv3
 */
 /* Includes ------------------------------------------------------------------*/
-#include "led.h"
-
-#include "main.h"
 #include <string.h>
+#include "main.h"
+#include "led.h"
 
 /* Variables -----------------------------------------------------------------*/
 extern TIM_HandleTypeDef htim3;
@@ -16,8 +15,9 @@ extern bool	isLEDsendpulse;
 uint32_t period;
 uint8_t	LEDColor[LED_COUNT];	//!	@var coded LED color value
 uint8_t	LEDPulse[TOTAL_BITS];	//! @var Data formed PWM width send to LED
-uint8_t	LEDTimer[LED_COUNT];
+uint8_t	LEDTimer[LED_COUNT];	//! @var Individual LED Timer Counter
 
+//! @var RGB LED intensity table
 const LEDDATA LEDTable[COLOR_MAX] = {
 	//			R		G		B
 	{.rgbw = {.r=LOFF,.g=LOFF,.b=LOFF}},//COLOR_OFF,
@@ -43,7 +43,6 @@ void LED_Initialize(){
 	memset(LEDTimer,LED_TIMER_CONSTANT,LED_COUNT);
 
 	LED_SendPulse();
-	return;
 }
 /**
  *	@brief	Sets decorative color pattern to LEDs.

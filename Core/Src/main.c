@@ -30,7 +30,6 @@
 #include "midi.h"
 #include "usbd_hid.h"
 #include "led.h"
-#include "i2c-lcd.h"
 #include "bitcount.h"
 #include "key_define.h"
 #include "usbd_midi_if.h"
@@ -59,7 +58,6 @@ I2C_HandleTypeDef hi2c1;
 DMA_HandleTypeDef hdma_i2c1_tx;
 
 TIM_HandleTypeDef htim1;
-TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim14;
 DMA_HandleTypeDef hdma_tim3_ch1_trig;
@@ -88,6 +86,7 @@ bool		Msg_Timer_Enable;
 bool        Msg_Off_Flag;
 bool		Msg_1st_timeout;
 bool		isMsgFlash;
+bool		isRender;
 
 //! LED variables
 bool		isLEDsendpulse;
@@ -125,7 +124,6 @@ static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM14_Init(void);
 static void MX_ADC_Init(void);
-static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 void EmulateKeyboard();
 /* USER CODE END PFP */
@@ -314,6 +312,8 @@ int main(void)
   Msg_Timer_Enable = false;
   Msg_Timer_Count = MSG_TIMER_DEFAULT;
   Msg_1st_timeout = true;
+  isMsgFlash = false;
+  isRender = true;
 
   LrE6State = LRE6_RESET;
   LrE6Scene	= LrE6_SCENE0;
@@ -349,7 +349,6 @@ int main(void)
 #else //HID
   MX_USB_DEVICE_Init();
 #endif
-  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);
@@ -364,9 +363,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   const uint16_t ts_cal110 = *TEMP110_CAL_ADDR;
   const uint16_t ts_cal30 = *TEMP30_CAL_ADDR;
+#ifdef DEBUG
+  const int16_t k = (110 - 30) / (ts_cal110 - ts_cal30);
+#else
   const float k = (110.0 - 30.0) / (ts_cal110 - ts_cal30);
+#endif
 
   Start_MsgTimer(MSG_TIMER_DEFAULT);
   Msg_Off_Flag = false;
@@ -423,6 +427,10 @@ int main(void)
 
 				uint32_t inner_sensor_val = HAL_ADC_GetValue(&hadc);
 				int16_t m = inner_sensor_val - ts_cal30;
+#ifdef DEBUG
+				uint16_t t = (k*m) + 30;
+				sprintf(Msg_Buffer[0], "%10d", inner_sensor_val);
+#else
 				float t = (k * (float)m) + 30.0;
 
 				int tempf = (t * 100);
@@ -430,6 +438,7 @@ int main(void)
 				int8_t temp_s = tempf % 100;
 
 				sprintf(Msg_Buffer[0], "%02d.%02dC\xdf", temp_i, temp_s);
+#endif
 				SSD1306_SetScreen(ON);
 
 				Msg_Print();
@@ -473,11 +482,20 @@ int main(void)
 
 	//Flashing LCD.
 	if (isMsgFlash == true) {
-		SSD1306_Render2Buffer();
-		SSD1306_FlashScreen();
-		isMsgFlash = false;
+		if (isRender == true) {
+			SSD1306_Render2Buffer();
+			isRender = false;
+		}
+		if (SSD1306_FlashScreen() == true){
+			isMsgFlash = false;	// success to flash
+			isRender = true;
+		} else {
+			HAL_Delay(1);		// failed to flash, retry
+		}
 	}
-
+#if 0
+	HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -676,65 +694,6 @@ static void MX_TIM1_Init(void)
 }
 
 /**
-  * @brief TIM2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM2_Init(void)
-{
-
-  /* USER CODE BEGIN TIM2_Init 0 */
-
-  /* USER CODE END TIM2_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
-
-  /* USER CODE BEGIN TIM2_Init 1 */
-
-  /* USER CODE END TIM2_Init 1 */
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = TIM_PRESC_1uS;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = TIM_PERIOD_4mS;
-  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigOC.OCMode = TIM_OCMODE_PWM2;
-  sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM2_Init 2 */
-
-  /* USER CODE END TIM2_Init 2 */
-  HAL_TIM_MspPostInit(&htim2);
-
-}
-
-/**
   * @brief TIM3 Initialization Function
   * @param None
   * @retval None
@@ -879,7 +838,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : ENC_1A_Pin ENC_1B_Pin */
   GPIO_InitStruct.Pin = ENC_1A_Pin|ENC_1B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : L3_Pin L0_Pin L1_Pin L2_Pin */

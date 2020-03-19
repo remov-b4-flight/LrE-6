@@ -65,6 +65,7 @@ extern	I2C_HandleTypeDef		SSD1306_I2C_PORT;
 #define VAL_PRECHG_DEFAULT		0x22
 #define VAL_VCOMH_DEFAULT		0x20
 #define	VAL_CHG_PUMP_ENABLE		0x14
+#define VAL_VOFFSET_NONE		0x00
 
 #define VAL_MPX_RATIO_32L		0x1F
 #define VAL_COM_CONFIG_32L		0x02
@@ -99,7 +100,7 @@ enum render_operator {
  */
 void SSD1306_Initialize(void);
 void SSD1306_ClearBuffer(void);
-void SSD1306_FlashScreen(void);
+bool SSD1306_FlashScreen(void);
 void SSD1306_SetScreen(bool on);
 void SSD1306_Render2Buffer(void);
 

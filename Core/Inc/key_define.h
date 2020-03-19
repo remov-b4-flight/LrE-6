@@ -2,7 +2,7 @@
 #define _USB_HID_H
 
 //Key define types
-enum{
+enum define_type_t {
 	TYPE_SWITCH = 0,
 	TYPE_ROTARY = 1,
 };

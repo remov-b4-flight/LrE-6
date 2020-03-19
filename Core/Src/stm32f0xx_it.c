@@ -23,9 +23,9 @@
 #include "stm32f0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "midi.h"
 #include <stdbool.h>
 #include <string.h>
+#include "midi.h"
 #include "stm32f0xx_hal_tim.h"
 #include "i2c-lcd.h"
 #include "ssd1306.h"
@@ -100,7 +100,7 @@ static inline void MIDI_CC_Inc(uint8_t rot){
 
 static inline void MIDI_CC_Dec(uint8_t rot){
 #ifdef MIDI
-	if (MIDI_CC_Value[LrE6Scene][rot] >= (MIDI_CC_MIN+1) ) MIDI_CC_Value[LrE6Scene][rot]--;
+	if (MIDI_CC_Value[LrE6Scene][rot] >= (MIDI_CC_MIN + 1) ) MIDI_CC_Value[LrE6Scene][rot]--;
 #endif
 }
 
@@ -109,6 +109,7 @@ static inline void MIDI_CC_Dec(uint8_t rot){
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_FS;
 extern DMA_HandleTypeDef hdma_i2c1_tx;
+extern I2C_HandleTypeDef hi2c1;
 extern DMA_HandleTypeDef hdma_tim3_ch1_trig;
 extern TIM_HandleTypeDef htim1;
 /* USER CODE BEGIN EV */
@@ -690,6 +691,24 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
   /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 1 */
 
   /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 1 */
+}
+
+/**
+  * @brief This function handles I2C1 event global interrupt / I2C1 wake-up interrupt through EXTI line 23.
+  */
+void I2C1_IRQHandler(void)
+{
+  /* USER CODE BEGIN I2C1_IRQn 0 */
+
+  /* USER CODE END I2C1_IRQn 0 */
+  if (hi2c1.Instance->ISR & (I2C_FLAG_BERR | I2C_FLAG_ARLO | I2C_FLAG_OVR)) {
+    HAL_I2C_ER_IRQHandler(&hi2c1);
+  } else {
+    HAL_I2C_EV_IRQHandler(&hi2c1);
+  }
+  /* USER CODE BEGIN I2C1_IRQn 1 */
+
+  /* USER CODE END I2C1_IRQn 1 */
 }
 
 /**
