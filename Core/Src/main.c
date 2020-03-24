@@ -68,6 +68,7 @@ extern	USBD_HandleTypeDef hUsbDeviceFS;
 
 uint8_t		LrE6State;	//! @var LrE-6 USB connection state
 uint8_t		LrE6Scene;	//! @var LrE-6 scene index
+uint8_t		USB_ResetCount;	//! @var count to try USB reconnect;
 
 //! keyboard variable
 bool		isKeyPressed;
@@ -317,6 +318,7 @@ int main(void)
 
   LrE6State = LRE6_RESET;
   LrE6Scene	= LrE6_SCENE0;
+  USB_ResetCount = 0;
 
 #if MIDI
   isPrev_sw = false;
@@ -367,7 +369,7 @@ int main(void)
   const uint16_t ts_cal110 = *TEMP110_CAL_ADDR;
   const uint16_t ts_cal30 = *TEMP30_CAL_ADDR;
 #ifdef DEBUG
-  const int16_t k = (110 - 30) / (ts_cal110 - ts_cal30);
+  const int16_t k = (110 - 30) * 100 / (ts_cal110 - ts_cal30);
 #else
   const float k = (110.0 - 30.0) / (ts_cal110 - ts_cal30);
 #endif
@@ -413,6 +415,7 @@ int main(void)
 		Msg_1st_timeout = false;
 		Start_MsgTimer(MSG_TIMER_DEFAULT);
 		LrE6State = LRE6_USB_NOLINK;
+		USB_ResetCount = 0;
 
 	} else if(LrE6State == LRE6_USB_NOLINK) {
 		//USB Not initially configured.
@@ -428,12 +431,13 @@ int main(void)
 				uint32_t inner_sensor_val = HAL_ADC_GetValue(&hadc);
 				int16_t m = inner_sensor_val - ts_cal30;
 #ifdef DEBUG
-				uint16_t t = (k*m) + 30;
-				sprintf(Msg_Buffer[0], "%10d", inner_sensor_val);
+				uint16_t temp = (k * m) / 100 + 30;
+				sprintf(Msg_Buffer[0], "%10d", temp);
+//				sprintf(Msg_Buffer[0], "%10ld", inner_sensor_val);
 #else
-				float t = (k * (float)m) + 30.0;
+				float temp = (k * (float)m) + 30.0;
 
-				int tempf = (t * 100);
+				int tempf = (temp * 100);
 				int8_t temp_i = tempf / 100;
 				int8_t temp_s = tempf % 100;
 
@@ -457,6 +461,16 @@ int main(void)
 				LEDColor[0] = tempcolor;
 
 				isLEDsendpulse = true;
+				if ((USB_ResetCount++ % 8) == 7){
+					USBD_DeInit(&hUsbDeviceFS);
+					HAL_Delay(10);
+					#if MIDI
+					  MX_USB_MIDI_INIT();
+					#else //HID
+					  MX_USB_DEVICE_Init();
+					#endif
+				}
+
 			}
 		}// LCD_Off_Flag
 	}// LrE6State

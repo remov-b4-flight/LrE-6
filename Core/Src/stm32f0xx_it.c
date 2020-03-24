@@ -199,6 +199,7 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles EXTI line 0 and 1 interrupts.
   */
+#if !(ENC_9R5KQ)
 void EXTI0_1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
@@ -206,39 +207,6 @@ void EXTI0_1_IRQHandler(void)
 	uint8_t	r5 = (ENC5_GPIO_Port->IDR) & ROT_MASK;
 	//rotator 5
 	if( pr & PRMASK_R5 ){
-#if ENC_9R5KQ
-    	if ( r5 == ENC_MV0 || r5 ==ENC_MV3 ) { //Stopped
-			if( rot5_prev == ENC_MV1 || rot5_prev == ENC_MV2 ){
-				Key_Stat.nb.rot5 = ROT_NOT_MOVE;
-				isKeyPressed = true;
-				isKeyRelaseSent = true;
-			}
-		}else if( r5 == ENC_MV1 ){ //Moved
-			if( rot5_prev == ENC_MV0 ){
-				Key_Stat.nb.rot5 = ROT_MOVE_CW;
-	          	MIDI_CC_Inc(LrE6_ROT5);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot5_prev == ENC_MV3 ){
-				Key_Stat.nb.rot5 = ROT_MOVE_CCW;
-	          	MIDI_CC_Dec(LrE6_ROT5);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if( r5 == ENC_MV2 ){ //Moved
-			if( rot5_prev == ENC_MV0 ){
-				Key_Stat.nb.rot5 = ROT_MOVE_CCW;
-	          	MIDI_CC_Dec(LrE6_ROT5);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot5_prev == ENC_MV3 ){
-				Key_Stat.nb.rot5 = ROT_MOVE_CW;
-	            MIDI_CC_Inc(LrE6_ROT5);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}
-#else
 	  if (r5 == ENC_MOVE) {
 	      if( rot5_prev == ENC_MVCCW ){ //CCW
 	          Key_Stat.nb.rot5 = ROT_MOVE_CCW;
@@ -256,7 +224,6 @@ void EXTI0_1_IRQHandler(void)
 			isKeyPressed = true;
 			isKeyRelaseSent = true;
 	  }
-#endif
 	  rot5_prev = r5;
 	}
 
@@ -267,10 +234,12 @@ void EXTI0_1_IRQHandler(void)
 
   /* USER CODE END EXTI0_1_IRQn 1 */
 }
+#endif
 
 /**
   * @brief This function handles EXTI line 4 to 15 interrupts.
   */
+#if !(ENC_9R5KQ)
 void EXTI4_15_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
@@ -282,39 +251,6 @@ void EXTI4_15_IRQHandler(void)
     // Rotator1
     if(pr & PRMASK_R1){// EXTI4,5
         uint8_t	r1 = ( ra >> 4 ) & ROT_MASK;
-#if ENC_9R5KQ
-    	if ( r1 == ENC_MV0 || r1 == ENC_MV3 ) { //Stopped
-			if( rot1_prev == ENC_MV1 || rot1_prev == ENC_MV2 ){
-				Key_Stat.nb.rot1 = ROT_NOT_MOVE;
-				isKeyPressed = true;
-				isKeyRelaseSent = true;
-			}
-		}else if( r1 == ENC_MV1 ){ //Moved
-			if(rot1_prev == ENC_MV0){
-				Key_Stat.nb.rot1 = ROT_MOVE_CW;
-		        MIDI_CC_Inc(LrE6_ROT1);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot1_prev == ENC_MV3 ){
-				Key_Stat.nb.rot1 = ROT_MOVE_CCW;
-		        MIDI_CC_Dec(LrE6_ROT1);
-		        isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if( r1 == ENC_MV2 ){ //Moved
-			if( rot1_prev == ENC_MV0 ){
-				Key_Stat.nb.rot1 = ROT_MOVE_CCW;
-		        MIDI_CC_Dec(LrE6_ROT1);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot1_prev == ENC_MV3 ){
-				Key_Stat.nb.rot1 = ROT_MOVE_CW;
-		        MIDI_CC_Inc(LrE6_ROT1);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}
-#else
 		if ( r1 == ENC_MOVE ) {
 			if( rot1_prev == ENC_MVCCW ){ //CCW
 				Key_Stat.nb.rot1 = ROT_MOVE_CCW;
@@ -332,7 +268,6 @@ void EXTI4_15_IRQHandler(void)
 			isKeyPressed = true;
 			isKeyRelaseSent = true;
 		}
-#endif
 	    rot1_prev = r1;
 
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
@@ -343,39 +278,6 @@ void EXTI4_15_IRQHandler(void)
     //Rotator 2
     if(pr & PRMASK_R2){ //EXTI8,9
     	uint8_t	r2 = r230 & ROT_MASK;
-#if ENC_9R5KQ
-    	if ( r2 == ENC_MV0 || r2 == ENC_MV3 ) { //Stopped
-			if( rot2_prev == ENC_MV1 || rot2_prev == ENC_MV2 ){
-				Key_Stat.nb.rot2 = ROT_NOT_MOVE;
-				isKeyPressed = true;
-				isKeyRelaseSent = true;
-			}
-		}else if( r2 == ENC_MV1 ){ //Moved
-			if( rot2_prev == ENC_MV0 ){
-				Key_Stat.nb.rot2 = ROT_MOVE_CW;
-				MIDI_CC_Inc(LrE6_ROT2);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot2_prev == ENC_MV3 ){
-				Key_Stat.nb.rot2 = ROT_MOVE_CCW;
-		        MIDI_CC_Dec(LrE6_ROT2);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if( r2 == ENC_MV2 ){ //Moved
-			if( rot2_prev == ENC_MV0 ){
-				Key_Stat.nb.rot2 = ROT_MOVE_CCW;
-		        MIDI_CC_Dec(LrE6_ROT2);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot2_prev == ENC_MV3 ){
-				Key_Stat.nb.rot2 = ROT_MOVE_CW;
-				MIDI_CC_Inc(LrE6_ROT2);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}
-#else
 		if ( r2 == ENC_MOVE ) {
 			if( rot2_prev == ENC_MVCCW ){ //CCW
 		        MIDI_CC_Dec(LrE6_ROT2);
@@ -393,7 +295,6 @@ void EXTI4_15_IRQHandler(void)
 			isKeyPressed = true;
 			isKeyRelaseSent = true;
 		}
-#endif
 		rot2_prev = r2;
 
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
@@ -405,41 +306,6 @@ void EXTI4_15_IRQHandler(void)
     //Rotator 3
 	if( pr & PRMASK_R3 ){	//EXTI10,11
 		uint8_t	r3 = ( r230 >> 2 ) & ROT_MASK;
-#if ENC_9R5KQ
-    	if ( r3 == ENC_MV0 || r3 == ENC_MV3 ) { //Stopped
-			if( rot3_prev == ENC_MV1 || rot3_prev == ENC_MV2 ){
-				Key_Stat.nb.rot3 = ROT_NOT_MOVE;
-				isKeyPressed = true;
-				isKeyRelaseSent = true;
-			}
-		}else if( r3 == ENC_MV1 ){ //Moved
-			if( rot3_prev == ENC_MV0 ){
-				Key_Stat.nb.rot3 = ROT_MOVE_CW;
-		        MIDI_CC_Inc(LrE6_ROT3);
-
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot3_prev == ENC_MV3 ){
-				Key_Stat.nb.rot3 = ROT_MOVE_CCW;
-				MIDI_CC_Dec(LrE6_ROT3);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if( r3 == ENC_MV2 ){ //Moved
-			if( rot3_prev == ENC_MV0 ){
-				Key_Stat.nb.rot3 = ROT_MOVE_CCW;
-				MIDI_CC_Dec(LrE6_ROT3);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot3_prev == ENC_MV3 ){
-				Key_Stat.nb.rot3 = ROT_MOVE_CW;
-		        MIDI_CC_Inc(LrE6_ROT3);
-
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}
-#else
 		if ( r3 == ENC_MOVE ) {
 			if( rot3_prev == ENC_MVCCW ){ //CCW
 				MIDI_CC_Dec(LrE6_ROT3);
@@ -457,7 +323,6 @@ void EXTI4_15_IRQHandler(void)
 			isKeyPressed = true;
 			isKeyRelaseSent = true;
 		}
-#endif
 	    rot3_prev = r3;
 
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
@@ -469,39 +334,6 @@ void EXTI4_15_IRQHandler(void)
     //Rotator 4
     if(pr & PRMASK_R4){ //EXTI14&15
     	uint8_t	r4 = ( (ENC4_GPIO_Port->IDR) >> 14 ) & ROT_MASK;
-#if ENC_9R5KQ
-    	if ( r4 == ENC_MV0 || r4 == ENC_MV3 ) { //Stopped
-			if(rot4_prev == ENC_MV1 || rot4_prev == ENC_MV2){
-				Key_Stat.nb.rot4 = ROT_NOT_MOVE;
-				isKeyPressed = true;
-				isKeyRelaseSent = true;
-			}
-		}else if( r4 == ENC_MV1 ){ //Moved
-			if( rot4_prev == ENC_MV0 ){
-				Key_Stat.nb.rot4 = ROT_MOVE_CW;
-		        MIDI_CC_Inc(LrE6_ROT4);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot4_prev == ENC_MV3 ){
-				Key_Stat.nb.rot4 = ROT_MOVE_CCW;
-		        MIDI_CC_Dec(LrE6_ROT4);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if( r4 == ENC_MV2 ){ //Moved
-			if( rot4_prev == ENC_MV0 ){
-				Key_Stat.nb.rot4 = ROT_MOVE_CCW;
-		        MIDI_CC_Dec(LrE6_ROT4);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot4_prev == ENC_MV3 ){
-				Key_Stat.nb.rot4 = ROT_MOVE_CW;
-		        MIDI_CC_Inc(LrE6_ROT4);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}
-#else
 		if ( r4 == ENC_MOVE ) {
 			if( rot4_prev == ENC_MVCCW ){ //CCW
 		        MIDI_CC_Dec(LrE6_ROT4);
@@ -519,7 +351,6 @@ void EXTI4_15_IRQHandler(void)
 			isKeyPressed = true;
 			isKeyRelaseSent = true;
 		}
-#endif
 	    rot4_prev = r4;
 
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
@@ -531,39 +362,6 @@ void EXTI4_15_IRQHandler(void)
     //Rotator 0(selector)
     if( pr & PRMASK_R0 ){ //EXTI12,13
     	uint8_t	r0 = ( r230 >> 4 ) & ROT_MASK;
-#if ENC_9R5KQ
-    	if ( r0 == ENC_MV0 || r0 == ENC_MV3 ) { //Stopped
-			if( rot0_prev == ENC_MV1 || rot0_prev == ENC_MV2 ){
-				Key_Stat.nb.rot0 = ROT_NOT_MOVE;
-				isKeyPressed = true;
-				isKeyRelaseSent = true;
-			}
-		}else if( r0 == ENC_MV1 ){ //Moved
-			if( rot0_prev == ENC_MV0 ){
-				Key_Stat.nb.rot0 = ROT_MOVE_CW;
-		        MIDI_CC_Inc(LrE6_ROT0);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot0_prev == ENC_MV3 ){
-				Key_Stat.nb.rot0 = ROT_MOVE_CCW;
-		        MIDI_CC_Dec(LrE6_ROT0);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}else if( r0 == ENC_MV2 ){ //Moved
-			if( rot0_prev == ENC_MV0 ){
-				Key_Stat.nb.rot0 = ROT_MOVE_CCW;
-		        MIDI_CC_Dec(LrE6_ROT0);
-				isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}else if( rot0_prev == ENC_MV3 ){
-				Key_Stat.nb.rot0 = ROT_MOVE_CW;
-		        MIDI_CC_Inc(LrE6_ROT0);
-		        isKeyPressed = true;
-				isKeyRelaseSent = false;
-			}
-		}
-#else
     	if ( r0 == ENC_MOVE ) {
 			if( rot0_prev == ENC_MVCCW ){ //CCW
 				Key_Stat.nb.rot0 = ROT_MOVE_CCW;
@@ -581,7 +379,6 @@ void EXTI4_15_IRQHandler(void)
 			isKeyPressed = true;
 			isKeyRelaseSent = true;
 		}
-#endif
 	    rot0_prev = r0;
 
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
@@ -605,7 +402,7 @@ void EXTI4_15_IRQHandler(void)
 
   /* USER CODE END EXTI4_15_IRQn 1 */
 }
-
+#endif
 /**
   * @brief This function handles DMA1 channel 4, 5, 6 and 7 interrupts.
   */
