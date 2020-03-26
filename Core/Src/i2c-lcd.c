@@ -17,7 +17,6 @@ uint8_t i2cbuf[LCD_LINEBUF_SIZE * 2];
 /* User code -----------------------------------------------------------------*/
 /**
  * @brief	Initialize of LCD
- * @param	none.
  */
 void LCD_Initialize(){
     uint8_t buf[2];
@@ -67,7 +66,6 @@ void LCD_Initialize(){
 
 /**
  *	@brief Clear LCD
- *	@param	none.
  */
 void LCD_Clear(){
     uint8_t buf[2];
@@ -79,8 +77,8 @@ void LCD_Clear(){
 
 /**
  * 	@brief Locate cursor
- * 	@param	uint8_t	column
- * 	@param	uint8_t	line 0:upper 1:lower
+ * 	@param	column
+ * 	@param	line 0:upper 1:lower
  */
 void LCD_Locate(uint8_t column,uint8_t line){
     uint8_t buf[2];
@@ -101,7 +99,7 @@ void LCD_SetDisplay(bool on, bool cursor, bool blink){
 
 /**
  *	@brief Put character on LCD
- *	@param	char c	character to print.
+ *	@param	c	character to print.
  */
 void LCD_Putchar(char c){
     uint8_t buf[2];
@@ -113,7 +111,6 @@ void LCD_Putchar(char c){
 
 /**
  * @brief Flash LCD screen.
- * @param none.
  */
 void LCD_Flash(){
 	LCD_Locate(0, LCD_LINE0);
@@ -124,7 +121,7 @@ void LCD_Flash(){
 
 /**
  * @brief Print LCD Message Immediately
- * @param string to print
+ * @param str	string to print
  */
 void LCD_Print_Quick(const char *str){
 	const uint8_t len = LCD_WIDTH;
@@ -144,7 +141,8 @@ void LCD_Print_Quick(const char *str){
 
 /**
  *	@brief	Set LCD Back-light status wheather ON or OFF.
- *	@param	bool	light	true:backlight on	false:off
+ *	@param	light	true:backlight on	false:off
+ *	@param	cycle	LED pulse width.(LED_BL_STATIC = constant)
  */
 void LCD_SetBackLight(bool light, uint16_t cycle){
 	TIM_OC_InitTypeDef sConfigOC;
@@ -167,8 +165,8 @@ void LCD_SetBackLight(bool light, uint16_t cycle){
 
 /**
  *	@brief Set CGRAM content to use 'user defined' character
- *	@param uint8_t	code		character code set to CGRAM.
- *	@param uint8_t	*pattern	bitmap character pattern.
+ *	@param code		character code set to CGRAM.
+ *	@param *pattern	bitmap character pattern.
  */
 void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
 	if(code <= LCD_CGRAM_MAX){
@@ -198,7 +196,7 @@ void LCD_SetCGRAM(uint8_t code, const uint8_t *pattern){
 
 /**
  *	@brief	Set DDRAM address to set location
- *	@param	uint8_t	address	Data Display RAM address to print character
+ *	@param	address	Data Display RAM address to print character
  */
 void LCD_SetDDADR(uint8_t address){
     uint8_t buf[2];

@@ -56,12 +56,7 @@ typedef union keyscan_t {
     } nb;
 } KEYSCAN;
 
-typedef struct key_define_t {
-	uint8_t	type;
-	uint8_t color;
-	uint8_t duration;
-	char	*message;
-} KEY_DEFINE;
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -267,6 +262,10 @@ enum {
 #define ROT_MOVE_CCW        2
 #define ROT_MASK			0x03
 #define MOD_SW_BIT_MASK		0x0fffffff
+
+//! @def USB time definitions
+#define USB_RECONNECT_WAIT	10
+#define	USB_RECONNECT_MAX	100
 
 //! For temperature calculator
 #define TEMP110_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7C2))

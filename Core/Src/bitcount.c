@@ -10,8 +10,8 @@
 /* User code -----------------------------------------------------------------*/
 /**
  * @brief	count number of bits is '1'
- * @param 	uint8_t	b8	number to count bits
- * @return	uint8_t		count of bit '1'
+ * @param 	b8	number to count bits
+ * @return	count of bit '1'
  */
 uint8_t bitcount8(uint8_t b8){
 	uint8_t count = ( ((b8 & 0xAA) >> 1) + (b8 & 0x55) );
@@ -22,8 +22,8 @@ uint8_t bitcount8(uint8_t b8){
 
 /**
  * @brief	count number of bits is '1'
- * @param 	uint16_t	b16	number to count bits
- * @return	uint8_t			count of bit '1'
+ * @param 	b16	number to count bits
+ * @return	count of bit '1'
  */
 uint8_t bitcount16(uint16_t b16) {
     uint16_t count = (b16 & 0x5555) + ((b16 >> 1) & 0x5555);
@@ -34,8 +34,8 @@ uint8_t bitcount16(uint16_t b16) {
 
 /**
  * @brief	count number of bits is '1'
- * @param 	uint32_t	b32	number to count bits
- * @return	uint8_t			count of bit '1'
+ * @param 	b32	number to count bits
+ * @return	count of bit '1'
  */
 int bitcount32(uint32_t b32)
 {
@@ -48,8 +48,8 @@ int bitcount32(uint32_t b32)
 
 /**
  *	@brief	compute first bit position bit is '1'
- *	@param 	uint16_t	v	number to computes
- *	@return	uint8_t			bit number (0-15)
+ *	@param 	v	number to computes
+ *	@return	bit number (0-15)
  */
 uint8_t ntz16(uint16_t v){
     uint16_t w=(v&(-v))-1;
@@ -58,8 +58,8 @@ uint8_t ntz16(uint16_t v){
 
 /**
  *	@brief	figures first bit position bit is '1'
- *	@param	uint32_t	v	number to computes
- *	@return	uint8_t			bit number (0-31)
+ *	@param	v	number to computes
+ *	@return	bit number (0-31)
  */
 uint8_t ntz32(uint32_t v){
     uint32_t w=(v&(-v))-1;

@@ -38,7 +38,11 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#ifdef DEBUG
+#define CONN_MSG	"%8s %2x.%02xD"
+#else
+#define CONN_MSG	"%8s %2x.%02x"
+#endif
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -63,12 +67,18 @@ TIM_HandleTypeDef htim14;
 DMA_HandleTypeDef hdma_tim3_ch1_trig;
 
 /* USER CODE BEGIN PV */
+#if !(ENC_9R5KQ)
+#warning "You are building binary for EC11 encoder."
+#endif
+#if !(MIDI)
+#warning "You are building binary for USB HID device."
+#endif
 TIM_HandleTypeDef htim3;
 extern	USBD_HandleTypeDef hUsbDeviceFS;
 
-uint8_t		LrE6State;	//! @var LrE-6 USB connection state
-uint8_t		LrE6Scene;	//! @var LrE-6 scene index
-uint8_t		USB_ResetCount;	//! @var count to try USB reconnect;
+uint8_t		LrE6State;	// LrE-6 USB connection state
+uint8_t		LrE6Scene;	// LrE-6 scene index
+uint8_t		USB_ResetCount;	// count to try USB reconnect;
 
 //! keyboard variable
 bool		isKeyPressed;
@@ -212,7 +222,7 @@ static bool EmulateMIDI(){
         		isKeyPressed = false;
         		isKeyReport = false;
         	}else{
-        		sprintf(msg_string, "Note %3d", note);
+        		sprintf(msg_string, "Note: %3d", note);
                 isKeyReport = true;
         	}
 
@@ -254,7 +264,7 @@ static bool EmulateMIDI(){
             //Print Message to LCD & LED
             if (keytable[LrE6Scene][bitpos].message != NULL) {
             	SSD1306_SetScreen(ON);
-                sprintf(msg_string, ((channel > 99)? "C%3d=%3d":"Ch%2d=%3d"), channel, val);
+                sprintf(msg_string, ((channel > 99)? "C%3d = %3d":"Ch%2d = %3d"), channel, val);
                 strcpy(Msg_Buffer[0], keytable[LrE6Scene][bitpos].message);
             	strcpy(Msg_Buffer[1], msg_string);
             	Msg_Print();
@@ -355,12 +365,12 @@ int main(void)
   HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);
 
+  HAL_Delay(SSD1306_PWRUP_WAIT);		//Wait for LCD module power up.
   LED_Initialize();	//Set all LEDs to 'OFF'
 
   //Initialize SSD1306 OLED
-  HAL_Delay(SSD1306_PWRUP_WAIT);		//Wait for LCD module power up.
-
   SSD1306_Initialize();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -369,7 +379,7 @@ int main(void)
   const uint16_t ts_cal110 = *TEMP110_CAL_ADDR;
   const uint16_t ts_cal30 = *TEMP30_CAL_ADDR;
 #ifdef DEBUG
-  const int16_t k = (110 - 30) * 100 / (ts_cal110 - ts_cal30);
+  const int16_t k = (110 - 30) * 1000 / (ts_cal110 - ts_cal30);
 #else
   const float k = (110.0 - 30.0) / (ts_cal110 - ts_cal30);
 #endif
@@ -391,7 +401,7 @@ int main(void)
 		LEDTimer[LED_IDX_ENC0] = LED_TIMER_CONNECT;
 
 		SSD1306_SetScreen(ON);
-		sprintf(Msg_Buffer[0], "%8s %2x.%02x", LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
+		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
 
 		Msg_Print();
 
@@ -441,7 +451,7 @@ int main(void)
 				int8_t temp_i = tempf / 100;
 				int8_t temp_s = tempf % 100;
 
-				sprintf(Msg_Buffer[0], "%02d.%02dC\xdf", temp_i, temp_s);
+				sprintf(Msg_Buffer[0], "%02d.%02d degC", temp_i, temp_s);
 #endif
 				SSD1306_SetScreen(ON);
 
@@ -461,16 +471,21 @@ int main(void)
 				LEDColor[0] = tempcolor;
 
 				isLEDsendpulse = true;
-				if ((USB_ResetCount++ % 8) == 7){
+				if ((USB_ResetCount % 8) == 7) {
 					USBD_DeInit(&hUsbDeviceFS);
-					HAL_Delay(10);
+					sprintf(Msg_Buffer[0],"USB Re-connect");
+					SSD1306_Render2Buffer();
+					SSD1306_FlashScreen();
+					HAL_Delay(USB_RECONNECT_WAIT);
 					#if MIDI
 					  MX_USB_MIDI_INIT();
 					#else //HID
 					  MX_USB_DEVICE_Init();
 					#endif
 				}
-
+				if (USB_ResetCount < USB_RECONNECT_MAX){
+					USB_ResetCount++;
+				}
 			}
 		}// LCD_Off_Flag
 	}// LrE6State

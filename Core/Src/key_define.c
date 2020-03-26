@@ -24,13 +24,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "key_define.h"
+#include "EmulateHID.h"
 #include "led.h"
 
 /* Variables ----------------------------------------------------------------*/
 #if MIDI
-//! @var	User-friendly scene names appears on LCD.
+// User-friendly scene names appears on LCD.
 const char *scene_name[SCENE_COUNT] = { "Library", "Tone Curve",  "Color Saturation", "Sharpen", };
-//! @var	LED patterns that set by switching scenes.
+// LED patterns that set by switching scenes.
 const uint8_t LED_Scene[SCENE_COUNT][LED_COUNT] = {
 	//0					1					2					3					4					5
 	{LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,},		//Scene0

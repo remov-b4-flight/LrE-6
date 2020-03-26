@@ -29,7 +29,7 @@ extern	HID_DEFINE keytable[];
 KEY_MODIFIER modifiers[KEY_COUNT];
 KEYBOARD_INPUT_REPORT	In_Report;
 
-inline void Msg_Print(){
+static inline void Msg_Print(){
 	isMsgFlash = true;
 }
 

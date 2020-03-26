@@ -13,11 +13,11 @@
 extern TIM_HandleTypeDef htim3;
 extern bool	isLEDsendpulse;
 uint32_t period;
-uint8_t	LEDColor[LED_COUNT];	//!	@var coded LED color value
-uint8_t	LEDPulse[TOTAL_BITS];	//! @var Data formed PWM width send to LED
-uint8_t	LEDTimer[LED_COUNT];	//! @var Individual LED Timer Counter
+uint8_t	LEDColor[LED_COUNT];	// coded LED color value
+uint8_t	LEDPulse[TOTAL_BITS];	// Data formed PWM width send to LED
+uint8_t	LEDTimer[LED_COUNT];	// Individual LED Timer Counter
 
-//! @var RGB LED intensity table
+// RGB LED intensity table
 const LEDDATA LEDTable[COLOR_MAX] = {
 	//			R		G		B
 	{.rgbw = {.r=LOFF,.g=LOFF,.b=LOFF}},//COLOR_OFF,
@@ -36,7 +36,6 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 /* User code ----------------------------------------------------------------*/
 /**
  * @brief	Sets all LEDs to 'OFF'
- * @param	none
  */
 void LED_Initialize(){
 	memset(LEDColor,LED_COLOR_OFF,LED_COUNT);
@@ -46,7 +45,6 @@ void LED_Initialize(){
 }
 /**
  *	@brief	Sets decorative color pattern to LEDs.
- *	@param	none
  */
 void LED_TestPattern(){
 	LEDColor[0]=LED_COLOR_WHITE;
@@ -59,9 +57,9 @@ void LED_TestPattern(){
 }
 
 /**
- *	@brief	Flush LEDs immediately with LEDColor[]
- *	@param	uint8_t	index	index of LEDs.
- *	@param	uint8_t	color	color of LED.
+ *	@brief	Flush a LED immediately with LEDColor[]
+ *	@param	index	index of LEDs.
+ *	@param	color	color of LED.
  */
 void LED_Set_Quick(uint8_t index,uint8_t color){
 	LEDColor[index] = color;
@@ -69,9 +67,9 @@ void LED_Set_Quick(uint8_t index,uint8_t color){
 }
 
 /**
- *	@brief	Flush LEDs at loop in main()
- *	@param	uint8_t	index	index of LEDs.
- *	@param	uint8_t	color	color of LED
+ *	@brief	Set single LEDColor[] value to flush LED at loop in main()
+ *	@param	index	index of LEDs.
+ *	@param	color	color of LED
  * 	@attention	Difference of LED_Set() and LED_Set_Quick() is
  * 	Using LED_Set(), Real flash LED point is pended until return to main().
  * 	Using LED_Set_Quick() , It flashes LEDs immediately.
@@ -82,10 +80,10 @@ inline void LED_Set(uint8_t index,uint8_t color){
 }
 
 /**
- *	@brief	Make LED pulses.
- *	@param	uint8_t	index	index of LEDs.
- *	@param	uint8_t	color	color of LED.
- *	@param	uint8_t	pulse	duration of pulse in 4ms unit(i.e. pulse=25 => 100ms).
+ *	@brief	Make LED flashing by setting LEDTimer[]
+ *	@param	index	index of LEDs.
+ *	@param	color	color of LED.
+ *	@param	pulse	duration of pulse in 4ms unit(i.e. pulse=25 => 100ms).
  */
 inline void LED_SetPulse(uint8_t index,uint8_t color,uint8_t pulse){
 	LEDColor[index] = color;
@@ -97,7 +95,7 @@ inline void LED_SetPulse(uint8_t index,uint8_t color,uint8_t pulse){
  *	@brief	make LEDPulse[] from LEDColor[]
  *	@pre	LEDColor[] contains LED color setting.
  */
-void Color2Pulse(){
+static void Color2Pulse(){
 	uint8_t	pulse = 0;
 	LEDDATA	leddata;
 
@@ -111,9 +109,8 @@ void Color2Pulse(){
 }
 
 /**
- *	@brief	Send pulses to LEDs rely on LEDColor[] array
- *	@param	none.
- *	@pre	LEDColor[] contains LED color setting.
+ *	@brief	Send PWM pulses to LEDs rely on LEDColor[] array
+ *	@pre	LEDPulse[] contains pulse width array.
  */
 void LED_SendPulse(){
 

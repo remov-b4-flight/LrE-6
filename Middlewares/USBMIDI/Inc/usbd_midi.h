@@ -3,7 +3,7 @@
   * @file    usbd_midi.h
   ******************************************************************************
 
-  (CC at)2016 by D.F.Mac. @TripArts Music
+  (CC at)2016 by D.F.Mac. @@TripArts Music
 
 */ 
  

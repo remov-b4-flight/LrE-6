@@ -16,7 +16,7 @@
 extern char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 extern uint8_t Font8x16[];
 
-//! @var SSD1306 OLED frame buffer
+// SSD1306 OLED frame buffer
 static uint8_t Frame_Buffer[SSD1306_WIDTH * MAX_PAGE];
 
 /**
@@ -103,7 +103,6 @@ void SSD1306_Initialize(void) {
 
 /**
  * @brief Clear all of frame buffer
- * @param color	:	Color to fill (White or Black)
  */
 void SSD1306_ClearBuffer() {
     for(size_t i = 0; i < sizeof(Frame_Buffer); i++) {

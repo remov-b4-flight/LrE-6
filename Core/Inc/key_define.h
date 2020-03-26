@@ -1,11 +1,23 @@
 #ifndef _USB_HID_H
 #define _USB_HID_H
 
-//Key define types
+/**
+ * @brief Key define types whether SWITCH or ROTARY encoder
+ */
 enum define_type_t {
-	TYPE_SWITCH = 0,
-	TYPE_ROTARY = 1,
+	TYPE_SWITCH = 0,//!< TYPE_SWITCH
+	TYPE_ROTARY = 1,//!< TYPE_ROTARY
 };
+
+/**
+ * @brief define key definiton structure.
+ */
+typedef struct key_define_t {
+	uint8_t	type;
+	uint8_t color;
+	uint8_t duration;
+	char	*message;
+} KEY_DEFINE;
 
 //HID key codes HID 1.11
 
