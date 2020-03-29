@@ -199,7 +199,7 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles EXTI line 0 and 1 interrupts.
   */
-#if (ENC_9R5KQ)
+#if ENC_9R5KQ
 void EXTI0_1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */

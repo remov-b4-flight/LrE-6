@@ -56,7 +56,7 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_DEFAULT,	.message = "Add Quick Colle."},	//L1M2	SW8
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_DEFAULT,	.message = "Undo"},				//L1M3	SW9
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_DEFAULT,	.message = "Rate = 5"},			//L2M0	SW5
-		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_LONG,		.message = "Scene  0"},			//L2M1	SW10 [SCENE]
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_LONG,		.message = "Scene 0"},			//L2M1	SW10 [SCENE]
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Grid View"},		//L2M2	rot4 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "People View"},		//L2M3	rot5 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Rate reset"},		//L3M0	rot1 push
@@ -148,9 +148,9 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L2M0	SW5
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_LONG,		.message = "Scene 3"},			//L2M1	SW10 [SCENE]
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Sat. All"},	//L2M2	rot4 push
-		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clr.Sat. Magenta"},		//L2M3	rot5 push
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clr.Sat. Magenta"},	//L2M3	rot5 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Tilt"},		//L3M0	rot1 push
-		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Vibrancy"},		//L3M1	rot2 push
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Vibrancy"},	//L3M1	rot2 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear DeHaze"},		//L3M2	rot3 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Sharp"},		//L3M3	rot0 push
 		//Scence3 Rotators																				0123456789ABCDEF
@@ -158,14 +158,14 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Sharpen \x83"},		//rot0 CCW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_CYAN,	.duration = LED_TIMER_HALF,		.message = "Tilt \x80"},		//rot1 CW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Tilt \x81"},		//rot1 CCW
-		{.type =TYPE_ROTARY,	.color = LED_COLOR_RED,		.duration = LED_TIMER_HALF,		.message = "Vibrancy \x82"},		//rot2 CW
-		{.type =TYPE_ROTARY,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_HALF,		.message = "Vibrancy \x83"},		//rot2 CCW
+		{.type =TYPE_ROTARY,	.color = LED_COLOR_RED,		.duration = LED_TIMER_HALF,		.message = "Vibrancy \x82"},	//rot2 CW
+		{.type =TYPE_ROTARY,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_HALF,		.message = "Vibrancy \x83"},	//rot2 CCW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "De-Haze \x82"},		//rot3 CW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "De-Haze \x83"},		//rot3 CCW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.All \x82"},		//rot4 CW
 		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.All \x83"},		//rot4 CCW
-		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Magnta \x82"},		//rot5 CW
-		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Magnta \x83"},		//rot5 CCW
+		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Magnta \x82"},	//rot5 CW
+		{.type =TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Magnta \x83"},	//rot5 CCW
 	}
 };
 #else //HID

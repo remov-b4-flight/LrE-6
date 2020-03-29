@@ -213,12 +213,15 @@ enum {
 	L3
 };
 
+#if MIDI
+//! Scene definition in MIDI
 enum {
 	LrE6_SCENE0 = 0,
 	LrE6_SCENE1 = 1,
 	LrE6_SCENE2 = 2,
 	LrE6_SCENE3 = 3,
 };
+#endif
 
 enum {
 	LrE6_ROT0 = 0,
@@ -235,7 +238,7 @@ enum {
 #define	CC_CH_PER_SCENE	16
 #define NOTES_PER_SCENE	32
 //! Key define structure
-#define KEY_DEFINE_COUNT	(KEY_COUNT+(ROT_COUNT*2))
+#define KEY_DEFINE_COUNT	( KEY_COUNT + (ROT_COUNT * 2) )
 
 #define LxMASK	0x0F
 //
@@ -247,9 +250,9 @@ enum {
 #define PRMASK_R5	0x0003
 
 //! Screen timer definitions
-#define MSG_TIMER_DEFAULT	1000	//4 sec (1 tick=4ms)
-#define MSG_TIMER_INIT		10      //40m sec initialze time
-#define MSG_TIMER_UPDATE	250		//1 sec (LCD update in non HID)
+#define MSG_TIMER_DEFAULT	1000	//4s (1 tick=4ms)
+#define MSG_TIMER_INIT		10      //40ms initialize time
+#define MSG_TIMER_UPDATE	250		//1s (LCD update in USB not connected)
 
 //! LED timer definitions
 #define LED_TIMER_DEFAULT	25		//400ms (1 tick=16ms)

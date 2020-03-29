@@ -477,11 +477,11 @@ int main(void)
 					SSD1306_Render2Buffer();
 					SSD1306_FlashScreen();
 					HAL_Delay(USB_RECONNECT_WAIT);
-					#if MIDI
+#if MIDI
 					  MX_USB_MIDI_INIT();
-					#else //HID
+#else //HID
 					  MX_USB_DEVICE_Init();
-					#endif
+#endif
 				}
 				if (USB_ResetCount < USB_RECONNECT_MAX){
 					USB_ResetCount++;
