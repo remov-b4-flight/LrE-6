@@ -39,9 +39,11 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #ifdef DEBUG
-#define CONN_MSG	"%8s %2x.%02xD"
+//#define CONN_MSG	"%8s %2x.%02xD"
+#define CONN_MSG	"%s %2x.%02xD"
 #else
-#define CONN_MSG	"%8s %2x.%02x"
+//#define CONN_MSG	"%8s %2x.%02x"
+#define CONN_MSG	"%s %2x.%02x"
 #endif
 /* USER CODE END PTD */
 
@@ -124,7 +126,7 @@ char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 	extern USBD_HandleTypeDef *pInstance;
 #endif
 
-extern char *connect_bitmap;
+extern uint8_t *connect_bitmap;
 
 /* USER CODE END PV */
 
@@ -403,12 +405,15 @@ int main(void)
 		LEDTimer[LED_IDX_ENC0] = LED_TIMER_CONNECT;
 
 		SSD1306_SetScreen(ON);
-		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
 #if 0
-		SSD1306_LoadBitmap(connect_bitmap);
-		SSD1306_RenderBanner(Msg_Buffer[0], (SSD1306_WIDTH / 3), (SSD1306_HEIGHT / 3), INP);
-#endif
+		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
 		Msg_Print();
+#else
+		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
+		SSD1306_LoadBitmap();
+		SSD1306_RenderBanner(Msg_Buffer[0], 12, 12, INP);
+		SSD1306_FlashScreen();
+#endif
 
 		LrE6State = LRE6_USB_LINKED;
 
