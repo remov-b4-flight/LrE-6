@@ -1,36 +1,38 @@
 /**
  * 	@file led.h
- *	@brief LED control functions.
+ *	@brief (WS2812B style) RGB LEDs control functions.
+ *	@author jenoki
  *	@copyright	GPLv3
  */
 
 #ifndef _LED_H    /* Guard against multiple inclusion */
 #define _LED_H
 
-/* Private includes ----------------------------------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* Exported constants --------------------------------------------------------*/
-enum led_color {   //constants for expressing color.
-	LED_COLOR_OFF = 0,
-	LED_COLOR_RED,
-	LED_COLOR_BLUE,
-	LED_COLOR_GREEN,
-	LED_COLOR_WHITE,
-	LED_COLOR_YELLOW,
-	LED_COLOR_MAGENTA,
-	LED_COLOR_CYAN,
-	LED_COLOR_ORANGE,
-	LED_COLOR_GLAY,
-	LED_COLOR_DARK,
+/**
+ * @enum constants for expressing LED light color.
+ */
+enum led_color_t {
+	LED_COLOR_OFF = 0,//!< LED_COLOR_OFF
+	LED_COLOR_RED,    //!< LED_COLOR_RED
+	LED_COLOR_BLUE,   //!< LED_COLOR_BLUE
+	LED_COLOR_GREEN,  //!< LED_COLOR_GREEN
+	LED_COLOR_WHITE,  //!< LED_COLOR_WHITE
+	LED_COLOR_YELLOW, //!< LED_COLOR_YELLOW
+	LED_COLOR_MAGENTA,//!< LED_COLOR_MAGENTA
+	LED_COLOR_CYAN,   //!< LED_COLOR_CYAN
+	LED_COLOR_ORANGE, //!< LED_COLOR_ORANGE
+	LED_COLOR_GLAY,   //!< LED_COLOR_GLAY
+	LED_COLOR_DARK,   //!< LED_COLOR_DARK
 };
 #define COLOR_MAX 11
 
+//! @def LrE-6 board definition
 #define LED_COUNT		6
 #define BITS_PER_LED    24  // (RGB) 3 * 8bit
 #define TOTAL_BITS      (LED_COUNT * BITS_PER_LED)
@@ -49,8 +51,12 @@ enum led_color {   //constants for expressing color.
 #define LED_TIMER_CONSTANT	0xFF
 #define	LED_IDX_ENC0	0
 #define LED_RESET_WIDTH	280	//in usec.
-
-/* Exported types ------------------------------------------------------------*/
+/**
+ * @typedef RGB LED intensity definition
+ * @brief used for set RGB LED intensity definition.
+ * this is union used for set values as .rgbw form in your codes.
+ * in the codes that makes data for RGB LEDs, .n 32bit numeric is used.
+ */
 typedef union leddata_t {
 	uint32_t	n;
 	struct	rgbw_t {

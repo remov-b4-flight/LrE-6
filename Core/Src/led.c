@@ -1,15 +1,14 @@
 /**
  *	@file led.c
- *	@brief Array of Color LEDs control functions
+ *	@brief (WS2812B style) RGB LEDs control functions
  *	@author jenoki
  *	@copyright	GPLv3
 */
-/* Includes ------------------------------------------------------------------*/
+
 #include <string.h>
 #include "main.h"
 #include "led.h"
 
-/* Variables -----------------------------------------------------------------*/
 extern TIM_HandleTypeDef htim3;
 extern bool	isLEDsendpulse;
 uint32_t period;
@@ -17,7 +16,11 @@ uint8_t	LEDColor[LED_COUNT];	// coded LED color value
 uint8_t	LEDPulse[TOTAL_BITS];	// Data formed PWM width send to LED
 uint8_t	LEDTimer[LED_COUNT];	// Individual LED Timer Counter
 
-// RGB LED intensity table
+/**
+ * @brief RGB LED intensity table
+ * @details define Light intensity for each R,G,B
+ * values forms array indexed by LED_COLOR_XXX (in enum led_color_t)
+ */
 const LEDDATA LEDTable[COLOR_MAX] = {
 	//			R		G		B
 	{.rgbw = {.r=LOFF,.g=LOFF,.b=LOFF}},//COLOR_OFF,
@@ -33,9 +36,8 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 	{.rgbw = {.r=LDRK,.g=LDRK,.b=LDRK}},//COLOR_DARK,
 };
 
-/* User code ----------------------------------------------------------------*/
 /**
- * @brief	Sets all LEDs to 'OFF'
+ * @brief	LED Initialize - Sets all LEDs to 'OFF'
  */
 void LED_Initialize(){
 	memset(LEDColor,LED_COLOR_OFF,LED_COUNT);
@@ -61,7 +63,7 @@ void LED_TestPattern(){
  *	@param	index	index of LEDs.
  *	@param	color	color of LED.
  */
-void LED_Set_Quick(uint8_t index,uint8_t color){
+void LED_Set_Quick(uint8_t index, uint8_t color){
 	LEDColor[index] = color;
 	LED_SendPulse();
 }
@@ -74,7 +76,7 @@ void LED_Set_Quick(uint8_t index,uint8_t color){
  * 	Using LED_Set(), Real flash LED point is pended until return to main().
  * 	Using LED_Set_Quick() , It flashes LEDs immediately.
  */
-inline void LED_Set(uint8_t index,uint8_t color){
+inline void LED_Set(uint8_t index, uint8_t color){
 	LEDColor[index] = color;
 	isLEDsendpulse = true;
 }
@@ -85,7 +87,7 @@ inline void LED_Set(uint8_t index,uint8_t color){
  *	@param	color	color of LED.
  *	@param	pulse	duration of pulse in 4ms unit(i.e. pulse=25 => 100ms).
  */
-inline void LED_SetPulse(uint8_t index,uint8_t color,uint8_t pulse){
+inline void LED_SetPulse(uint8_t index, uint8_t color, uint8_t pulse){
 	LEDColor[index] = color;
     LEDTimer[index] = pulse;	// 4ms unit (i.e. pulse=25 => 100ms)
 	isLEDsendpulse = true;

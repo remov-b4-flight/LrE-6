@@ -16,7 +16,7 @@
 extern char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 extern uint8_t Font8x16[];
 
-// SSD1306 OLED frame buffer
+//! @brief SSD1306 OLED frame buffer
 static uint8_t Frame_Buffer[SSD1306_WIDTH * MAX_PAGE];
 
 /**
@@ -155,7 +155,7 @@ void SSD1306_Render2Buffer(void){
 		}//Msg_Buffer column Loop
 	}//Msg_Buffer line Loop
 }
-#if 0
+#if 1
 /**
  * @param string	: Message to screen
  * @param x		: x coordinate to render
@@ -190,5 +190,12 @@ void SSD1306_RenderBanner(char *string, int x, int y ,uint8_t op){
 			}
 		}//Frame Buffer column Loop
 	}//String Loop
+}
+/**
+ * @brief Load bitmap image to frame buffer
+ * @param bitmap SSD1306 style bitmap 8bit array.
+ */
+void SSD1306_LoadBitmap(char *bitmap){
+	memcpy(Frame_Buffer, bitmap, FB_SIZE);
 }
 #endif

@@ -87,8 +87,8 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L1M3	SW9
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_DEFAULT,	.message = "Fluorescent"},		//L2M0	SW5
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_LONG,		.message = "Scene 1"},			//L2M1	SW10 [SCENE]
-		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear HiLight"},	//L2M2	rot4 push
-		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Temper."},	//L2M3	rot5 push
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Hi-Light"},	//L2M2	rot4 push
+		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear C-Temp."},	//L2M3	rot5 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Clear Shadow"},		//L3M0	rot1 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Dark"},		//L3M1	rot2 push
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Clear Light"},		//L3M2	rot3 push
@@ -102,10 +102,10 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Darks \x83"},		//rot2 CCW
 		{.type = TYPE_ROTARY,	.color = LED_COLOR_GLAY,	.duration = LED_TIMER_HALF,		.message = "Lights \x82"},		//rot3 CW
 		{.type = TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Lights \x83"},		//rot3 CCW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "HiLight \x82"},		//rot4 CW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "HiLight \x83"},		//rot4 CCW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "C-Temp. \x82"},		//rot5 CW
-		{.type = TYPE_ROTARY,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "C-Temp. \x83"},		//rot5 CCW
+		{.type = TYPE_ROTARY,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "Hi-Light \x82"},	//rot4 CW
+		{.type = TYPE_ROTARY,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Hi-Light \x83"},	//rot4 CCW
+		{.type = TYPE_ROTARY,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Color-Temp. \x82"},	//rot5 CW
+		{.type = TYPE_ROTARY,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Color-Temp. \x83"},	//rot5 CCW
 	},{	//Scene2 Button																					0123456789ABCDEF
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Keyword 1"},		//L0M0	SW1
 		{.type = TYPE_SWITCH,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Keyword 2"},		//L0M1	SW2

@@ -76,17 +76,17 @@ DMA_HandleTypeDef hdma_tim3_ch1_trig;
 TIM_HandleTypeDef htim3;
 extern	USBD_HandleTypeDef hUsbDeviceFS;
 
-uint8_t		LrE6State;	// LrE-6 USB connection state
-uint8_t		LrE6Scene;	// LrE-6 scene index
+uint8_t		LrE6State;	//! LrE-6 USB connection state
+uint8_t		LrE6Scene;	//! LrE-6 scene index
 uint8_t		USB_ResetCount;	// count to try USB reconnect;
 
 //! keyboard variable
-bool		isKeyPressed;
+bool		isKeyPressed;	//! If true, ISR detected any Key/Encoder was moved.
 KEYSCAN     Key_Stat;
 uint8_t		Key_Line;
 bool		isKeyRelaseSent;
 #if MIDI
-	bool		isPrev_sw;	//MIDI event previous sent is switch(true) or rotator(false)
+	bool		isPrev_sw;	//! MIDI event previous sent is switch(true) or rotator(false)
 	uint32_t	MaskKey[SCENE_COUNT];
 	uint32_t	MaskRot[SCENE_COUNT];
 #endif
@@ -96,11 +96,11 @@ int32_t     Msg_Timer_Count;
 bool		Msg_Timer_Enable;
 bool        Msg_Off_Flag;
 bool		Msg_1st_timeout;
-bool		isMsgFlash;
+bool		isMsgFlash;		//! if true, Screen is flashed by Msg_Buffer[] at main() function.
 bool		isRender;
 
 //! LED variables
-bool		isLEDsendpulse;
+bool		isLEDsendpulse;		//! if true, LEDs are flashed by LEDColor[] array.
 bool		LED_Timer_Update;
 
 //! Scene related
@@ -123,6 +123,8 @@ char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 	uint8_t	USBMIDI_Event[4];
 	extern USBD_HandleTypeDef *pInstance;
 #endif
+
+extern char *connect_bitmap;
 
 /* USER CODE END PV */
 
@@ -402,7 +404,10 @@ int main(void)
 
 		SSD1306_SetScreen(ON);
 		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
-
+#if 0
+		SSD1306_LoadBitmap(connect_bitmap);
+		SSD1306_RenderBanner(Msg_Buffer[0], (SSD1306_WIDTH / 3), (SSD1306_HEIGHT / 3), INP);
+#endif
 		Msg_Print();
 
 		LrE6State = LRE6_USB_LINKED;
