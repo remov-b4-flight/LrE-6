@@ -173,34 +173,41 @@ void Start_LCDTimer(uint32_t tick);
 
 #define	TIM_PWM_50PER (TIM_PERIOD_4mS / 2)
 
+#if ENC_9R5KQ
 //! 9R5KQ type Encoder
-#define ENC_MV3		3
-#define ENC_MV2		2
-#define ENC_MV1		1
-#define ENC_MV0		0
-
+enum enc9R5_t {
+	ENC_MV3 =	3,
+	ENC_MV2	=	2,
+	ENC_MV1	=	1,
+	ENC_MV0	=	0,
+};
+#else
 //! Standard EC11 type Encoder
-#define ENC_MOVE	0
-#define ENC_MVCCW	2
-#define ENC_MVCW	1
-#define ENC_NOMV	3
-
+enum ec11_t {
+	ENC_MOVE =	0,
+	ENC_MVCCW =	2,
+	ENC_MVCW =	1,
+	ENC_NOMV =	3,
+};
+#endif
 //! LrE-6 Ports on Board
 #define Mx_GPIO_Port GPIOA
 #define ENC1_GPIO_Port GPIOA
 #define ENC23S_GPIO_Port GPIOB
 #define ENC4_GPIO_Port GPIOC
 #define ENC5_GPIO_Port GPIOF
+
+//! LrE-6 Hardware definition
 #define KEY_COUNT	16
 #define	ROT_COUNT	6
 
 //! LrE-6 States
-enum {
-	LRE6_RESET,
-	LRE6_USB_NOLINK,
-	LRE6_USB_LINKUP,
-	LRE6_USB_LINKED,
-	LRE6_USB_LINK_LOST,
+enum lre6_state_t {
+	LRE6_RESET,        //!< LRE6_RESET
+	LRE6_USB_NOLINK,   //!< LRE6_USB_NOLINK
+	LRE6_USB_LINKUP,   //!< LRE6_USB_LINKUP
+	LRE6_USB_LINKED,   //!< LRE6_USB_LINKED
+	LRE6_USB_LINK_LOST,//!< LRE6_USB_LINK_LOST
 };
 
 //! Key matrix lines
@@ -264,7 +271,7 @@ enum {
 #define ROT_MASK			0x03
 #define MOD_SW_BIT_MASK		0x0fffffff
 
-//! @def USB time definitions
+//! USB time definitions
 #define USB_RECONNECT_WAIT	10
 #define	USB_RECONNECT_MAX	100
 

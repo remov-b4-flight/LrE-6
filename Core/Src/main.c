@@ -39,10 +39,8 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #ifdef DEBUG
-//#define CONN_MSG	"%8s %2x.%02xD"
 #define CONN_MSG	"%s %2x.%02xD"
 #else
-//#define CONN_MSG	"%8s %2x.%02x"
 #define CONN_MSG	"%s %2x.%02x"
 #endif
 /* USER CODE END PTD */
@@ -77,35 +75,50 @@ DMA_HandleTypeDef hdma_tim3_ch1_trig;
 #endif
 TIM_HandleTypeDef htim3;
 extern	USBD_HandleTypeDef hUsbDeviceFS;
+//! LrE-6 USB connection state
+uint8_t		LrE6State;
+//! LrE-6 scene index
+uint8_t		LrE6Scene;
+//! Count to try USB reconnect;
+uint8_t		USB_ResetCount;
 
-uint8_t		LrE6State;	//! LrE-6 USB connection state
-uint8_t		LrE6Scene;	//! LrE-6 scene index
-uint8_t		USB_ResetCount;	// count to try USB reconnect;
-
-//! keyboard variable
-bool		isKeyPressed;	//! If true, ISR detected any Key/Encoder was moved.
+// keyboard variable
+//! If true, ISR detected any Key/Encoder was moved.
+bool		isKeyPressed;
+//! Key pressed/released status set by timer key scanning.
 KEYSCAN     Key_Stat;
+//! In key scanning wheather Line selected to read for key matrix.
 uint8_t		Key_Line;
+//! If true, MIDI Event/HID packet is sent by key pressed/rotator moved. if false, not sent.
 bool		isKeyRelaseSent;
 #if MIDI
-	bool		isPrev_sw;	//! MIDI event previous sent is switch(true) or rotator(false)
+	//! If true, MIDI event previous sent is switch. if false, it's rotator
+	bool		isPrev_sw;
+	//! Bit masks for which bit of KEYSCAN variable acts as key.
 	uint32_t	MaskKey[SCENE_COUNT];
+	//! Bit masks for which bit of KEYSCAN variable acts as rotator.
 	uint32_t	MaskRot[SCENE_COUNT];
 #endif
 
-//! LCD variables
-int32_t     Msg_Timer_Count;
+// LCD variables
+int32_t		Msg_Timer_Count;
 bool		Msg_Timer_Enable;
-bool        Msg_Off_Flag;
+//! If true, Screen is cleared in main() that is determined on timer interrupt.
+bool		Msg_Off_Flag;
+//! Indicates 1st Msg_Timer timeout has occured from power on reset.
 bool		Msg_1st_timeout;
-bool		isMsgFlash;		//! if true, Screen is flashed by Msg_Buffer[] at main() function.
+//! If true, Screen is flashed by Msg_Buffer[] at main() function.
+bool		isMsgFlash;
+//! If true, frame_buffer[] contents flashes the screen.
 bool		isRender;
 
-//! LED variables
-bool		isLEDsendpulse;		//! if true, LEDs are flashed by LEDColor[] array.
+// LED variables
+//! if true, LEDs are flashed by LEDColor[] array.
+bool		isLEDsendpulse;
+//! flag is set by timer ISR, it makes LED_Timer[] count up in main()
 bool		LED_Timer_Update;
 
-//! Scene related
+// Scene related
 #if MIDI
 	extern	KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT];
 	extern	char *scene_name[SCENE_COUNT];
@@ -116,17 +129,19 @@ extern	uint8_t	LED_Scene[SCENE_COUNT][LED_COUNT];
 extern	uint8_t	LEDColor[LED_COUNT];
 extern	uint8_t	LEDTimer[LED_COUNT];
 
+//! String message buffer of screen
 char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 
-//! MIDI variables
+// MIDI variables
 #if MIDI
+	//! MIDI CC message value for each channels.
 	uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
+	//! keep previous sent 'Key On' note/channel for release message.
 	uint8_t prev_note;
+	//! USB MIDI message buffer
 	uint8_t	USBMIDI_Event[4];
 	extern USBD_HandleTypeDef *pInstance;
 #endif
-
-extern uint8_t *connect_bitmap;
 
 /* USER CODE END PV */
 
@@ -368,9 +383,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);
+  LED_Initialize();	//Set all LEDs to 'OFF'
 
   HAL_Delay(SSD1306_PWRUP_WAIT);		//Wait for LCD module power up.
-  LED_Initialize();	//Set all LEDs to 'OFF'
 
   //Initialize SSD1306 OLED
   SSD1306_Initialize();
@@ -405,15 +420,11 @@ int main(void)
 		LEDTimer[LED_IDX_ENC0] = LED_TIMER_CONNECT;
 
 		SSD1306_SetScreen(ON);
-#if 0
-		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
-		Msg_Print();
-#else
+
 		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
 		SSD1306_LoadBitmap();
 		SSD1306_RenderBanner(Msg_Buffer[0], 12, 12, INP);
 		SSD1306_FlashScreen();
-#endif
 
 		LrE6State = LRE6_USB_LINKED;
 

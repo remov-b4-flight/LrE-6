@@ -151,7 +151,7 @@ bool SSD1306_FlashScreen(void) {
 
 /**
  * @brief Set screen on/off
- * @param on	:	true = Set display ON, false = Set display off
+ * @param on	true = Set display ON, false = Set display off
  */
 void SSD1306_SetScreen(bool on){
     SSD1306_WriteCommand( (on)? CMD_DISPLAY_ON : CMD_DISPLAY_OFF );
@@ -184,10 +184,10 @@ void SSD1306_Render2Buffer(void){
 
 /**
  * @brief Rendar banner message to frame buffer
- * @param string	: Message to screen
- * @param x		: x coordinate to render
- * @param y		: y coordinate to render
- * @param op	: operator with frame buffer contents
+ * @param string	Message to screen
+ * @param x		x coordinate to render
+ * @param y		y coordinate to render
+ * @param op	operator with frame buffer contents
  */
 void SSD1306_RenderBanner(char *string, int x, int y ,uint8_t op){
 	uint8_t	page = y / BITS_PER_PAGE;
