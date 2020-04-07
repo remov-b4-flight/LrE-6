@@ -73,6 +73,7 @@ DMA_HandleTypeDef hdma_tim3_ch1_trig;
 #if !(MIDI)
 #warning "You are building binary for USB HID device."
 #endif
+//! STM32 TIM3 instance handle
 TIM_HandleTypeDef htim3;
 extern	USBD_HandleTypeDef hUsbDeviceFS;
 //! LrE-6 USB connection state
@@ -101,7 +102,9 @@ bool		isKeyRelaseSent;
 #endif
 
 // LCD variables
+//! Timer counter ticked by end of L3 matrix scanning. (16ms interval).
 int32_t		Msg_Timer_Count;
+//! If true Msg_Timer counting is enabled.
 bool		Msg_Timer_Enable;
 //! If true, Screen is cleared in main() that is determined on timer interrupt.
 bool		Msg_Off_Flag;
@@ -113,9 +116,9 @@ bool		isMsgFlash;
 bool		isRender;
 
 // LED variables
-//! if true, LEDs are flashed by LEDColor[] array.
+//! If true, LEDs are flashed by LEDColor[] array.
 bool		isLEDsendpulse;
-//! flag is set by timer ISR, it makes LED_Timer[] count up in main()
+//! Flag is set by timer ISR, It makes LED_Timer[] count up in main()
 bool		LED_Timer_Update;
 
 // Scene related
@@ -140,6 +143,7 @@ char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 	uint8_t prev_note;
 	//! USB MIDI message buffer
 	uint8_t	USBMIDI_Event[4];
+	//Instance Handle of USB interface
 	extern USBD_HandleTypeDef *pInstance;
 #endif
 
@@ -413,6 +417,12 @@ int main(void)
   MakeMasks();
 #endif
 
+#if 1
+  SSD1306_LoadBitmap();
+  SSD1306_FlashScreen();
+#endif
+
+  //Main loop
   while (1) {
 	if (LrE6State == LRE6_USB_LINKUP) {
 		//USB device configured by host
@@ -422,7 +432,6 @@ int main(void)
 		SSD1306_SetScreen(ON);
 
 		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
-		SSD1306_LoadBitmap();
 		SSD1306_RenderBanner(Msg_Buffer[0], 12, 12, INP);
 		SSD1306_FlashScreen();
 
@@ -508,7 +517,7 @@ int main(void)
 					USB_ResetCount++;
 				}
 			}
-		}// LCD_Off_Flag
+		}// Msg_Off_Flag
 	}// LrE6State
 
 

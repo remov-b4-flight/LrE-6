@@ -227,7 +227,7 @@ enum {
 	LrE6_SCENE3 = 3,
 };
 #endif
-
+//! Rotator definitions
 enum {
 	LrE6_ROT0 = 0,
 	LrE6_ROT1,
@@ -238,6 +238,7 @@ enum {
 };
 
 #define SCENE_COUNT		4
+//! Define key that designated for scene change.
 #define SCENE_BIT		9
 #define KEY_PER_SCENE	(KEY_COUNT)
 #define	CC_CH_PER_SCENE	16
@@ -254,12 +255,12 @@ enum {
 #define PRMASK_R4	0xC000
 #define PRMASK_R5	0x0003
 
-//! Screen timer definitions
+// Screen timer definitions
 #define MSG_TIMER_DEFAULT	1000	//4s (1 tick=4ms)
 #define MSG_TIMER_INIT		10      //40ms initialize time
 #define MSG_TIMER_UPDATE	250		//1s (LCD update in USB not connected)
 
-//! LED timer definitions
+// LED timer definitions
 #define LED_TIMER_DEFAULT	25		//400ms (1 tick=16ms)
 #define LED_TIMER_HALF		12		//192ms
 #define LED_TIMER_LONG		35		//560ms

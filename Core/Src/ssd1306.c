@@ -201,14 +201,14 @@ void SSD1306_RenderBanner(char *string, int x, int y ,uint8_t op){
 			x = 0;
 		}
 	}
-	for (uint8_t i = 0; (string[i] != '\0' && i < 16); i++){
-		uint8_t cindex = string[i] - FONT_PRINTABLE_START;
+	for (uint8_t i = 0; (string[i] != '\0' && i < MSG_WIDTH); i++){
+		uint8_t ch_index = string[i] - FONT_PRINTABLE_START;
 		uint16_t fb_top = (page * SSD1306_WIDTH) + x ;
-		uint16_t font_top = (cindex * BYTES_PER_CHAR_DATA);
-		for (uint8_t c = 0; c < FONT_WIDTH; c++){
-			uint8_t font_h = Font8x16[font_top + c];
-			uint8_t font_l = Font8x16[font_top + c + FONT_WIDTH];
-			uint16_t fb_index = fb_top + (i * FONT_WIDTH) + c;
+		uint16_t font_top = (ch_index * BYTES_PER_CHAR_DATA);
+		for (uint8_t column = 0; column < FONT_WIDTH; column++){
+			uint8_t font_h = Font8x16[font_top + column];
+			uint8_t font_l = Font8x16[font_top + column + FONT_WIDTH];
+			uint16_t fb_index = fb_top + (i * FONT_WIDTH) + column;
 			if (op == INP){
 				Frame_Buffer[fb_index] = font_h;
 				Frame_Buffer[fb_index + SSD1306_WIDTH] = font_l;
