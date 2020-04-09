@@ -143,7 +143,7 @@ char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 	uint8_t prev_note;
 	//! USB MIDI message buffer
 	uint8_t	USBMIDI_Event[4];
-	//Instance Handle of USB interface
+	//! Instance Handle of USB interface
 	extern USBD_HandleTypeDef *pInstance;
 #endif
 
@@ -417,10 +417,8 @@ int main(void)
   MakeMasks();
 #endif
 
-#if 1
   SSD1306_LoadBitmap();
   SSD1306_FlashScreen();
-#endif
 
   //Main loop
   while (1) {
@@ -552,9 +550,9 @@ int main(void)
 			HAL_Delay(1);		// failed to flash, retry
 		}
 	}
-#if 0
+	// Enter sleep until next interrupt.
 	HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-#endif
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
