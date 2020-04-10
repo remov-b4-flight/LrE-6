@@ -433,6 +433,8 @@ int main(void)
 		SSD1306_RenderBanner(Msg_Buffer[0], 12, 12, INP);
 		SSD1306_FlashScreen();
 
+		Msg_Off_Flag = false;
+		Start_MsgTimer(MSG_TIMER_DEFAULT);
 		LrE6State = LRE6_USB_LINKED;
 
 	} else if (LrE6State == LRE6_USB_LINKED) {
@@ -443,11 +445,7 @@ int main(void)
 		//Operates as USB Keyboards.
 		EmulateKeyboard();
 #endif
-		if(Msg_Off_Flag == true){
-			Msg_Off_Flag = false;
-			SSD1306_SetScreen(OFF);
-			SSD1306_ClearBuffer();
-		}
+
 	} else if(LrE6State == LRE6_USB_LINK_LOST) {
 		LED_TestPattern();
 		Msg_1st_timeout = false;
@@ -535,6 +533,12 @@ int main(void)
 	if (isLEDsendpulse == true) {
 		LED_SendPulse();
 		isLEDsendpulse = false;
+	}
+
+	if(Msg_Off_Flag == true){
+		Msg_Off_Flag = false;
+		SSD1306_SetScreen(OFF);
+		SSD1306_ClearBuffer();
 	}
 
 	//Flashing LCD.
