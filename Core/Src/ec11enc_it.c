@@ -11,7 +11,6 @@
 #include <string.h>
 #include "midi.h"
 #include "stm32f0xx_hal_tim.h"
-#include "i2c-lcd.h"
 #include "ssd1306.h"
 #include "ssd1306_fonts.h"
 

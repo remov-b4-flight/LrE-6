@@ -78,7 +78,6 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.1221847083" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.437855303.1323160264" name="i2c-lcd.h" rcbsApplicability="disable" resourcePath="Core/Inc/i2c-lcd.h" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="Src/ssd1306_bitmap.c|Src/9r5enc_it.c|Inc/i2c-lcd.h|Src/i2c-lcd.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
