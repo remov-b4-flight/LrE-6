@@ -1,10 +1,9 @@
-/*
+/**
  * @file	EmulateHID.c
  * @brief	functions used in HID keyboard build.
- *  Created on: 2019/12/24
- *      Author: jenoki
+ * @author	jenoki
  */
-//
+
 #include <stdbool.h>
 #include "main.h"
 #include "usbd_hid.h"
@@ -24,9 +23,9 @@ extern	bool	isMsgFlash;
 extern	USBD_HandleTypeDef	hUsbDeviceFS;
 extern	KEYSCAN	Key_Stat;
 extern	char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
-
 extern	HID_DEFINE keytable[];
-KEY_MODIFIER modifiers[KEY_COUNT];
+
+//! HID keyboard input report
 KEYBOARD_INPUT_REPORT	In_Report;
 
 static inline void Msg_Print(){
@@ -85,6 +84,7 @@ bool EmulateKeyboard(void) {
         return false;
 }
 #if 0
+KEY_MODIFIER modifiers[KEY_COUNT];
 void ExpandModifiers() {
 	uint8_t mod_index;
 	memset(modifiers, 0, sizeof(modifiers));
