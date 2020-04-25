@@ -1,8 +1,7 @@
-/*
+/**
  * @file	EmulateHID.h
- *
- *  Created on: 2019/12/24
- *      Author: jenoki
+ * @brief	header file for HID mode functions.
+ * @author	remov-b4-flight
  */
 
 #ifndef EMULATEHID_H_

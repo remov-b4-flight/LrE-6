@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
-  * @file           : usbd_midi_if.c
-  * @brief          :
+  * @file	usbd_midi_if.c
+  * @brief	USB MIDI class implement functions.
   ******************************************************************************
 
     (CC at)2016 by D.F.Mac. @@TripArts Music
@@ -18,10 +18,10 @@
  */
 
 /**
-*	@brief This file is modified by jenoki for use with LrE-6.
+*	@note This file is modified by remov-b4-flight for use with LrE-6.
 *	Original headers are up.
 *	Unneeded parts of original source are excluded by #if 0
-*	@author modified by jenoki
+*	@author modified by remov-b4-flight
 *	@copyright CC BY 4.0
 */
 

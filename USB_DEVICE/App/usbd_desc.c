@@ -4,6 +4,7 @@
   * @file           : App/usbd_desc.c
   * @version        : v2.0_Cube
   * @brief          : This file implements the USB device descriptors.
+  * @author			remov-b4-flight
   ******************************************************************************
   * @attention
   *

@@ -4,7 +4,7 @@
   * @file	main.h
   * @brief	Header for main.c file.
   *         This file contains the common defines of the application.
-  * @author	jenoki
+  * @author	remov-b4-flight
   * @copyright GPLv3
   ******************************************************************************
   * @attention
@@ -166,7 +166,7 @@ void Start_LCDTimer(uint32_t tick);
 	#define LrE6_PRODUCT "LrE-6"
 #else
 	#define	LrE6_PID 0xB737
-	#define LrE6_PRODUCT "LrE-6HID"
+	#define LrE6_PRODUCT "LrKB"
 	#define LrE6_WIN	1	//Use windows shortcut.
 #endif
 #define LrE6_VENDOR "Ruffles Inc."

@@ -1,8 +1,9 @@
 /**
- * @file ec11enc_it.c
- * @author jenoki
- * @brief LrE-6 Board EXTIx handling routine for 9.5KQ rotary encoder.
+ * @file	ec11enc_it.c
+ * @author	remov-b4-flight
+ * @brief	LrE-6 Board EXTIx handling routine for 9.5KQ rotary encoder.
  * board R2.01 F2.2 (or above) available
+ * @copyright	GPLv3
  */
 #include "main.h"
 #include "stm32f0xx_it.h"

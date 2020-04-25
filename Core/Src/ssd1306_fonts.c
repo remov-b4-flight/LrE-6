@@ -1,7 +1,7 @@
 /**
  * @file	ssd1306_fonts.c
  * @brief	SSD1306 OLED library font data.
- * @author	modified by jenoki
+ * @author	modified by remov-b4-flight
  * @copyright	MIT License for STM-SSD1306 Library
  * @copyright	MIT License for OLED_SSD106 Library
  * @note	Font data are taken from OLED_1306 Library,

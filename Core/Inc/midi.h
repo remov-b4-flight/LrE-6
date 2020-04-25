@@ -1,7 +1,7 @@
 /**
  * @file	midi.h
- * @brief	constants and defines for USB MIDI function.
- * @author	jenoki
+ * @brief	header file for USB MIDI function.
+ * @author	remov-b4-flight
  * @copyright GPLv3
  */
 

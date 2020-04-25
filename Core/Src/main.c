@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file	main.c
   * @brief	Main program body
-  * @author	jenoki
+  * @author	remov-b4-flight
   * @copyright GPLv3
   ******************************************************************************
   * @attention
@@ -93,12 +93,12 @@ uint8_t		Key_Line;
 //! If true, MIDI Event/HID packet is sent by key pressed/rotator moved. if false, not sent.
 bool		isKeyRelaseSent;
 #if MIDI
-	//! If true, MIDI event previous sent is switch. if false, it's rotator
-	bool		isPrev_sw;
-	//! Bit masks for which bit of KEYSCAN variable acts as key.
-	uint32_t	MaskKey[SCENE_COUNT];
-	//! Bit masks for which bit of KEYSCAN variable acts as rotator.
-	uint32_t	MaskRot[SCENE_COUNT];
+//! If true, MIDI event previous sent is switch. if false, it's rotator
+bool		isPrev_sw;
+//! Bit masks for which bit of KEYSCAN variable acts as key.
+uint32_t	MaskKey[SCENE_COUNT];
+//! Bit masks for which bit of KEYSCAN variable acts as rotator.
+uint32_t	MaskRot[SCENE_COUNT];
 #endif
 
 // LCD variables
@@ -123,9 +123,9 @@ bool		LED_Timer_Update;
 
 // Scene related
 #if MIDI
-	extern	KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT];
-	extern	char *scene_name[SCENE_COUNT];
-	extern uint8_t	led_axis_table[KEY_DEFINE_COUNT];
+extern	KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT];
+extern	char *scene_name[SCENE_COUNT];
+extern uint8_t	led_axis_table[KEY_DEFINE_COUNT];
 #endif
 
 extern	uint8_t	LED_Scene[SCENE_COUNT][LED_COUNT];
@@ -137,14 +137,14 @@ char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 
 // MIDI variables
 #if MIDI
-	//! MIDI CC message value for each channels.
-	uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
-	//! keep previous sent 'Key On' note/channel for release message.
-	uint8_t prev_note;
-	//! USB MIDI message buffer
-	uint8_t	USBMIDI_Event[4];
-	//! Instance Handle of USB interface
-	extern USBD_HandleTypeDef *pInstance;
+//! MIDI CC message value for each channels.
+uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
+//! keep previous sent 'Key On' note/channel for release message.
+uint8_t prev_note;
+//! USB MIDI message buffer
+uint8_t	USBMIDI_Event[4];
+//! Instance Handle of USB interface
+extern USBD_HandleTypeDef *pInstance;
 #endif
 
 /* USER CODE END PV */
@@ -214,9 +214,7 @@ static bool	MakeMasks(){
 	}
 	return ret;
 }
-#endif
 
-#if MIDI
 /**
  *	@brief	Generate MIDI event and Send to host by User interaction.
  *	@return true : function processed any Key/Encoder event.
@@ -462,7 +460,7 @@ int main(void)
 
 				HAL_ADC_Start(&hadc);
 				//get value from ADC and display it...
-				while (HAL_ADC_PollForConversion(&hadc, 100) != HAL_OK)	;
+				while (HAL_ADC_PollForConversion(&hadc, 100) != HAL_OK)	; //wait until ADC OK
 
 				uint32_t inner_sensor_val = HAL_ADC_GetValue(&hadc);
 				int16_t m = inner_sensor_val - ts_cal30;
@@ -547,7 +545,7 @@ int main(void)
 			SSD1306_Render2Buffer();
 			isRender = false;
 		}
-		if (SSD1306_FlashScreen() == true){
+		if (SSD1306_FlashScreen() == true) {
 			isMsgFlash = false;	// success to flash
 			isRender = true;
 		} else {

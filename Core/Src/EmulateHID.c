@@ -1,7 +1,8 @@
 /**
  * @file	EmulateHID.c
  * @brief	functions used in HID keyboard build.
- * @author	jenoki
+ * @author	remov-b4-flight
+ * @copyright	GPLv3
  */
 
 #include <stdbool.h>

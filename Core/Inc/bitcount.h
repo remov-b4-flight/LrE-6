@@ -1,8 +1,8 @@
-/* 
- * File:   bitcount.h
- * Author: jenoki
- *
- * Created on May 8, 2016, 7:41 AM
+/**
+ * @file	bitcount.h
+ * @brief	header file for 'bit count' functions.
+ * @author	remov-b4-flight
+ * @copyright	GPLv3
  */
 
 #ifndef BITCOUNT_H
@@ -22,4 +22,3 @@ uint8_t ntz32(uint32_t v);
 #endif
 
 #endif	/* BITCOUNT_H */
-

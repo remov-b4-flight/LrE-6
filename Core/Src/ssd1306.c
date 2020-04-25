@@ -1,7 +1,7 @@
 /**
  * @file	ssd1306.c
  * @brief	SSD1306 OLED Library Source.
- * @author	totally modified by jenoki
+ * @author	totally modified by remov-b4-flight
  * @copyright	MIT License
  * This Library was originally written by Olivier Van den Eede (4ilo) in 2016.
  * Some refactoring was done and SPI support was added by Aleksander Alekseev (afiskon) in 2018.
