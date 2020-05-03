@@ -90,8 +90,8 @@ void Start_LCDTimer(uint32_t tick);
 #define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
 #define PWM_PERIOD 59
-#define PWM_HI 38	//29
-#define PWM_LO 15	//14
+#define PWM_HI 45	//29
+#define PWM_LO 22	//14
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
 #define ENC_4A_EXTI_IRQn EXTI4_15_IRQn

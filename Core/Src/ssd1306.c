@@ -52,7 +52,7 @@ const uint8_t connect_bitmap[SSD1306_WIDTH *(SSD1306_HEIGHT / BITS_PER_PAGE)]={
 static inline void SSD1306_WriteCommand(uint8_t cmd) {
 	HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, SSD1306_CMD, 1, &cmd, 1, HAL_MAX_DELAY);
 }
-#if 0
+#if 1
 /**
  * @brief Write SSD1306 data register
  * @param buffer	:	pointer to data buffer
@@ -140,6 +140,7 @@ void SSD1306_ClearBuffer() {
  * @brief Update SSD1306 OLED screen with frame buffer
  */
 bool SSD1306_FlashScreen(void) {
+#if 1
 	if (HAL_I2C_GetState(&SSD1306_I2C_PORT) != HAL_I2C_STATE_READY) {
 		return false;
 	}
@@ -147,6 +148,10 @@ bool SSD1306_FlashScreen(void) {
 		return false;
 	}
 	return true;
+#else
+    SSD1306_WriteData(Frame_Buffer, FB_SIZE);
+    return true;
+#endif
 }
 
 /**
