@@ -125,7 +125,7 @@ void LED_SendPulse(){
 
 	//Start DMA
 	htim3.Instance->CNT = PWM_HI + 1;
-	HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_1, (uint32_t *)LEDPulse, TOTAL_BITS*2);
+	HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_1, (uint32_t *)LEDPulse, TOTAL_BITS);
 }
 
 /* ******************************************************* **** END OF FILE****/

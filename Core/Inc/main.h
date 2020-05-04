@@ -34,7 +34,8 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#define USBD_DEVICE_VER_MAJ	0x00
+#define USBD_DEVICE_VER_MIN	0x36
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -65,8 +66,7 @@ typedef union keyscan_t {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x35
+
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -90,8 +90,8 @@ void Start_LCDTimer(uint32_t tick);
 #define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
 #define PWM_PERIOD 59
-#define PWM_HI 45	//29
-#define PWM_LO 22	//14
+#define PWM_HI 45
+#define PWM_LO 22
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
 #define ENC_4A_EXTI_IRQn EXTI4_15_IRQn

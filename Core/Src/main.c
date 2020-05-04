@@ -383,9 +383,10 @@ int main(void)
   MX_USB_DEVICE_Init();
 #endif
   /* USER CODE BEGIN 2 */
+  hdma_tim3_ch1_trig.Instance->CCR &= ~(DMA_CCR_HTIE | DMA_CCR_TEIE);		//Disable DMA1 half transfer interrupt(for LEDs).
   HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);
-  LED_Initialize();	//Set all LEDs to 'OFF'
+  LED_Initialize();						//Set all LEDs to 'OFF'
 
   HAL_Delay(SSD1306_PWRUP_WAIT);		//Wait for LCD module power up.
 

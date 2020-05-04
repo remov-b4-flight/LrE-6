@@ -494,7 +494,9 @@ void EXTI4_15_IRQHandler(void)
 void DMA1_Channel4_5_6_7_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 0 */
-  HAL_TIM_PWM_Stop_DMA(&htim3,TIM_CHANNEL_1);
+  if(DMA1->ISR & DMA_ISR_TCIF4){
+	HAL_TIM_PWM_Stop_DMA(&htim3, TIM_CHANNEL_1);
+  }
   /* USER CODE END DMA1_Channel4_5_6_7_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_tim3_ch1_trig);
   HAL_DMA_IRQHandler(&hdma_i2c1_tx);
