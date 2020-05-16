@@ -35,7 +35,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x36
+#define USBD_DEVICE_VER_MIN	0x37
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -181,14 +181,6 @@ enum enc9R5_t {
 	ENC_MV1	=	1,
 	ENC_MV0	=	0,
 };
-#else
-//! Standard EC11 type Encoder
-enum ec11_t {
-	ENC_MOVE =	0,
-	ENC_MVCCW =	2,
-	ENC_MVCW =	1,
-	ENC_NOMV =	3,
-};
 #endif
 //! LrE-6 Ports on Board
 #define Mx_GPIO_Port GPIOA
@@ -257,7 +249,7 @@ enum {
 
 // Screen timer definitions
 #define MSG_TIMER_DEFAULT	1000	//4s (1 tick=4ms)
-#define MSG_TIMER_INIT		10      //40ms initialize time
+#define MSG_TIMER_INIT		10      //40ms SSD1306 initialize time
 #define MSG_TIMER_UPDATE	250		//1s (LCD update in USB not connected)
 
 // LED timer definitions

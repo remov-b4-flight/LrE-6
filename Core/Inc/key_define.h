@@ -14,6 +14,7 @@ enum define_type_t {
  */
 typedef struct key_define_t {
 	uint8_t	type;
+	uint8_t	axis;
 	uint8_t color;
 	uint8_t duration;
 	char	*message;

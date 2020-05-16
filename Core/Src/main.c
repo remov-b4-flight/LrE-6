@@ -121,8 +121,8 @@ bool		isLEDsendpulse;
 //! Flag is set by timer ISR, It makes LED_Timer[] count up in main()
 bool		LED_Timer_Update;
 
-// Scene related
 #if MIDI
+// Scene related
 extern	KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT];
 extern	char *scene_name[SCENE_COUNT];
 extern uint8_t	led_axis_table[KEY_DEFINE_COUNT];
@@ -230,9 +230,8 @@ static bool EmulateMIDI(){
 
         if ( Key_Stat.wd & MaskKey[LrE6Scene] ) { //Matrix switches
         	uint8_t	note = (LrE6Scene * NOTES_PER_SCENE) + bitpos;
-        	uint8_t led_axis = led_axis_table[bitpos];
 
-            if (bitpos == SCENE_BIT) { //[SCENE] switch?
+        	if (bitpos == SCENE_BIT) { //[SCENE] switch?
             	//Move to next Scene.
         		LrE6Scene++;
         		if(LrE6Scene >= SCENE_COUNT){
@@ -258,7 +257,7 @@ static bool EmulateMIDI(){
             	Msg_Off_Flag = false;
             	Start_MsgTimer(MSG_TIMER_DEFAULT);
             }
-            LED_SetPulse(led_axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
+            LED_SetPulse(keytable[LrE6Scene][bitpos].axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
 
             if (isKeyReport == true) {
 				//Set 'Note ON
@@ -293,8 +292,7 @@ static bool EmulateMIDI(){
             	Msg_Off_Flag = false;
             	Start_MsgTimer(MSG_TIMER_DEFAULT);
             }
-
-            LED_SetPulse(axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
+            LED_SetPulse(keytable[LrE6Scene][bitpos].axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].duration);
             isKeyReport = true;
 
         }else if(isPrev_sw == true && rkey == 0) {// Switch is released
