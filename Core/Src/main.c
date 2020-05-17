@@ -413,10 +413,10 @@ int main(void)
   LED_SetScene(LrE6Scene);
   MakeMasks();
 #endif
-
   SSD1306_LoadBitmap();
+#if 0
   SSD1306_FlashScreen();
-
+#endif
   //Main loop
   while (1) {
 	if (LrE6State == LRE6_USB_LINKUP) {
