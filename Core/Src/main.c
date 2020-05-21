@@ -323,13 +323,13 @@ static bool EmulateMIDI(){
 
 /**
   * @brief  The application entry point.
+  * @retval int
   */
 int main(void)
 {
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -381,7 +381,7 @@ int main(void)
   MX_USB_DEVICE_Init();
 #endif
   /* USER CODE BEGIN 2 */
-  hdma_tim3_ch1_trig.Instance->CCR &= ~(DMA_CCR_HTIE | DMA_CCR_TEIE);		//Disable DMA1 half transfer interrupt(for LEDs).
+  hdma_tim3_ch1_trig.Instance->CCR &= ~(DMA_CCR_HTIE | DMA_CCR_TEIE);		//Disable DMA1 half or error transfer interrupt(for LEDs).
   HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);
   LED_Initialize();						//Set all LEDs to 'OFF'
@@ -414,7 +414,9 @@ int main(void)
   MakeMasks();
 #endif
   SSD1306_LoadBitmap();
-#if 0
+#if 1
+  Msg_Print();
+#else
   SSD1306_FlashScreen();
 #endif
   //Main loop
@@ -501,9 +503,9 @@ int main(void)
 					SSD1306_FlashScreen();
 					HAL_Delay(USB_RECONNECT_WAIT);
 #if MIDI
-					  MX_USB_MIDI_INIT();
+					MX_USB_MIDI_INIT();
 #else //HID
-					  MX_USB_DEVICE_Init();
+					MX_USB_DEVICE_Init();
 #endif
 				}
 				if (USB_ResetCount < USB_RECONNECT_MAX){
@@ -516,7 +518,7 @@ int main(void)
 
 	//LED Timer
 	if (LED_Timer_Update == true){ //4x4ms = 16ms interval
-		for (uint8_t i = 0; i < LED_COUNT ; i++){
+		for (uint8_t i = 0; i < LED_COUNT; i++){
 			if (LEDTimer[i] != LED_TIMER_CONSTANT) {
 				if (--LEDTimer[i] == 0) {
 					LED_SetPulse(i, LED_Scene[LrE6Scene][i], LED_TIMER_CONSTANT);
@@ -524,18 +526,21 @@ int main(void)
 		 	}
 		}
 		LED_Timer_Update = false;
+		continue;
 	}
 
 	//Flashing LEDs
 	if (isLEDsendpulse == true) {
 		LED_SendPulse();
 		isLEDsendpulse = false;
+		continue;
 	}
 
 	if(Msg_Off_Flag == true){
 		Msg_Off_Flag = false;
 		SSD1306_SetScreen(OFF);
 		SSD1306_ClearBuffer();
+		continue;
 	}
 
 	//Flashing LCD.
@@ -548,12 +553,14 @@ int main(void)
 			isMsgFlash = false;	// success to flash
 			isRender = true;
 		} else {
-			HAL_Delay(1);		// failed to flash, retry
+			HAL_Delay(I2C_RETRY_WAIT);	// failed to flash, retry with interval
 		}
+		continue;
 	}
 	// Enter sleep until next interrupt.
-	HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-
+	if(hdma_tim3_ch1_trig.State != HAL_DMA_STATE_BUSY){
+		HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+	}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

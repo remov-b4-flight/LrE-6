@@ -268,6 +268,9 @@ enum {
 #define USB_RECONNECT_WAIT	10
 #define	USB_RECONNECT_MAX	100
 
+//! I2C time definitions
+#define I2C_RETRY_WAIT		8
+
 //! For temperature calculator
 #define TEMP110_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7C2))
 #define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
