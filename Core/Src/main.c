@@ -390,7 +390,6 @@ int main(void)
 
   //Initialize SSD1306 OLED
   SSD1306_Initialize();
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -413,12 +412,10 @@ int main(void)
   LED_SetScene(LrE6Scene);
   MakeMasks();
 #endif
+
   SSD1306_LoadBitmap();
-#if 1
-  Msg_Print();
-#else
   SSD1306_FlashScreen();
-#endif
+
   //Main loop
   while (1) {
 	if (LrE6State == LRE6_USB_LINKUP) {
@@ -429,6 +426,7 @@ int main(void)
 		SSD1306_SetScreen(ON);
 
 		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
+
 		SSD1306_RenderBanner(Msg_Buffer[0], 12, 12, INP);
 		SSD1306_FlashScreen();
 
@@ -496,11 +494,11 @@ int main(void)
 				LEDColor[0] = tempcolor;
 
 				isLEDsendpulse = true;
+
 				if ((USB_ResetCount % 8) == 7) {
 					USBD_DeInit(&hUsbDeviceFS);
 					sprintf(Msg_Buffer[0],"USB Re-connect");
-					SSD1306_Render2Buffer();
-					SSD1306_FlashScreen();
+					Msg_Print();
 					HAL_Delay(USB_RECONNECT_WAIT);
 #if MIDI
 					MX_USB_MIDI_INIT();
@@ -511,6 +509,7 @@ int main(void)
 				if (USB_ResetCount < USB_RECONNECT_MAX){
 					USB_ResetCount++;
 				}
+
 			}
 		}// Msg_Off_Flag
 	}// LrE6State
@@ -553,7 +552,7 @@ int main(void)
 			isMsgFlash = false;	// success to flash
 			isRender = true;
 		} else {
-			HAL_Delay(I2C_RETRY_WAIT);	// failed to flash, retry with interval
+			HAL_Delay(I2C_RETRY_WAIT);	// i2c is busy, retry with interval
 		}
 		continue;
 	}

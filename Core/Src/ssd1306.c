@@ -116,7 +116,7 @@ void SSD1306_Initialize(void) {
     SSD1306_WriteCommand(CMD_SET_VCOMH);		// Set vcomh
     SSD1306_WriteCommand(VAL_VCOMH_DEFAULT);	// 0x20,0.77xVcc
 
-    SSD1306_WriteCommand(CMD_SET_CHARGE_PUMP); // Set DC-DC enable
+    SSD1306_WriteCommand(CMD_SET_CHARGE_PUMP);	// Set DC-DC enable
     SSD1306_WriteCommand(VAL_CHG_PUMP_ENABLE);
     SSD1306_WriteCommand(CMD_DISPLAY_ON);		// Turn on SSD1306 panel
 
