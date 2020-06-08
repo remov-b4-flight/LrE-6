@@ -118,6 +118,7 @@ void SSD1306_Initialize(void) {
 
     SSD1306_WriteCommand(CMD_SET_CHARGE_PUMP);	// Set DC-DC enable
     SSD1306_WriteCommand(VAL_CHG_PUMP_ENABLE);
+    HAL_Delay(1);
     SSD1306_WriteCommand(CMD_DISPLAY_ON);		// Turn on SSD1306 panel
 
     // Clear frame buffer

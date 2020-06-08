@@ -476,12 +476,12 @@ Wire Wire Line
 $Comp
 L LrE-6-rescue:+3V3-power #PWR0119
 U 1 1 5C4EAC46
-P 13200 6050
-F 0 "#PWR0119" H 13200 5900 50  0001 C CNN
-F 1 "+3V3" H 13215 6223 50  0000 C CNN
-F 2 "" H 13200 6050 50  0001 C CNN
-F 3 "" H 13200 6050 50  0001 C CNN
-	1    13200 6050
+P 13200 5450
+F 0 "#PWR0119" H 13200 5300 50  0001 C CNN
+F 1 "+3V3" H 13215 5623 50  0000 C CNN
+F 2 "" H 13200 5450 50  0001 C CNN
+F 3 "" H 13200 5450 50  0001 C CNN
+	1    13200 5450
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -507,14 +507,7 @@ F 3 "~" H 13450 6550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13450 6400 13450 6150
-Wire Wire Line
-	13450 6150 13200 6150
-Wire Wire Line
-	13200 6150 13200 6050
-Wire Wire Line
-	13200 6400 13200 6150
-Connection ~ 13200 6150
+	13450 6400 13450 5500
 Text Label 12500 7250 0    50   ~ 0
 SDA
 Text Label 12500 7400 0    50   ~ 0
@@ -2039,8 +2032,8 @@ Wire Wire Line
 Connection ~ 11650 1700
 Wire Wire Line
 	11650 1700 11650 1650
-Text Notes 15200 10450 0    197  ~ 0
-F2.8
+Text Notes 14900 10450 0    197  ~ 0
+F2.8-1
 Wire Wire Line
 	1200 10900 1700 10900
 $Comp
@@ -2694,7 +2687,6 @@ Wire Wire Line
 Wire Wire Line
 	13450 7250 13900 7250
 Connection ~ 13450 7250
-Connection ~ 13450 6150
 $Comp
 L LrE-6-rescue:C-Device C28
 U 1 1 5E946B99
@@ -2806,11 +2798,6 @@ F 3 "" H 15500 9100 50  0001 C CNN
 	1    15500 9100
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	14650 6150 14400 6150
-Connection ~ 14400 6150
-Wire Wire Line
-	13450 6150 14400 6150
 $Comp
 L LrE-6-rescue:C-Device C27
 U 1 1 5C4B998D
@@ -2829,9 +2816,7 @@ Wire Wire Line
 Wire Wire Line
 	15100 7250 15800 7250
 Wire Wire Line
-	14400 6150 14400 6400
-Wire Wire Line
-	14650 6150 14650 6550
+	14650 5500 14650 6550
 Wire Wire Line
 	15050 6550 15250 6550
 Wire Wire Line
@@ -2842,7 +2827,6 @@ Wire Wire Line
 	13750 6400 13750 6550
 Wire Wire Line
 	14200 6400 14400 6400
-Connection ~ 14400 6400
 Wire Wire Line
 	14400 6400 14400 6800
 Connection ~ 14650 6550
@@ -2867,4 +2851,54 @@ Wire Wire Line
 	12500 7250 13450 7250
 Wire Wire Line
 	12500 7400 13200 7400
+Wire Wire Line
+	13200 6400 13200 5500
+$Comp
+L Device:R R23
+U 1 1 5EEE6BD3
+P 14400 5850
+F 0 "R23" H 14150 5950 50  0000 L CNN
+F 1 "100" H 14150 5850 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 14330 5850 50  0001 C CNN
+F 3 "~" H 14400 5850 50  0001 C CNN
+	1    14400 5850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R22
+U 1 1 5EEE73A1
+P 14050 6150
+F 0 "R22" V 13843 6150 50  0000 C CNN
+F 1 "1K" V 13934 6150 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 13980 6150 50  0001 C CNN
+F 3 "~" H 14050 6150 50  0001 C CNN
+	1    14050 6150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	14400 6000 14400 6150
+Connection ~ 14400 6400
+Wire Wire Line
+	14200 6150 14400 6150
+Connection ~ 14400 6150
+Wire Wire Line
+	14400 6150 14400 6400
+Wire Wire Line
+	13900 6150 13750 6150
+Wire Wire Line
+	13750 6150 13750 6400
+Connection ~ 13750 6400
+Wire Wire Line
+	13200 5500 13450 5500
+Connection ~ 13200 5500
+Wire Wire Line
+	13200 5500 13200 5450
+Connection ~ 13450 5500
+Wire Wire Line
+	13450 5500 14400 5500
+Wire Wire Line
+	14400 5700 14400 5500
+Connection ~ 14400 5500
+Wire Wire Line
+	14400 5500 14650 5500
 $EndSCHEMATC
