@@ -242,7 +242,7 @@ static bool EmulateMIDI(){
         		isKeyPressed = false;
         		isKeyReport = false;
         	}else{
-        		sprintf(msg_string, "Note: %3d", note);
+        		sprintf(msg_string, "Note: %3d    S%1d", note, LrE6Scene);
                 isKeyReport = true;
         	}
 
@@ -284,7 +284,8 @@ static bool EmulateMIDI(){
             //Print Message to LCD & LED
             if (keytable[LrE6Scene][bitpos].message != NULL) {
             	SSD1306_SetScreen(ON);
-                sprintf(msg_string, ((channel > 99)? "C%3d = %3d":"Ch%2d = %3d"), channel, val);
+                sprintf(msg_string,
+                	((channel > 99)? "C%3d = %3d    S%1d":"Ch%1d = %3d    S%1d"), channel, val, LrE6Scene);
                 strcpy(Msg_Buffer[0], keytable[LrE6Scene][bitpos].message);
             	strcpy(Msg_Buffer[1], msg_string);
             	Msg_Print();
