@@ -191,14 +191,14 @@ const HID_DEFINE keytable[HID_DEFINE_COUNT] = {
 //Rotator movements
 	{HID_NONM,			HID_RIGHT,	NULL},			//rot0 CW
 	{HID_NONM,			HID_LEFT,	NULL},			//rot0 CCW
-	{HID_NONM,			HID_LB,		"Rate \x5  "},	//rot1 CW
-	{HID_NONM,			HID_RB,		"Rate \x6  "},	//rot1 CCW
-	{HID_CTLM,			HID_UP,		"Flag \x5  "},	//rot2 CW
-	{HID_CTLM,			HID_DOWN,	"Flag \x6  "},	//rot2 CCW
-	{HID_CTLM,			HID_LB,		"Rotate \x7"},	//rot3 CW
-	{HID_CTLM,			HID_RB,		"Rotate \x8"},	//rot3 CCW
-	{HID_NONM,			HID_PGUP,	"Scroll \x5"},	//rot4 CW
-	{HID_NONM,			HID_PGDOWN,	"Scroll \x6"},	//rot4 CCW
+	{HID_NONM,			HID_LB,		"Rate \x82  "},	//rot1 CW
+	{HID_NONM,			HID_RB,		"Rate \x83  "},	//rot1 CCW
+	{HID_CTLM,			HID_UP,		"Flag \x82  "},	//rot2 CW
+	{HID_CTLM,			HID_DOWN,	"Flag \x83  "},	//rot2 CCW
+	{HID_CTLM,			HID_LB,		"Rotate \x80"},	//rot3 CW
+	{HID_CTLM,			HID_RB,		"Rotate \x81"},	//rot3 CCW
+	{HID_NONM,			HID_PGUP,	"Scroll \x82"},	//rot4 CW
+	{HID_NONM,			HID_PGDOWN,	"Scroll \x83"},	//rot4 CCW
 	{HID_CTLM+HID_SFTM,	HID_DT,		"Zoom In "},	//rot5 CW
 	{HID_CTLM+HID_SFTM,	HID_CM,		"Zoom Out"},	//rot5 CCW
 #else //macOS Key Table Definitions

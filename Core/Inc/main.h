@@ -35,7 +35,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x38
+#define USBD_DEVICE_VER_MIN	0x39
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -218,6 +218,8 @@ enum {
 	LrE6_SCENE2 = 2,
 	LrE6_SCENE3 = 3,
 };
+#else
+#define	LrE6_SCENE0 0
 #endif
 //! Rotator definitions
 enum {
