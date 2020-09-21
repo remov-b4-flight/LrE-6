@@ -293,6 +293,10 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
 void TIM7_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM7_IRQn 0 */
+
+  /* USER CODE END TIM7_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim7);
+  /* USER CODE BEGIN TIM7_IRQn 1 */
 	uint16_t rot = get_Rotary_Encoder();
 
 	uint16_t rot_edge = rot_prev[1] ^ rot_prev[0];
@@ -533,10 +537,6 @@ EXIT:
 	rot_prev[2] = rot_prev[1];
 	rot_prev[1] = rot_prev[0];
 	rot_prev[0] = rot;
-
-  /* USER CODE END TIM7_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim7);
-  /* USER CODE BEGIN TIM7_IRQn 1 */
 
   /* USER CODE END TIM7_IRQn 1 */
 }
