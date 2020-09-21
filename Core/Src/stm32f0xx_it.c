@@ -293,19 +293,10 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
 void TIM7_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM7_IRQn 0 */
-
-  /* USER CODE END TIM7_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim7);
-  /* USER CODE BEGIN TIM7_IRQn 1 */
 	uint16_t rot = get_Rotary_Encoder();
 
 	uint16_t rot_edge = rot_prev[1] ^ rot_prev[0];
 	bool isChange = (rot_prev[0] == rot) && (rot_prev[2] == rot_prev[1]) && (rot_edge != 0);
-
-	//shift out pot_prev
-	rot_prev[2] = rot_prev[1];
-	rot_prev[1] = rot_prev[0];
-	rot_prev[0] = rot;
 
 	if(isChange == true){
 	    //Rotator 0
@@ -343,10 +334,7 @@ void TIM7_IRQHandler(void)
 				}
 			}
 		    rot0_prev = r0;
-
-			if(isKeyPressed)
-				return;
-
+			if(isKeyPressed) goto EXIT;
 	    }
 	    // Rotator1
 	    if( rot_edge & PRMASK_R1 ){
@@ -383,9 +371,7 @@ void TIM7_IRQHandler(void)
 				}
 			}
 		    rot1_prev = r1;
-
-			if (isKeyPressed)
-				return;
+			if (isKeyPressed) goto EXIT;
 	    }
 	    //Rotator 2
 	    if( rot_edge & PRMASK_R2 ){
@@ -422,9 +408,7 @@ void TIM7_IRQHandler(void)
 				}
 			}
 			rot2_prev = r2;
-
-			if(isKeyPressed)
-				return;
+			if(isKeyPressed) goto EXIT;
 	    }
 
 	    //Rotator 3
@@ -464,9 +448,7 @@ void TIM7_IRQHandler(void)
 				}
 			}
 		    rot3_prev = r3;
-
-			if(isKeyPressed)
-				return;
+			if(isKeyPressed) goto EXIT;
 		}
 
 	    //Rotator 4
@@ -504,9 +486,7 @@ void TIM7_IRQHandler(void)
 				}
 			}
 		    rot4_prev = r4;
-
-			if(isKeyPressed)
-				return;
+			if(isKeyPressed) goto EXIT;
 	    }
 		//Rotator 5
 		if( rot_edge & PRMASK_R5 ){
@@ -544,12 +524,20 @@ void TIM7_IRQHandler(void)
 				}
 			}
 	    	rot5_prev = r5;
-
-			if(isKeyPressed)
-				return;
+			if(isKeyPressed) goto EXIT;
 		}
 
 	}//isChange
+EXIT:
+	//shift out pot_prev
+	rot_prev[2] = rot_prev[1];
+	rot_prev[1] = rot_prev[0];
+	rot_prev[0] = rot;
+
+  /* USER CODE END TIM7_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim7);
+  /* USER CODE BEGIN TIM7_IRQn 1 */
+
   /* USER CODE END TIM7_IRQn 1 */
 }
 
