@@ -60,8 +60,8 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.axis = 3,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L3M2	rot3 push
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Reject"},			//L3M3	rot0 push
 		//Scence0 Rotators																				0123456789ABCDEF
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//rot0 CW cursor right
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//rot0 CCW cursor left
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Next \x80"},		//rot0 CW cursor right
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Prev. \x81"},		//rot0 CCW cursor left
 		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Rate \x82"},		//rot1 CW
 		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Rate \x83"},		//rot1 CCW
 		{.type = TYPE_SWITCH,	.axis = 2,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_HALF,		.message = "Flag \x82"},		//rot2 CW
@@ -172,25 +172,25 @@ const uint8_t LED_Scene[SCENE_COUNT][LED_COUNT] ={
 const HID_DEFINE keytable[HID_DEFINE_COUNT] = {
 #if LrE6_WIN //Windows Key Table Definitions
 //Switch definitions
-	{HID_NONM,			HID_1,		"Rate 1  "},	//L0M0	SW1
-	{HID_NONM,			HID_2,		"Rate 2  "},	//L0M1	SW2
-	{HID_NONM,			HID_3,		"Rate 3  "},	//L0M2	SW3
-	{HID_NONM,			HID_4,		"Rate 4  "},	//L1M3	SW4
-	{HID_NONM,			HID_F11,	"2nd Mon."},	//L1M0	SW6
-	{HID_NONM,			HID_0,		"Rate 0  "},	//L1M1	SW7
+	{HID_NONM,			HID_1,		"Rate = 1"},	//L0M0	SW1
+	{HID_NONM,			HID_2,		"Rate = 2"},	//L0M1	SW2
+	{HID_NONM,			HID_3,		"Rate = 3"},	//L0M2	SW3
+	{HID_NONM,			HID_4,		"Rate = 4"},	//L1M3	SW4
+	{HID_NONM,			HID_F11,	"2nd Monitor"},	//L1M0	SW6
+	{HID_NONM,			HID_0,		"Rate = 0"},	//L1M1	SW7
 	{HID_NONM,			HID_z,		"Zoom In "},	//L1M2	SW8
 	{HID_CTLM,			HID_z,		"Undo    "},	//L1M3	SW9
-	{HID_NONM,			HID_5,		"Rate 5  "},	//L2M0	SW5
-	{HID_NONM,			HID_b,		"Quick c."},	//L2M1	SW10 [MODE]
-	{HID_NONM,			HID_NONE,	NULL},			//L2M2 rot3 push
-	{HID_NONM,			HID_NONE,	NULL},			//L2M3 rot4 push
-	{HID_NONM,			HID_0,		"Rate res."},	//L3M0 rot0 push
-	{HID_NONM,			HID_u,		"Flag res."},	//L3M1 rot1 push
-	{HID_NONM,			HID_NONE,	NULL},			//L3M2 rot2 push
-	{HID_NONM,			HID_x,		"Reject  "},	//L3M3 rot5 push
+	{HID_NONM,			HID_5,		"Rate = 5"},	//L2M0	SW5
+	{HID_NONM,			HID_b,		"Add Quick Colle."},	//L2M1	SW10 [MODE]
+	{HID_NONM,			HID_NONE,	NULL},			//L2M2 rot4 push
+	{HID_NONM,			HID_NONE,	NULL},			//L2M3 rot5 push
+	{HID_NONM,			HID_0,		"Rate reset"},	//L3M0 rot1 push
+	{HID_NONM,			HID_u,		"Flag reset"},	//L3M1 rot2 push
+	{HID_NONM,			HID_NONE,	NULL},			//L3M2 rot3 push
+	{HID_NONM,			HID_x,		"Reject  "},	//L3M3 rot0 push
 //Rotator movements
-	{HID_NONM,			HID_RIGHT,	NULL},			//rot0 CW
-	{HID_NONM,			HID_LEFT,	NULL},			//rot0 CCW
+	{HID_NONM,			HID_RIGHT,	"Next \x80  "},	//rot0 CW
+	{HID_NONM,			HID_LEFT,	"Prev. \x81 "},	//rot0 CCW
 	{HID_NONM,			HID_LB,		"Rate \x82  "},	//rot1 CW
 	{HID_NONM,			HID_RB,		"Rate \x83  "},	//rot1 CCW
 	{HID_CTLM,			HID_UP,		"Flag \x82  "},	//rot2 CW
@@ -218,7 +218,7 @@ const HID_DEFINE keytable[HID_DEFINE_COUNT] = {
 	{HID_NONM,			HID_0,		"Rate res."},	//L3M0 rot1 push
 	{HID_NONM,			HID_u,		"Flag res."},	//L3M1 rot2 push
 	{HID_NONM,			HID_NONE,	NULL},			//L3M2 rot3 push
-	{HID_NONM,			HID_x,		"Reject  "},	//L3M3 rots push
+	{HID_NONM,			HID_x,		"Reject  "},	//L3M3 rot0 push
 //Rotator movements
 	{HID_NONM,			HID_RIGHT,	NULL},			//rot0 CW
 	{HID_NONM,			HID_LEFT,	NULL},			//rot0 CCW
