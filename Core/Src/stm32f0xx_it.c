@@ -293,13 +293,22 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
 void TIM7_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM7_IRQn 0 */
+
+  /* USER CODE END TIM7_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim7);
+  /* USER CODE BEGIN TIM7_IRQn 1 */
 	uint16_t rot = get_Rotary_Encoder();
 
 	uint16_t rot_edge = rot_prev[1] ^ rot_prev[0];
 	bool isChange = (rot_prev[0] == rot) && (rot_prev[2] == rot_prev[1]) && (rot_edge != 0);
 
+	//shift out pot_prev
+	rot_prev[2] = rot_prev[1];
+	rot_prev[1] = rot_prev[0];
+	rot_prev[0] = rot;
+
 	if(isChange == true){
-	    //Rotator 0(selector)
+	    //Rotator 0
 	    if( rot_edge & PRMASK_R0 ){
 	    	uint8_t	r0 = ( rot >> 12 ) & ROT_MASK;
 	    	if ( r0 == ENC_MV0 || r0 == ENC_MV3 ) { //Stopped
@@ -336,7 +345,7 @@ void TIM7_IRQHandler(void)
 		    rot0_prev = r0;
 
 			if(isKeyPressed)
-				goto EXIT;
+				return;
 
 	    }
 	    // Rotator1
@@ -376,7 +385,7 @@ void TIM7_IRQHandler(void)
 		    rot1_prev = r1;
 
 			if (isKeyPressed)
-				goto EXIT;
+				return;
 	    }
 	    //Rotator 2
 	    if( rot_edge & PRMASK_R2 ){
@@ -415,7 +424,7 @@ void TIM7_IRQHandler(void)
 			rot2_prev = r2;
 
 			if(isKeyPressed)
-				goto EXIT;
+				return;
 	    }
 
 	    //Rotator 3
@@ -457,7 +466,7 @@ void TIM7_IRQHandler(void)
 		    rot3_prev = r3;
 
 			if(isKeyPressed)
-				goto EXIT;
+				return;
 		}
 
 	    //Rotator 4
@@ -497,13 +506,13 @@ void TIM7_IRQHandler(void)
 		    rot4_prev = r4;
 
 			if(isKeyPressed)
-				goto EXIT;
+				return;
 	    }
 		//Rotator 5
 		if( rot_edge & PRMASK_R5 ){
 			uint8_t	r5 = (rot) & ROT_MASK;
 
-	    	if ( r5 == ENC_MV0 || r5 ==ENC_MV3 ) { //Stopped
+	    	if ( r5 == ENC_MV0 || r5 == ENC_MV3 ) { //Stopped
 				if( rot5_prev == ENC_MV1 || rot5_prev == ENC_MV2 ){
 					Key_Stat.nb.rot5 = ROT_NOT_MOVE;
 					isKeyPressed = true;
@@ -537,20 +546,10 @@ void TIM7_IRQHandler(void)
 	    	rot5_prev = r5;
 
 			if(isKeyPressed)
-				goto EXIT;
+				return;
 		}
 
 	}//isChange
-EXIT:
-	//shift out pot_prev
-	rot_prev[2] = rot_prev[1];
-	rot_prev[1] = rot_prev[0];
-	rot_prev[0] = rot;
-
-  /* USER CODE END TIM7_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim7);
-  /* USER CODE BEGIN TIM7_IRQn 1 */
-
   /* USER CODE END TIM7_IRQn 1 */
 }
 
