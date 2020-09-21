@@ -336,7 +336,7 @@ void TIM7_IRQHandler(void)
 		    rot0_prev = r0;
 
 			if(isKeyPressed)
-				return;
+				goto EXIT;
 
 	    }
 	    // Rotator1
@@ -376,7 +376,7 @@ void TIM7_IRQHandler(void)
 		    rot1_prev = r1;
 
 			if (isKeyPressed)
-				  return;
+				goto EXIT;
 	    }
 	    //Rotator 2
 	    if( rot_edge & PRMASK_R2 ){
@@ -415,7 +415,7 @@ void TIM7_IRQHandler(void)
 			rot2_prev = r2;
 
 			if(isKeyPressed)
-				return;
+				goto EXIT;
 	    }
 
 	    //Rotator 3
@@ -457,7 +457,7 @@ void TIM7_IRQHandler(void)
 		    rot3_prev = r3;
 
 			if(isKeyPressed)
-				return;
+				goto EXIT;
 		}
 
 	    //Rotator 4
@@ -497,7 +497,7 @@ void TIM7_IRQHandler(void)
 		    rot4_prev = r4;
 
 			if(isKeyPressed)
-				return;
+				goto EXIT;
 	    }
 		//Rotator 5
 		if( rot_edge & PRMASK_R5 ){
@@ -535,10 +535,13 @@ void TIM7_IRQHandler(void)
 				}
 			}
 	    	rot5_prev = r5;
+
+			if(isKeyPressed)
+				goto EXIT;
 		}
 
-	}
-
+	}//isChange
+EXIT:
 	//shift out pot_prev
 	rot_prev[2] = rot_prev[1];
 	rot_prev[1] = rot_prev[0];
