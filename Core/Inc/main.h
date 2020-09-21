@@ -35,7 +35,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x41
+#define USBD_DEVICE_VER_MIN	0x42
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -77,6 +77,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 void Delay_us(uint32_t microsec);
 void Start_LCDTimer(uint32_t tick);
+uint16_t get_Rotary_Encoder(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -92,18 +93,15 @@ void Start_LCDTimer(uint32_t tick);
 #define PWM_PERIOD 59
 #define PWM_HI 45
 #define PWM_LO 22
+#define TIM_PERIOD_1mS 1000
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
-#define ENC_4A_EXTI_IRQn EXTI4_15_IRQn
 #define ENC_4B_Pin GPIO_PIN_15
 #define ENC_4B_GPIO_Port GPIOC
-#define ENC_4B_EXTI_IRQn EXTI4_15_IRQn
 #define ENC_5A_Pin GPIO_PIN_0
 #define ENC_5A_GPIO_Port GPIOF
-#define ENC_5A_EXTI_IRQn EXTI0_1_IRQn
 #define ENC_5B_Pin GPIO_PIN_1
 #define ENC_5B_GPIO_Port GPIOF
-#define ENC_5B_EXTI_IRQn EXTI0_1_IRQn
 #define M0_Pin GPIO_PIN_0
 #define M0_GPIO_Port GPIOA
 #define M1_Pin GPIO_PIN_1
@@ -114,26 +112,20 @@ void Start_LCDTimer(uint32_t tick);
 #define M3_GPIO_Port GPIOA
 #define ENC_1A_Pin GPIO_PIN_4
 #define ENC_1A_GPIO_Port GPIOA
-#define ENC_1A_EXTI_IRQn EXTI4_15_IRQn
 #define ENC_1B_Pin GPIO_PIN_5
 #define ENC_1B_GPIO_Port GPIOA
-#define ENC_1B_EXTI_IRQn EXTI4_15_IRQn
 #define LED_DON_Pin GPIO_PIN_6
 #define LED_DON_GPIO_Port GPIOA
 #define L3_Pin GPIO_PIN_2
 #define L3_GPIO_Port GPIOB
 #define ENC_3A_Pin GPIO_PIN_10
 #define ENC_3A_GPIO_Port GPIOB
-#define ENC_3A_EXTI_IRQn EXTI4_15_IRQn
 #define ENC_3B_Pin GPIO_PIN_11
 #define ENC_3B_GPIO_Port GPIOB
-#define ENC_3B_EXTI_IRQn EXTI4_15_IRQn
-#define ENC_6A_Pin GPIO_PIN_12
-#define ENC_6A_GPIO_Port GPIOB
-#define ENC_6A_EXTI_IRQn EXTI4_15_IRQn
-#define ENC_6B_Pin GPIO_PIN_13
-#define ENC_6B_GPIO_Port GPIOB
-#define ENC_6B_EXTI_IRQn EXTI4_15_IRQn
+#define ENC_0A_Pin GPIO_PIN_12
+#define ENC_0A_GPIO_Port GPIOB
+#define ENC_0B_Pin GPIO_PIN_13
+#define ENC_0B_GPIO_Port GPIOB
 #define USB_DM_Pin GPIO_PIN_11
 #define USB_DM_GPIO_Port GPIOA
 #define USB_DP_Pin GPIO_PIN_12
@@ -154,10 +146,8 @@ void Start_LCDTimer(uint32_t tick);
 #define SDA_GPIO_Port GPIOB
 #define ENC_2A_Pin GPIO_PIN_8
 #define ENC_2A_GPIO_Port GPIOB
-#define ENC_2A_EXTI_IRQn EXTI4_15_IRQn
 #define ENC_2B_Pin GPIO_PIN_9
 #define ENC_2B_GPIO_Port GPIOB
-#define ENC_2B_EXTI_IRQn EXTI4_15_IRQn
 /* USER CODE BEGIN Private defines */
 #undef		LrE6_PID
 #undef		LrE6_PRODUCT
@@ -185,7 +175,7 @@ enum enc9R5_t {
 //! LrE-6 Ports on Board
 #define Mx_GPIO_Port GPIOA
 #define ENC1_GPIO_Port GPIOA
-#define ENC23S_GPIO_Port GPIOB
+#define ENC230_GPIO_Port GPIOB
 #define ENC4_GPIO_Port GPIOC
 #define ENC5_GPIO_Port GPIOF
 
