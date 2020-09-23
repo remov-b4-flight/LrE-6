@@ -182,7 +182,10 @@ void Delay_us(uint32_t microsec){
 
 	HAL_TIM_Base_Stop(&htim14);
 }
-
+/**
+ * @brief  Get rotary encoder signal sttus.
+ * @return Packed rotary encoder signals.
+ */
 uint16_t get_Rotary_Encoder(void){
 	uint16_t r1 = (ENC1_GPIO_Port->IDR) & 0x0030;
 	uint16_t r230 = (ENC230_GPIO_Port->IDR) & 0x3f00;
@@ -252,7 +255,7 @@ static bool EmulateMIDI(){
         		isKeyPressed = false;
         		isKeyReport = false;
         	}else{
-        		sprintf(msg_string, "Note: %3d    S%1d", note, LrE6Scene);
+        		sprintf(msg_string, "Note: %3d    S%1d", note, (LrE6Scene % SCENE_COUNT) );
                 isKeyReport = true;
         	}
 

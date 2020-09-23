@@ -76,15 +76,23 @@ extern bool		LED_Timer_Update;
 uint32_t previous_scan = 0;
 uint32_t previous_key = 0;
 uint32_t current_key = 0;
+//! Value of scanned from key matrix.
 KEYSCAN current_scan;
 
+//! previous value of rotator 0
 uint8_t     rot0_prev;
+//! previous value of rotator 1
 uint8_t     rot1_prev;
+//! previous value of rotator 2
 uint8_t     rot2_prev;
+//! previous value of rotator 3
 uint8_t     rot3_prev;
+//! previous value of rotator 4
 uint8_t     rot4_prev;
+//! previous value of rotator 5
 uint8_t     rot5_prev;
 
+//! Shift register for packed encoder signals.
 uint16_t rot_prev[3];
 
 #ifdef MIDI
@@ -299,10 +307,11 @@ void TIM7_IRQHandler(void)
   /* USER CODE BEGIN TIM7_IRQn 1 */
 	uint16_t rot = get_Rotary_Encoder();
 
+	//Edge detector
 	uint16_t rot_edge = rot_prev[1] ^ rot_prev[0];
 	bool isChange = (rot_prev[0] == rot) && (rot_prev[2] == rot_prev[1]) && (rot_edge != 0);
 
-	if(isChange == true){
+	if(isChange == true){ //Any signal are changed
 	    //Rotator 0
 	    if( rot_edge & PRMASK_R0 ){
 	    	uint8_t	r0 = ( rot >> 12 ) & ROT_MASK;
@@ -446,7 +455,6 @@ void TIM7_IRQHandler(void)
 				}else if( rot3_prev == ENC_MV3 ){
 					Key_Stat.nb.rot3 = ROT_MOVE_CW;
 			        MIDI_CC_Inc(LrE6_ROT3);
-
 					isKeyPressed = true;
 					isKeyRelaseSent = false;
 				}
@@ -533,7 +541,7 @@ void TIM7_IRQHandler(void)
 
 	}//isChange
 EXIT:
-	//shift out pot_prev
+	//shift out rot_prev
 	rot_prev[2] = rot_prev[1];
 	rot_prev[1] = rot_prev[0];
 	rot_prev[0] = rot;
