@@ -399,10 +399,10 @@ int main(void)
   hdma_tim3_ch1_trig.Instance->CCR &= ~(DMA_CCR_HTIE | DMA_CCR_TEIE);		//Disable DMA1 half or error transfer interrupt(for LEDs).
   HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);		//Start Switch matrix timer.
-
+#if ENC_9R5KQ
   rot_prev[0] = rot_prev[1] = rot_prev[2] = get_Rotary_Encoder();
   HAL_TIM_Base_Start_IT(&htim7);		//Start Encoder timer.
-
+#endif
   LED_Initialize();						//Set all LEDs to 'OFF'
 
   HAL_Delay(SSD1306_PWRUP_WAIT);		//Wait for LCD module power up.
