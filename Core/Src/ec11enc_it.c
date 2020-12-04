@@ -103,7 +103,7 @@ void EXTI4_15_IRQHandler(void)
     uint32_t pr = EXTI->PR;
 
     uint8_t	ra = (ENC1_GPIO_Port->IDR);
-    uint8_t	r230 = ( (ENC23S_GPIO_Port->IDR) >> 8 );
+    uint8_t	r230 = ( (ENC230_GPIO_Port->IDR) >> 8 );
 
     // Rotator1
     if(pr & PRMASK_R1){// EXTI4,5
