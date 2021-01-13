@@ -57,7 +57,7 @@ void LED_TestPattern(){
 	LEDColor[5] = LED_COLOR_BLUE;
 	LED_SendPulse();
 }
-
+#if 0
 /**
  *	@brief	Flush a LED immediately with LEDColor[]
  *	@param	index	index of LEDs.
@@ -67,7 +67,7 @@ void LED_Set_Quick(uint8_t index, uint8_t color){
 	LEDColor[index] = color;
 	LED_SendPulse();
 }
-
+#endif
 /**
  *	@brief	Set single LEDColor[] value to flush LED at loop in main()
  *	@param	index	index of LEDs.

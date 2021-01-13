@@ -432,20 +432,19 @@ int main(void)
   MakeMasks();
 #endif
 
-  SSD1306_LoadBitmap();
-  SSD1306_FlashScreen();
-
   //Main loop
   while (1) {
 	if (LrE6State == LRE6_USB_LINKUP) {
 		//USB device configured by host
-		LED_Set_Quick(LED_IDX_ENC0, LED_COLOR_RED);
+		memset(LEDColor, LED_COLOR_OFF, LED_COUNT);
+		LED_Set(LED_IDX_ENC0, LED_COLOR_RED);
 		LEDTimer[LED_IDX_ENC0] = LED_TIMER_CONNECT;
 
 		SSD1306_SetScreen(ON);
 
 		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
 
+		SSD1306_LoadBitmap();
 		SSD1306_RenderBanner(Msg_Buffer[0], 12, 12, INP);
 		SSD1306_FlashScreen();
 
