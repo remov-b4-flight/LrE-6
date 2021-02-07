@@ -64,3 +64,4 @@ dkms.conf
 *.bak
 *.FCStd1
 *.zip
+.DS_Store
