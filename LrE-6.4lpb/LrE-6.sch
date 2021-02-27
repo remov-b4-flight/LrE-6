@@ -2033,7 +2033,7 @@ Connection ~ 11650 1700
 Wire Wire Line
 	11650 1700 11650 1650
 Text Notes 14900 10450 0    197  ~ 0
-F2.8-1
+F4.0
 Wire Wire Line
 	1200 10900 1700 10900
 $Comp
