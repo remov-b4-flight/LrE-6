@@ -62,7 +62,6 @@ DMA_HandleTypeDef hdma_i2c1_tx;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim7;
 TIM_HandleTypeDef htim14;
 DMA_HandleTypeDef hdma_tim3_ch1_trig;
 
@@ -159,7 +158,6 @@ static void MX_TIM3_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM14_Init(void);
 static void MX_ADC_Init(void);
-static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
 void EmulateKeyboard();
 /* USER CODE END PFP */
@@ -394,14 +392,13 @@ int main(void)
 #else //HID
   MX_USB_DEVICE_Init();
 #endif
-  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
   hdma_tim3_ch1_trig.Instance->CCR &= ~(DMA_CCR_HTIE | DMA_CCR_TEIE);		//Disable DMA1 half or error transfer interrupt(for LEDs).
   HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);		//Start Switch matrix timer.
 #if ENC_9R5KQ
   rot_prev[0] = rot_prev[1] = rot_prev[2] = get_Rotary_Encoder();
-  HAL_TIM_Base_Start_IT(&htim7);		//Start Encoder timer.
+  //HAL_TIM_Base_Start_IT(&htim7);		//Start Encoder timer.
 #endif
   LED_Initialize();						//Set all LEDs to 'OFF'
 
@@ -836,44 +833,6 @@ static void MX_TIM3_Init(void)
 }
 
 /**
-  * @brief TIM7 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM7_Init(void)
-{
-
-  /* USER CODE BEGIN TIM7_Init 0 */
-
-  /* USER CODE END TIM7_Init 0 */
-
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM7_Init 1 */
-
-  /* USER CODE END TIM7_Init 1 */
-  htim7.Instance = TIM7;
-  htim7.Init.Prescaler = TIM_PRESC_1uS;
-  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = TIM_PERIOD_1mS;
-  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM7_Init 2 */
-
-  /* USER CODE END TIM7_Init 2 */
-
-}
-
-/**
   * @brief TIM14 Initialization Function
   * @param None
   * @retval None
@@ -940,21 +899,25 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : ENC_4A_Pin ENC_4B_Pin */
   GPIO_InitStruct.Pin = ENC_4A_Pin|ENC_4B_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : ENC_5A_Pin ENC_5B_Pin */
   GPIO_InitStruct.Pin = ENC_5A_Pin|ENC_5B_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M0_Pin M1_Pin M2_Pin M3_Pin
-                           ENC_1A_Pin ENC_1B_Pin */
-  GPIO_InitStruct.Pin = M0_Pin|M1_Pin|M2_Pin|M3_Pin
-                          |ENC_1A_Pin|ENC_1B_Pin;
+  /*Configure GPIO pins : M0_Pin M1_Pin M2_Pin M3_Pin */
+  GPIO_InitStruct.Pin = M0_Pin|M1_Pin|M2_Pin|M3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : ENC_1A_Pin ENC_1B_Pin */
+  GPIO_InitStruct.Pin = ENC_1A_Pin|ENC_1B_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -965,13 +928,20 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC_3A_Pin ENC_3B_Pin ENC_0A_Pin ENC_0B_Pin
+  /*Configure GPIO pins : ENC_3A_Pin ENC_3B_Pin ENC_6A_Pin ENC_6B_Pin
                            ENC_2A_Pin ENC_2B_Pin */
-  GPIO_InitStruct.Pin = ENC_3A_Pin|ENC_3B_Pin|ENC_0A_Pin|ENC_0B_Pin
+  GPIO_InitStruct.Pin = ENC_3A_Pin|ENC_3B_Pin|ENC_6A_Pin|ENC_6B_Pin
                           |ENC_2A_Pin|ENC_2B_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 
 }
 
