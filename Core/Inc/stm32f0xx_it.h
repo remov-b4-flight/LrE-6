@@ -43,7 +43,15 @@
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+#if !(ENC_9R5KQ)
+//! Standard EC11 type Encoder
+enum ec11_t {
+	ENC_MOVE =	0,
+	ENC_MVCCW =	2,
+	ENC_MVCW =	1,
+	ENC_NOMV =	3,
+};
+#endif
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

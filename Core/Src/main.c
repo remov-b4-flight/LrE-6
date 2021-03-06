@@ -66,8 +66,8 @@ TIM_HandleTypeDef htim14;
 DMA_HandleTypeDef hdma_tim3_ch1_trig;
 
 /* USER CODE BEGIN PV */
-#if !(ENC_9R5KQ)
-#warning "You are building binary for EC11 encoder."
+#if ENC_9R5KQ
+#warning "You are building binary for 9.5KQ encoder."
 #endif
 #if !(MIDI)
 #warning "You are building binary for USB HID device."
@@ -79,9 +79,6 @@ extern	USBD_HandleTypeDef hUsbDeviceFS;
 uint8_t		LrE6State;
 //! LrE-6 scene index
 uint8_t		LrE6Scene;
-//! Count to try USB reconnect;
-uint8_t		USB_ResetCount;
-
 // keyboard variable
 //! If true, ISR detected any Key/Encoder was moved.
 bool		isKeyPressed;
@@ -359,7 +356,6 @@ int main(void)
 
   LrE6State = LRE6_RESET;
   LrE6Scene	= LrE6_SCENE0;
-  USB_ResetCount = 0;
 
 #if MIDI
   isPrev_sw = false;
@@ -463,7 +459,6 @@ int main(void)
 		Msg_1st_timeout = false;
 		Start_MsgTimer(MSG_TIMER_DEFAULT);
 		LrE6State = LRE6_USB_NOLINK;
-		USB_ResetCount = 0;
 
 	} else if(LrE6State == LRE6_USB_NOLINK) {
 		//USB Not initially configured.
@@ -509,22 +504,6 @@ int main(void)
 				LEDColor[0] = tempcolor;
 
 				isLEDsendpulse = true;
-
-				if ((USB_ResetCount % 8) == 7) {
-					USBD_DeInit(&hUsbDeviceFS);
-					sprintf(Msg_Buffer[0],"USB Re-connect");
-					Msg_Print();
-					HAL_Delay(USB_RECONNECT_WAIT);
-#if MIDI
-					MX_USB_MIDI_INIT();
-#else //HID
-					MX_USB_DEVICE_Init();
-#endif
-				}
-				if (USB_ResetCount < USB_RECONNECT_MAX){
-					USB_ResetCount++;
-				}
-
 			}
 		}// Msg_Off_Flag
 	}// LrE6State
