@@ -46,12 +46,21 @@
 #if !(ENC_9R5KQ)
 //! Standard EC11 type Encoder
 enum ec11_t {
+#if ENC_EC11REV
+	//! Reverse EC11 type Encoder
+	ENC_MOVE =	0,
+	ENC_MVCCW =	1,
+	ENC_MVCW =	2,
+	ENC_NOMV =	3,
+#else
+	//! Standard EC11 type Encoder
 	ENC_MOVE =	0,
 	ENC_MVCCW =	2,
 	ENC_MVCW =	1,
 	ENC_NOMV =	3,
-};
 #endif
+};
+#endif /*ENC_9R5KQ*/
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
