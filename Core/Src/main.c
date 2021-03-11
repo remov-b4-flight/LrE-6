@@ -66,8 +66,8 @@ TIM_HandleTypeDef htim14;
 DMA_HandleTypeDef hdma_tim3_ch1_trig;
 
 /* USER CODE BEGIN PV */
-#if ENC_9R5KQ
-#warning "You are building binary for 9.5KQ encoder."
+#if !(ENC_9R5KQ)
+#warning "You are building binary for EC11 encoder."
 #endif
 #if !(MIDI)
 #warning "You are building binary for USB HID device."
