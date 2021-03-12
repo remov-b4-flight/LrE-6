@@ -92,9 +92,6 @@ uint8_t     rot4_prev;
 //! previous value of rotator 5
 uint8_t     rot5_prev;
 
-//! Shift register for packed encoder signals.
-uint16_t rot_prev[3];
-
 #ifdef MIDI
 extern uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
 extern uint8_t LrE6Scene;

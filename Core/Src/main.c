@@ -127,7 +127,6 @@ extern uint8_t	led_axis_table[KEY_DEFINE_COUNT];
 extern	uint8_t	LED_Scene[SCENE_COUNT][LED_COUNT];
 extern	uint8_t	LEDColor[LED_COUNT];
 extern	uint8_t	LEDTimer[LED_COUNT];
-extern	uint16_t rot_prev[3];
 
 //! String message buffer of screen
 char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
@@ -177,6 +176,7 @@ void Delay_us(uint32_t microsec){
 
 	HAL_TIM_Base_Stop(&htim14);
 }
+#if 0
 /**
  * @brief  Get rotary encoder signal sttus.
  * @return Packed rotary encoder signals.
@@ -188,7 +188,7 @@ uint16_t get_Rotary_Encoder(void){
 	uint16_t r4 = (ENC4_GPIO_Port->IDR) & 0xc000;
 	return (r4 | r230 | r1 | r5);
 }
-
+#endif
 static inline void Start_MsgTimer(uint32_t tick){
 	Msg_Timer_Count = tick;
 	Msg_Timer_Enable = true;
@@ -392,10 +392,7 @@ int main(void)
   hdma_tim3_ch1_trig.Instance->CCR &= ~(DMA_CCR_HTIE | DMA_CCR_TEIE);		//Disable DMA1 half or error transfer interrupt(for LEDs).
   HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
   HAL_TIM_Base_Start_IT(&htim1);		//Start Switch matrix timer.
-#if ENC_9R5KQ
-  rot_prev[0] = rot_prev[1] = rot_prev[2] = get_Rotary_Encoder();
-  //HAL_TIM_Base_Start_IT(&htim7);		//Start Encoder timer.
-#endif
+
   LED_Initialize();						//Set all LEDs to 'OFF'
 
   HAL_Delay(SSD1306_PWRUP_WAIT);		//Wait for LCD module power up.
