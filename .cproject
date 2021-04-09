@@ -163,7 +163,7 @@
                     					
                     <sourceEntries>
                         						
-                        <entry excluding="Src/ec11enc_it.c|Src/ssd1306_bitmap.c|Src/9r5enc_it.c|Inc/i2c-lcd.h|Src/i2c-lcd.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+                        <entry excluding="Src/i2c-lcd.c|Inc/i2c-lcd.h|Src/9r5enc_it.c|Src/ssd1306_bitmap.c|Src/ec11enc_it.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
                         						
@@ -339,7 +339,7 @@
                     					
                     <sourceEntries>
                         						
-                        <entry excluding="Src/ec11enc_it.c|Src/ssd1306_bitmap.c|Src/9r5enc_it.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+                        <entry excluding="Src/9r5enc_it.c|Src/ssd1306_bitmap.c|Src/ec11enc_it.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
                         						
