@@ -95,7 +95,6 @@ uint8_t     rot5_prev;
 #ifdef MIDI
 extern uint8_t MIDI_CC_Value[SCENE_COUNT][ROT_COUNT];
 extern uint8_t LrE6Scene;
-
 #endif
 
 static inline void MIDI_CC_Inc(uint8_t rot){
