@@ -35,8 +35,10 @@ static inline void Msg_Print(){
 
 /**
  *	@brief	Generate HID packet and Send to host by User interaction.
+ *	@pre	isKeyPressed	any key is pressed or not
+ *	@pre	Key_Stat		current key status
  */
-bool EmulateKeyboard(void) {
+void EmulateKeyboard(void) {
     uint32_t rkey;
     uint8_t bitpos;
     bool isKeyReport;
@@ -80,9 +82,7 @@ bool EmulateKeyboard(void) {
 
         /* Clear the switch pressed flag */
         isKeyPressed = false;
-        return true;
-    } else
-        return false;
+    }
 }
 #if 0
 KEY_MODIFIER modifiers[KEY_COUNT];

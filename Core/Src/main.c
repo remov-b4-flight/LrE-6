@@ -84,7 +84,7 @@ uint8_t		LrE6Scene;
 bool		isKeyPressed;
 //! Key pressed/released status set by timer key scanning.
 KEYSCAN     Key_Stat;
-//! In key scanning wheather Line selected to read for key matrix.
+//! In key scanning whether Line selected to read for key matrix.
 uint8_t		Key_Line;
 //! If true, MIDI Event/HID packet is sent by key pressed/rotator moved. if false, not sent.
 bool		isKeyRelaseSent;
@@ -104,7 +104,7 @@ int32_t		Msg_Timer_Count;
 bool		Msg_Timer_Enable;
 //! If true, Screen is cleared in main() that is determined on timer interrupt.
 bool		Msg_Off_Flag;
-//! Indicates 1st Msg_Timer timeout has occured from power on reset.
+//! Indicates 1st Msg_Timer timeout has occurred from power on reset.
 bool		Msg_1st_timeout;
 //! If true, Screen is flashed by Msg_Buffer[] at main() function.
 bool		isMsgFlash;
@@ -178,7 +178,7 @@ void Delay_us(uint32_t microsec){
 }
 #if 0
 /**
- * @brief  Get rotary encoder signal sttus.
+ * @brief  Get rotary encoder signal status.
  * @return Packed rotary encoder signals.
  */
 uint16_t get_Rotary_Encoder(void){
@@ -225,9 +225,10 @@ static bool	MakeMasks(){
 
 /**
  *	@brief	Generate MIDI event and Send to host by User interaction.
- *	@return true : function processed any Key/Encoder event.
+ *	@pre	isKeyPressed	any key is pressed or not
+ *	@pre	Key_Stat		current key status
  */
-static bool EmulateMIDI(){
+static void EmulateMIDI(){
 	char msg_string[MSG_WIDTH];
 
 	if (isKeyPressed) {
@@ -249,6 +250,7 @@ static bool EmulateMIDI(){
         		strcpy(msg_string, scene_name[LrE6Scene]);
         		isKeyPressed = false;
         		isKeyReport = false;
+        		isPrev_sw = false;
         	}else{
         		sprintf(msg_string, "Note: %3d    S%1d", note, (LrE6Scene % SCENE_COUNT) );
                 isKeyReport = true;
@@ -323,9 +325,7 @@ static bool EmulateMIDI(){
 
         /* Clear the switch pressed flag */
         isKeyPressed = false;
-        return true;
-    } else //isKeyPressed
-        return false;
+    }
 }
 #endif //MIDI
 /* USER CODE END 0 */
