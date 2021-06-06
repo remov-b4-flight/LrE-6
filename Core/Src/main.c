@@ -84,7 +84,7 @@ uint8_t		LrE6Scene;
 bool		isKeyPressed;
 //! Key pressed/released status set by timer key scanning.
 KEYSCAN     Key_Stat;
-//! In key scanning whether Line selected to read for key matrix.
+//! In key scanning wheather Line selected to read for key matrix.
 uint8_t		Key_Line;
 //! If true, MIDI Event/HID packet is sent by key pressed/rotator moved. if false, not sent.
 bool		isKeyRelaseSent;
@@ -104,7 +104,7 @@ int32_t		Msg_Timer_Count;
 bool		Msg_Timer_Enable;
 //! If true, Screen is cleared in main() that is determined on timer interrupt.
 bool		Msg_Off_Flag;
-//! Indicates 1st Msg_Timer timeout has occurred from power on reset.
+//! Indicates 1st Msg_Timer timeout has occured from power on reset.
 bool		Msg_1st_timeout;
 //! If true, Screen is flashed by Msg_Buffer[] at main() function.
 bool		isMsgFlash;
@@ -225,6 +225,7 @@ static bool	MakeMasks(){
 
 /**
  *	@brief	Generate MIDI event and Send to host by User interaction.
+ *	@return true : function processed any Key/Encoder event.
  *	@pre	isKeyPressed	any key is pressed or not
  *	@pre	Key_Stat		current key status
  */
