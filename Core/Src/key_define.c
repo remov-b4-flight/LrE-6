@@ -30,14 +30,14 @@
 /* Variables ----------------------------------------------------------------*/
 #if MIDI
 //! User-friendly scene names appears on LCD.
-const char *scene_name[SCENE_COUNT] = { "Library", "Tone Curve",  "Color Saturation", "Sharpen", };
+const char *scene_name[SCENE_COUNT] = { "Library", "Basic Edits",  "Tone Curve", "Transform", };
 //! LED patterns that set by switching scenes.
 const uint8_t LED_Scene[SCENE_COUNT][LED_COUNT] = {
 	//0					1					2					3					4					5
-	{LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,},		//Scene0
-	{LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_DARK,		LED_COLOR_GLAY,		LED_COLOR_WHITE,	LED_COLOR_OFF,},		//Scene1
-	{LED_COLOR_RED,		LED_COLOR_ORANGE,	LED_COLOR_YELLOW,	LED_COLOR_GREEN,	LED_COLOR_CYAN,		LED_COLOR_BLUE,},		//Scene2
-	{LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_WHITE,	LED_COLOR_MAGENTA,},	//Scene3
+	{LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,},	//Scene0
+	{LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,},	//Scene1
+	{LED_COLOR_OFF,		LED_COLOR_DARK,		LED_COLOR_GLAY,		LED_COLOR_WHITE,	LED_COLOR_HILIGHT,	LED_COLOR_OFF,},	//Scene2
+	{LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,		LED_COLOR_OFF,},	//Scene3
 };
 
 //! @union Key/rotator configuration table
@@ -54,7 +54,7 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_DEFAULT,	.message = "Rate = 5"},			//L2M0	SW5
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_LONG,		.message = "Scene 0"},			//L2M1	SW10 [SCENE]
 		{.type = TYPE_SWITCH,	.axis = 4,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Grid View"},		//L2M2	rot4 push
-		{.type = TYPE_SWITCH,	.axis = 5,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "People View"},		//L2M3	rot5 push
+		{.type = TYPE_SWITCH,	.axis = 5,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Zoom reset"},		//L2M3	rot5 push
 		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Rate reset"},		//L3M0	rot1 push
 		{.type = TYPE_SWITCH,	.axis = 2,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Flag reset"},		//L3M1	rot2 push
 		{.type = TYPE_SWITCH,	.axis = 3,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L3M2	rot3 push
@@ -80,28 +80,28 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "W/B Cloud"},		//L1M0	SW6
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "W/B Shade"},		//L1M1	SW7
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L1M2	SW8
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L1M3	SW9
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Undo"},				//L1M3	SW9
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_DEFAULT,	.message = "Fluorescent"},		//L2M0	SW5
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_LONG,		.message = "Scene 1"},			//L2M1	SW10 [SCENE]
-		{.type = TYPE_SWITCH,	.axis = 4,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Hi-Light"},	//L2M2	rot4 push
-		{.type = TYPE_SWITCH,	.axis = 5,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear C-Temp."},	//L2M3	rot5 push
-		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Clear Shadow"},		//L3M0	rot1 push
-		{.type = TYPE_SWITCH,	.axis = 2,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Dark"},		//L3M1	rot2 push
-		{.type = TYPE_SWITCH,	.axis = 3,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Clear Light"},		//L3M2	rot3 push
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear W/B"},		//L3M3	rot0 push
+		{.type = TYPE_SWITCH,	.axis = 4,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "Contra. reset"},	//L2M2	rot4 push
+		{.type = TYPE_SWITCH,	.axis = 5,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "Vibra. reset"},		//L2M3	rot5 push
+		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "C-Temp. reset"},	//L3M0	rot1 push
+		{.type = TYPE_SWITCH,	.axis = 2,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "Tint reset"},		//L3M1	rot2 push
+		{.type = TYPE_SWITCH,	.axis = 3,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "Expo. reset"},		//L3M2	rot3 push
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Reject"},			//L3M3	rot0 push
 		//Scence1 Rotators																				0123456879ABCDEF
-		{.type = TYPE_ROTARY,	.axis = 0,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Magenta"},			//rot0 CW
-		{.type = TYPE_ROTARY,	.axis = 0,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_HALF,		.message = "Green"},			//rot0 CCW
-		{.type = TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Shadows \x82"},		//rot1 CW
-		{.type = TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Shadows \x83"},		//rot1 CCW
-		{.type = TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Darks \x82"},		//rot2 CW
-		{.type = TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Darks \x83"},		//rot2 CCW
-		{.type = TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_GLAY,	.duration = LED_TIMER_HALF,		.message = "Lights \x82"},		//rot3 CW
-		{.type = TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Lights \x83"},		//rot3 CCW
-		{.type = TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "Hi-Light \x82"},	//rot4 CW
-		{.type = TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Hi-Light \x83"},	//rot4 CCW
-		{.type = TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Color-Temp. \x82"},	//rot5 CW
-		{.type = TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Color-Temp. \x83"},	//rot5 CCW
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Next \x80"},		//rot0 CW cursor right
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Prev. \x81"},		//rot0 CCW cursor left
+		{.type = TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Color-Temp. \x82"},	//rot1 CW
+		{.type = TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Color-Temp. \x83"},	//rot1 CCW
+		{.type = TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Magenta"},			//rot2 CW
+		{.type = TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_GREEN,	.duration = LED_TIMER_HALF,		.message = "Green"},			//rot2 CCW
+		{.type = TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_GLAY,	.duration = LED_TIMER_HALF,		.message = "Exposure \x82"},	//rot3 CW
+		{.type = TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "Exposure \x83"},	//rot3 CCW
+		{.type = TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_GLAY,	.duration = LED_TIMER_HALF,		.message = "Contrast \x82"},	//rot4 CW
+		{.type = TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "Contrast \x83"},	//rot4 CCW
+		{.type = TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_GLAY,	.duration = LED_TIMER_HALF,		.message = "Vibrance \x82"},	//rot5 CW
+		{.type = TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "Vibrance \x83"},	//rot5 CCW
 	},{	//Scene2 Button																					0123456789ABCDEF
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Keyword 1"},		//L0M0	SW1
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Keyword 2"},		//L0M1	SW2
@@ -110,28 +110,28 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Keyword 6"},		//L1M0	SW6
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Keyword 7"},		//L1M1	SW7
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Keyword 8"},		//L1M2	SW8
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "GrayScale"},		//L1M3	SW9
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Undo"},				//L1M3	SW9
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Keyword 5"},		//L2M0	SW5
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_LONG,		.message = "Scene 2"},			//L2M1	SW10 [SCENE]
-		{.type = TYPE_SWITCH,	.axis = 4,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Sat. Cyan"},	//L2M2	rot4 push
-		{.type = TYPE_SWITCH,	.axis = 5,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Sat. Blue"},	//L2M3	rot5 push
-		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clr Sat. Orange"},	//L3M0	rot1 push
-		{.type = TYPE_SWITCH,	.axis = 2,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clr Sat. Yellow"},	//L3M1	rot2 push
-		{.type = TYPE_SWITCH,	.axis = 3,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clr Sat. Green"},	//L3M2	rot3 push
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Sat Red"},	//L3M3	rot0 push
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_LONG,		.message = "Scene 2"},			//L2M1	SW10 [SCENE]
+		{.type = TYPE_SWITCH,	.axis = 4,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "White reset"},		//L2M2	rot4 push
+		{.type = TYPE_SWITCH,	.axis = 5,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L2M3	rot5 push
+		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "Black reset"},		//L3M0	rot1 push
+		{.type = TYPE_SWITCH,	.axis = 2,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "Shadows reset"},	//L3M1	rot2 push
+		{.type = TYPE_SWITCH,	.axis = 3,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "HiLights reset"},	//L3M2	rot3 push
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Reject"},			//L3M3	rot0 push
 		//Scence2 Rotators																				0123456789ABCDEF
-		{.type = TYPE_ROTARY,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Red \x82"},		//rot0 CW
-		{.type = TYPE_ROTARY,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Red \x83"},		//rot0 CCW
-		{.type = TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Orange \x82"},	//rot1 CW
-		{.type = TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Orange \x83"},	//rot1 CCW
-		{.type = TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Yellow \x82"},	//rot2 CW
-		{.type = TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Yellow \x83"},	//rot2 CCW
-		{.type = TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Green \x82"},	//rot3 CW
-		{.type = TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Green \x83"},	//rot3 CCW
-		{.type = TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Cyan \x82"},	//rot4 CW
-		{.type = TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Cyan \x83"},	//rot4 CCW
-		{.type = TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Blue \x82"},	//rot5 CW
-		{.type = TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Blue \x83"},	//rot5 CCW
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Next \x80"},		//rot0 CW cursor right
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Prev. \x81"},		//rot0 CCW cursor left
+		{.type = TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_HALF,		.message = "Black \x82"},		//rot1 CW
+		{.type = TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Black \x83"},		//rot1 CCW
+		{.type = TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "Shadows \x82"},		//rot2 CW
+		{.type = TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_HALF,		.message = "Shadows \x83"},		//rot2 CCW
+		{.type = TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_HILIGHT,	.duration = LED_TIMER_HALF,		.message = "HiLights \x82"},	//rot3 CW
+		{.type = TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "HiLights \x83"},	//rot3 CCW
+		{.type = TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_HILIGHT,	.duration = LED_TIMER_HALF,		.message = "White \x82"},		//rot4 CW
+		{.type = TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_HALF,		.message = "White \x83"},		//rot4 CCW
+		{.type = TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = NULL},				//rot5 CW
+		{.type = TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = NULL},				//rot5 CCW
 	},{	//Scene3 Button																					0123456789ABCDEF
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Enable Detail"},	//L0M0	SW1
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "RedEye"},			//L0M1	SW2
@@ -140,28 +140,28 @@ const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_DEFAULT,	.message = "Auto Upright"},		//L1M0	SW6
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_DEFAULT,	.message = "Upright Vertical"},	//L1M1	SW7
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Upright Horizon"},	//L1M2	SW8
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Upright Off"},		//L1M3	SW9
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L2M0	SW5
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_LONG,		.message = "Scene 3"},			//L2M1	SW10 [SCENE]
-		{.type = TYPE_SWITCH,	.axis = 4,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Sat. All"},	//L2M2	rot4 push
-		{.type = TYPE_SWITCH,	.axis = 5,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clr.Sat. Magenta"},	//L2M3	rot5 push
-		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Tilt"},		//L3M0	rot1 push
-		{.type = TYPE_SWITCH,	.axis = 2,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Vibrancy"},	//L3M1	rot2 push
-		{.type = TYPE_SWITCH,	.axis = 3,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear DeHaze"},		//L3M2	rot3 push
-		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_DEFAULT,	.message = "Clear Sharp"},		//L3M3	rot0 push
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Undo"},				//L1M3	SW9
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L2M0	SW5
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_WHITE,	.duration = LED_TIMER_LONG,		.message = "Scene 3"},			//L2M1	SW10 [SCENE]
+		{.type = TYPE_SWITCH,	.axis = 4,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L2M2	rot4 push
+		{.type = TYPE_SWITCH,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L2M3	rot5 push
+		{.type = TYPE_SWITCH,	.axis = 1,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "Tilt reset"},		//L3M0	rot1 push
+		{.type = TYPE_SWITCH,	.axis = 2,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//L3M1	rot2 push
+		{.type = TYPE_SWITCH,	.axis = 3,	.color = LED_COLOR_DARK,	.duration = LED_TIMER_DEFAULT,	.message = "De-Haze reset"},	//L3M2	rot3 push
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "Reject"},			//L3M3	rot0 push
 		//Scence3 Rotators																				0123456789ABCDEF
-		{.type =TYPE_ROTARY,	.axis = 0,	.color = LED_COLOR_BLUE,	.duration = LED_TIMER_HALF,		.message = "Sharpen \x82"},		//rot0 CW
-		{.type =TYPE_ROTARY,	.axis = 0,	.color = LED_COLOR_YELLOW,	.duration = LED_TIMER_HALF,		.message = "Sharpen \x83"},		//rot0 CCW
-		{.type =TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_CYAN,	.duration = LED_TIMER_HALF,		.message = "Tilt \x80"},		//rot1 CW
-		{.type =TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_MAGENTA,	.duration = LED_TIMER_HALF,		.message = "Tilt \x81"},		//rot1 CCW
-		{.type =TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_RED,		.duration = LED_TIMER_HALF,		.message = "Vibrancy \x82"},	//rot2 CW
-		{.type =TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_ORANGE,	.duration = LED_TIMER_HALF,		.message = "Vibrancy \x83"},	//rot2 CCW
-		{.type =TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "De-Haze \x82"},		//rot3 CW
-		{.type =TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = "De-Haze \x83"},		//rot3 CCW
-		{.type =TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.All \x82"},		//rot4 CW
-		{.type =TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.All \x83"},		//rot4 CCW
-		{.type =TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Magnta \x82"},	//rot5 CW
-		{.type =TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Sat.Magnta \x83"},	//rot5 CCW
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Next \x80"},		//rot0 CW cursor right
+		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_COLOR_RED,		.duration = LED_TIMER_DEFAULT,	.message = "Prev. \x81"},		//rot0 CCW cursor left
+		{.type =TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Tilt \x80"},		//rot1 CW
+		{.type =TYPE_ROTARY,	.axis = 1,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "Tilt \x81"},		//rot1 CCW
+		{.type =TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//rot2 CW
+		{.type =TYPE_ROTARY,	.axis = 2,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//rot2 CCW
+		{.type =TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "De-Haze \x82"},		//rot3 CW
+		{.type =TYPE_ROTARY,	.axis = 3,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_HALF,		.message = "De-Haze \x83"},		//rot3 CCW
+		{.type =TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//rot4 CW
+		{.type =TYPE_ROTARY,	.axis = 4,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//rot4 CCW
+		{.type =TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//rot5 CW
+		{.type =TYPE_ROTARY,	.axis = 5,	.color = LED_COLOR_OFF,		.duration = LED_TIMER_DEFAULT,	.message = NULL},				//rot5 CCW
 	}
 };
 #else //HID
@@ -240,4 +240,3 @@ const HID_DEFINE keytable[HID_DEFINE_COUNT] = {
 };
 #endif
 /* ******************************************************* **** END OF FILE****/
-
