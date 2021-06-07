@@ -934,7 +934,8 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-
+    strcpy(Msg_Buffer[0], "Error");
+	Msg_Print();
   /* USER CODE END Error_Handler_Debug */
 }
 
