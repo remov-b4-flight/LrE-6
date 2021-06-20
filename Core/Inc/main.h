@@ -91,8 +91,8 @@ uint16_t get_Rotary_Encoder(void);
 #define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
 #define PWM_PERIOD 59
-#define PWM_HI 45
-#define PWM_LO 22
+#define PWM_HI 40
+#define PWM_LO 20
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
 #define ENC_4A_EXTI_IRQn EXTI4_15_IRQn
