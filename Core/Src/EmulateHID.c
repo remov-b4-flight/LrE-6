@@ -46,7 +46,7 @@ void EmulateKeyboard(void) {
     if (isKeyPressed) {
         bitpos = ntz32(Key_Stat.wd);
         rkey = (Key_Stat.wd & MOD_SW_BIT_MASK);
-        if ( bitpos < KEY_COUNT + (2 * ROT_COUNT) ){
+        if ( bitpos < KEY_COUNT + (2 * ENC_COUNT) ){
 #if 0
         	if(modifiers[bitpos].element[0] != HID_NONM) SendModifiers(bitpos);
 #endif
@@ -62,7 +62,7 @@ void EmulateKeyboard(void) {
                 memset(Msg_Buffer[1],' ',MSG_WIDTH);
             	Msg_Print();
             }
-            LED_SetPulse(LED_IDX_ENC0,LED_COLOR_YELLOW,25);
+            LED_SetPulse(LED_IDX_ENC0,LED_YELLOW,25);
 
             isKeyReport = true;
 		}else if (rkey == 0) {// Keys are released

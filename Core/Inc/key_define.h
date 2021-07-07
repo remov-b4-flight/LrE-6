@@ -2,7 +2,7 @@
 #define _USB_HID_H
 
 /**
- * @brief Key define types whether SWITCH or ROTARY encoder
+ * @brief Key define types whether SWITCH or rotary ENCODER
  */
 enum define_type_t {
 	TYPE_SWITCH = 0,//!< TYPE_SWITCH
@@ -16,9 +16,14 @@ typedef struct key_define_t {
 	uint8_t	type;
 	uint8_t	axis;
 	uint8_t color;
-	uint8_t duration;
+	uint8_t period;
 	char	*message;
 } KEY_DEFINE;
+
+#define RIGHTA	"\x7b"
+#define LEFTA	"\x7c"
+#define UPA		"\x7d"
+#define DOWNA	"\x7e"
 
 //HID key codes HID 1.11
 
@@ -105,5 +110,4 @@ typedef struct key_define_t {
 #define HID_ALTM 0x04
 #define HID_SFTM 0x02
 #define HID_CTLM 0x01
-
 #endif /*_USB_HID_H */

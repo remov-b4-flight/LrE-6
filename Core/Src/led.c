@@ -11,7 +11,6 @@
 
 extern TIM_HandleTypeDef htim3;
 extern bool	isLEDsendpulse;
-uint32_t period;
 uint8_t	LEDColor[LED_COUNT];	// coded LED color value
 uint8_t	LEDPulse[TOTAL_BITS];	// Data formed PWM width send to LED
 uint8_t	LEDTimer[LED_COUNT];	// Individual LED Timer Counter
@@ -35,53 +34,30 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 	{.rgbw = {.r=LQTR,.g=LQTR,.b=LQTR}},//COLOR_GLAY,
 	{.rgbw = {.r=LDRK,.g=LDRK,.b=LDRK}},//COLOR_DARK,
 	{.rgbw = {.r=LHIL,.g=LHIL,.b=LHIL}},//COLOR_HILIGHT,
+	{.rgbw = {.r=LMAX,.g=LHLF,.b=LMAX}},//COLOR_PINK,
 };
 
 /**
  * @brief	LED Initialize - Sets all LEDs to 'OFF'
  */
 void LED_Initialize(){
-	memset(LEDColor, LED_COLOR_OFF, LED_COUNT);
+	memset(LEDColor, LED_OFF, LED_COUNT);
 	memset(LEDTimer, LED_TIMER_CONSTANT, LED_COUNT);
-
 	LED_SendPulse();
 }
 /**
  *	@brief	Sets decorative color pattern to LEDs.
  */
 void LED_TestPattern(){
-	LEDColor[0] = LED_COLOR_WHITE;
-	LEDColor[1] = LED_COLOR_RED;
-	LEDColor[2] = LED_COLOR_ORANGE;
-	LEDColor[3] = LED_COLOR_YELLOW;
-	LEDColor[4] = LED_COLOR_GREEN;
-	LEDColor[5] = LED_COLOR_BLUE;
-	LED_SendPulse();
-}
-#if 0
-/**
- *	@brief	Flush a LED immediately with LEDColor[]
- *	@param	index	index of LEDs.
- *	@param	color	color of LED.
- */
-void LED_Set_Quick(uint8_t index, uint8_t color){
-	LEDColor[index] = color;
-	LED_SendPulse();
-}
-#endif
-/**
- *	@brief	Set single LEDColor[] value to flush LED at loop in main()
- *	@param	index	index of LEDs.
- *	@param	color	color of LED
- * 	@attention	Difference of LED_Set() and LED_Set_Quick() is
- * 	Using LED_Set(), Real flash LED point is pended until return to main().
- * 	Using LED_Set_Quick() , It flashes LEDs immediately.
- */
-inline void LED_Set(uint8_t index, uint8_t color){
-	LEDColor[index] = color;
-	isLEDsendpulse = true;
-}
+	LEDColor[0] = LED_WHITE;
+	LEDColor[1] = LED_RED;
+	LEDColor[2] = LED_ORANGE;
+	LEDColor[3] = LED_YELLOW;
+	LEDColor[4] = LED_GREEN;
+	LEDColor[5] = LED_BLUE;
 
+	LED_SendPulse();
+}
 /**
  *	@brief	Make LED flashing by setting LEDTimer[]
  *	@param	index	index of LEDs.
@@ -90,7 +66,7 @@ inline void LED_Set(uint8_t index, uint8_t color){
  */
 inline void LED_SetPulse(uint8_t index, uint8_t color, uint8_t pulse){
 	LEDColor[index] = color;
-    LEDTimer[index] = pulse;	// 4ms unit (i.e. pulse=25 => 100ms)
+    LEDTimer[index] = pulse;	// 16ms unit (i.e. pulse=25 => 400ms)
 	isLEDsendpulse = true;
 }
 
@@ -122,7 +98,6 @@ void LED_SendPulse(){
 
 	//Send 'RESET' signal(280us > low data) for LEDs
 	Delay_us(LED_RESET_WIDTH);
-	//End of RESET
 
 	//Start DMA
 	htim3.Instance->CNT = PWM_HI + 1;

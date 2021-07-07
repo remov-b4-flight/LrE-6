@@ -18,20 +18,21 @@ extern "C" {
  * @enum constants for expressing LED light color.
  */
 enum led_color_t {
-	LED_COLOR_OFF = 0,//!< LED_COLOR_OFF
-	LED_COLOR_RED,    //!< LED_COLOR_RED
-	LED_COLOR_BLUE,   //!< LED_COLOR_BLUE
-	LED_COLOR_GREEN,  //!< LED_COLOR_GREEN
-	LED_COLOR_WHITE,  //!< LED_COLOR_WHITE
-	LED_COLOR_YELLOW, //!< LED_COLOR_YELLOW
-	LED_COLOR_MAGENTA,//!< LED_COLOR_MAGENTA
-	LED_COLOR_CYAN,   //!< LED_COLOR_CYAN
-	LED_COLOR_ORANGE, //!< LED_COLOR_ORANGE
-	LED_COLOR_GLAY,   //!< LED_COLOR_GLAY
-	LED_COLOR_DARK,   //!< LED_COLOR_DARK
-	LED_COLOR_HILIGHT,
+	LED_OFF = 0,//!< LED_COLOR_OFF
+	LED_RED,    //!< LED_COLOR_RED
+	LED_BLUE,   //!< LED_COLOR_BLUE
+	LED_GREEN,  //!< LED_COLOR_GREEN
+	LED_WHITE,  //!< LED_COLOR_WHITE
+	LED_YELLOW, //!< LED_COLOR_YELLOW
+	LED_MAGENTA,//!< LED_COLOR_MAGENTA
+	LED_CYAN,   //!< LED_COLOR_CYAN
+	LED_ORANGE, //!< LED_COLOR_ORANGE
+	LED_GLAY,   //!< LED_COLOR_GLAY
+	LED_DARK,   //!< LED_COLOR_DARK
+	LED_HILIGHT,//!< LED_COLOR_HILIGHT
+	LED_PINK,
 };
-#define COLOR_MAX 12
+#define COLOR_MAX 13
 
 //! @def LrE-6 board definition
 #define LED_COUNT		6
@@ -51,7 +52,7 @@ enum led_color_t {
 
 #define LED_TIMER_CONSTANT	0xFF
 #define	LED_IDX_ENC0	0
-#define LED_RESET_WIDTH	280	//in usec.
+#define LED_RESET_WIDTH	330	//in usec.(more than 280)
 /**
  * @typedef RGB LED intensity definition
  * @brief used for set RGB LED intensity definition.
@@ -71,8 +72,6 @@ typedef union leddata_t {
 /* Exported functions prototypes ---------------------------------------------*/
     void LED_Initialize();
     void LED_TestPattern();
-    void LED_Set_Quick(uint8_t index, uint8_t color);
-    void LED_Set(uint8_t index, uint8_t color);
     void LED_SetPulse(uint8_t index, uint8_t color,uint8_t pulse);
     void LED_SendPulse();
 
