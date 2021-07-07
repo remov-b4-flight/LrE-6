@@ -172,10 +172,6 @@ uint16_t get_Rotary_Encoder(void);
 #endif
 #define LrE6_VENDOR "Ruffles Inc."
 
-#if 0
-#define	TIM_PWM_50PER (TIM_PERIOD_4mS / 2)
-#endif
-
 #if ENC_9R5KQ
 //! 9R5KQ type Encoder
 enum enc9R5_t {
