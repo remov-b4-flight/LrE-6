@@ -164,15 +164,6 @@ void Start_LCDTimer(uint32_t tick);
 #define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
 
-#if ENC_9R5KQ
-//! 9R5KQ type Encoder
-enum enc9R5_t {
-	ENC_MV3 =	3,
-	ENC_MV2	=	2,
-	ENC_MV1	=	1,
-	ENC_MV0	=	0,
-};
-#endif
 //! LrE-6 Ports on Board
 #define Mx_GPIO_Port GPIOA
 #define ENC1_GPIO_Port GPIOA

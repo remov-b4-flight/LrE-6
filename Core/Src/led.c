@@ -39,6 +39,7 @@ const LEDDATA LEDTable[COLOR_MAX] = {
 
 /**
  * @brief	LED Initialize - Sets all LEDs to 'OFF'
+ * @pre		TIM3 Initialized.
  */
 void LED_Initialize(){
 	memset(LEDColor, LED_OFF, LED_COUNT);
@@ -77,7 +78,7 @@ inline void LED_SetPulse(uint8_t index, uint8_t color, uint8_t pulse){
 static void Color2Pulse(){
 	uint8_t	pulse = 0;
 	LEDDATA	leddata;
-
+	//Convert LEDColor[] to LEDPulse[];
 	for(uint8_t	led = 0; led < LED_COUNT; led++){
 		uint8_t c = LEDColor[led];
 		leddata.n = LEDTable[c].n;
@@ -90,6 +91,7 @@ static void Color2Pulse(){
 /**
  *	@brief	Send PWM pulses to LEDs rely on LEDColor[] array
  *	@pre	LEDPulse[] contains pulse width array.
+ *	@return	result of Send
  */
 void LED_SendPulse(){
 
