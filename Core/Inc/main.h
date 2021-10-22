@@ -35,7 +35,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x47
+#define USBD_DEVICE_VER_MIN	0x49
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -60,8 +60,7 @@ typedef union keyscan_t {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-#define MSG_LINES	2
-#define MSG_WIDTH	16
+
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -77,7 +76,6 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 void Delay_us(uint32_t microsec);
 void Start_LCDTimer(uint32_t tick);
-uint16_t get_Rotary_Encoder(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -162,14 +160,8 @@ uint16_t get_Rotary_Encoder(void);
 /* USER CODE BEGIN Private defines */
 #undef		LrE6_PID
 #undef		LrE6_PRODUCT
-#if MIDI
-	#define LrE6_PID 0xA320
-	#define LrE6_PRODUCT "LrE-6"
-#else
-	#define	LrE6_PID 0xB737
-	#define LrE6_PRODUCT "LrKB"
-	#define LrE6_WIN	1	//Use windows shortcut.
-#endif
+#define LrE6_PID 0xA320
+#define LrE6_PRODUCT "LrE-6"
 #define LrE6_VENDOR "Ruffles Inc."
 
 #if ENC_9R5KQ
@@ -209,7 +201,6 @@ enum {
 	L3
 };
 
-#if MIDI
 //! Scene definition in MIDI
 enum {
 	LrE6_SCENE0 = 0,
@@ -217,9 +208,7 @@ enum {
 	LrE6_SCENE2 = 2,
 	LrE6_SCENE3 = 3,
 };
-#else
-#define	LrE6_SCENE0 0
-#endif
+
 //! Encoder definitions
 enum {
 	LrE6_ENC0 = 0,
@@ -258,6 +247,8 @@ enum {
 #define LED_TIM_HALF		12		//192ms
 #define LED_TIM_LONG		35		//560ms
 #define	LED_TIM_CONNECT		150
+//! LED TIM3 definitions
+#define LED_TIM_RETRY_WAIT	21		//Transfer period for I2C
 
 #define ENC_NOT_MOVE        0
 #define ENC_MOVE_CW         1
@@ -266,7 +257,7 @@ enum {
 #define MOD_SW_BIT_MASK		0x0fffffff
 
 //! I2C time definitions
-#define I2C_RETRY_WAIT		8
+#define I2C_RETRY_WAIT		2		//Transfer period for TIM3 PWM
 
 //! For temperature calculator
 #define TEMP110_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7C2))

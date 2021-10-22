@@ -69,9 +69,6 @@ DMA_HandleTypeDef hdma_tim3_ch1_trig;
 #if !(ENC_9R5KQ)
 #warning "You are building binary for EC11 encoder."
 #endif
-#if !(MIDI)
-#warning "You are building binary for USB HID device."
-#endif
 //! STM32 TIM3 instance handle
 TIM_HandleTypeDef htim3;
 extern	USBD_HandleTypeDef hUsbDeviceFS;
@@ -84,18 +81,16 @@ uint8_t		LrE6Scene;
 bool		isKeyPressed;
 //! Key pressed/released status set by timer key scanning.
 KEYSCAN     Key_Stat;
-//! In key scanning wheather Line selected to read for key matrix.
+//! In key scanning whether Line selected to read for key matrix.
 uint8_t		Key_Line;
-//! If true, MIDI Event/HID packet is sent by key pressed/rotator moved. if false, not sent.
+//! If true, MIDI Event/HID packet is sent by key pressed/encoder moved. if false, not sent.
 bool		isKeyRelaseSent;
-#if MIDI
-//! If true, MIDI event previous sent is switch. if false, it's rotator
+//! If true, MIDI event previous sent is switch. if false, it's encoder
 bool		isPrev_sw;
 //! Bit masks for which bit of KEYSCAN variable acts as key.
 uint32_t	MaskKey[SCENE_COUNT];
 //! Bit masks for which bit of KEYSCAN variable acts as encoder.
-uint32_t	MaskRot[SCENE_COUNT];
-#endif
+uint32_t	MaskEnc[SCENE_COUNT];
 
 // LCD variables
 //! Timer counter ticked by end of L3 matrix scanning. (16ms interval).
@@ -117,22 +112,19 @@ bool		isLEDsendpulse;
 //! Flag is set by timer ISR, It makes LED_Timer[] count up in main()
 bool		LED_Timer_Update;
 
-#if MIDI
 // Scene related
 extern	KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT];
 extern	char *scene_name[SCENE_COUNT];
 extern uint8_t	led_axis_table[KEY_DEFINE_COUNT];
-#endif
 
 extern	uint8_t	LED_Scene[SCENE_COUNT][LED_COUNT];
 extern	uint8_t	LEDColor[LED_COUNT];
 extern	uint8_t	LEDTimer[LED_COUNT];
 
 //! String message buffer of screen
-char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
+extern char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 
 // MIDI variables
-#if MIDI
 //! MIDI CC message value for each channels.
 uint8_t MIDI_CC_Value[SCENE_COUNT][ENC_COUNT];
 //! keep previous sent 'Key On' note/channel for release message.
@@ -141,7 +133,6 @@ uint8_t prev_note;
 uint8_t	USBMIDI_Event[4];
 //! Instance Handle of USB interface
 extern USBD_HandleTypeDef *pInstance;
-#endif
 
 /* USER CODE END PV */
 
@@ -186,7 +177,6 @@ static inline void Msg_Print(){
 	isMsgFlash = true;
 }
 
-#if MIDI
 /**
  * @brief alter LED contents by scene
  * @param scene	Scene No
@@ -196,7 +186,7 @@ static void LED_SetScene(uint8_t scene){
 	LED_SendPulse();
 }
 /**
- * @brief Make MaskKey[],MaskRot[] from keytable
+ * @brief Make MaskKey[],MaskRot[] from keytable[](in key_define.c)
  * @return false : there is some configuration error.
  */
 static bool	MakeMasks(){
@@ -205,7 +195,7 @@ static bool	MakeMasks(){
 		for(uint8_t bit = 0; bit < KEY_DEFINE_COUNT; bit++){
 			uint32_t	or_bit = (1 << bit);
 			MaskKey[scn] |= (keytable[scn][bit].type == TYPE_SWITCH)?	or_bit : 0;
-			MaskRot[scn] |= (keytable[scn][bit].type == TYPE_ROTARY)?	or_bit : 0;
+			MaskEnc[scn] |= (keytable[scn][bit].type == TYPE_ROTARY)?	or_bit : 0;
 		}
 	}
 	return ret;
@@ -236,13 +226,11 @@ static void EmulateMIDI(){
         		}
         		LED_SetScene(LrE6Scene);
         		strcpy(msg_string, scene_name[LrE6Scene]);
-        		isKeyPressed = false;
-        		isKeyReport = false;
-        		isPrev_sw = false;
         	}else{
+                LED_SetPulse(keytable[LrE6Scene][bitpos].axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].period);
         		sprintf(msg_string, "Note: %3d    S%1d", note, (LrE6Scene % SCENE_COUNT) );
-                isKeyReport = true;
         	}
+                isKeyReport = true;
 
             //Print Message to LCD & LED
             if (keytable[LrE6Scene][bitpos].message != NULL) {
@@ -255,7 +243,6 @@ static void EmulateMIDI(){
             	Msg_Off_Flag = false;
             	Start_MsgTimer(MSG_TIMER_DEFAULT);
             }
-            LED_SetPulse(keytable[LrE6Scene][bitpos].axis, keytable[LrE6Scene][bitpos].color, keytable[LrE6Scene][bitpos].period);
 
             if (isKeyReport == true) {
 				//Set 'Note ON
@@ -267,7 +254,7 @@ static void EmulateMIDI(){
 				prev_note = note;
 				isPrev_sw = true;
             }
-        }else if( Key_Stat.wd & MaskRot[LrE6Scene] ) {
+        }else if( Key_Stat.wd & MaskEnc[LrE6Scene] ) {
         	//Send CC Event from encoder
         	uint8_t axis = (bitpos - KEY_COUNT) / 2;
         	uint8_t val = MIDI_CC_Value[LrE6Scene][axis];
@@ -315,7 +302,6 @@ static void EmulateMIDI(){
         isKeyPressed = false;
     }
 }
-#endif //MIDI
 /* USER CODE END 0 */
 
 /**
@@ -345,10 +331,7 @@ int main(void)
   LrE6State = LRE6_RESET;
   LrE6Scene	= LrE6_SCENE0;
 
-#if MIDI
   isPrev_sw = false;
-#endif
-
   isKeyRelaseSent = true;
   isLEDsendpulse = false;
 #if 0
@@ -371,21 +354,23 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM14_Init();
   MX_ADC_Init();
-#if MIDI
+#if 1
   MX_USB_MIDI_INIT();
-#else //HID
+#else
   MX_USB_DEVICE_Init();
 #endif
   /* USER CODE BEGIN 2 */
-  hdma_tim3_ch1_trig.Instance->CCR &= ~(DMA_CCR_HTIE | DMA_CCR_TEIE);		//Disable DMA1 half or error transfer interrupt(for LEDs).
-  HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize Switch matrix.
+  //Initialize Switch matrix
+  HAL_GPIO_WritePin(L0_GPIO_Port, L0_Pin, GPIO_PIN_SET);	//Initialize L0-3.
   HAL_TIM_Base_Start_IT(&htim1);		//Start Switch matrix timer.
+  MakeMasks();
+
+
 
   LED_Initialize();						//Set all LEDs to 'OFF'
 
-  HAL_Delay(SSD1306_PWRUP_WAIT);		//Wait for LCD module power up.
-
   //Initialize SSD1306 OLED
+  HAL_Delay(SSD1306_PWRUP_WAIT);		//Wait for LCD module power up.
   SSD1306_Initialize();
   /* USER CODE END 2 */
 
@@ -404,43 +389,32 @@ int main(void)
   Msg_Off_Flag = false;
   LrE6State = LRE6_USB_NOLINK;
 
-#if MIDI
+  //Initialize CC Value table
   memset(MIDI_CC_Value, MIDI_CC_INITIAL, SCENE_COUNT * ENC_COUNT);
-  LED_SetScene(LrE6Scene);
-  MakeMasks();
-#endif
 
   //Main loop
   while (1) {
 	if (LrE6State == LRE6_USB_LINKUP) {
 		//USB device configured by host
-		memset(LEDColor, LED_OFF, LED_COUNT);
-		LED_SetPulse(LED_IDX_ENC0, LED_PINK, LED_TIM_CONNECT);
+		LED_SetScene(LrE6Scene);
 		SSD1306_SetScreen(ON);
 		sprintf(Msg_Buffer[0], CONN_MSG, LrE6_PRODUCT ,USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
 
 #ifdef DEBUG
 		Msg_Print();
 #else
-	#if 0
 		SSD1306_LoadBitmap();
-	#endif
 		SSD1306_RenderBanner(Msg_Buffer[0], 12, 12, INP);
 		SSD1306_FlashScreen();
 #endif
 		Msg_Off_Flag = false;
 		Start_MsgTimer(MSG_TIMER_DEFAULT);
+		LED_SetPulse(LED_IDX_ENC0, LED_PINK, LED_TIM_CONNECT);
 		LrE6State = LRE6_USB_LINKED;
 
 	} else if (LrE6State == LRE6_USB_LINKED) {
-#if MIDI
 		//Operate as MIDI Instruments.
 		EmulateMIDI();
-#else //HID
-		//Operates as USB Keyboards.
-		EmulateKeyboard();
-#endif
-
 	} else if(LrE6State == LRE6_USB_LINK_LOST) {
 		LED_TestPattern();
 		Msg_1st_timeout = false;
@@ -495,16 +469,13 @@ int main(void)
 		}// Msg_Off_Flag
 	}// LrE6State
 
-
 	//LED Timer
 	if (LED_Timer_Update == true){ //4x4ms = 16ms interval
 		for (uint8_t i = 0; i < LED_COUNT; i++){
-			if (LEDTimer[i] != LED_TIMER_CONSTANT) {
-				if (--LEDTimer[i] == 0) {
+			if (LEDTimer[i] != LED_TIMER_CONSTANT && --LEDTimer[i] == 0) {
 					LED_SetPulse(i, LED_Scene[LrE6Scene][i], LED_TIMER_CONSTANT);
 				}
 		 	}
-		}
 		LED_Timer_Update = false;
 		continue;
 	}
@@ -516,6 +487,7 @@ int main(void)
 		continue;
 	}
 
+	//LCD off Timer
 	if(Msg_Off_Flag == true){
 		Msg_Off_Flag = false;
 		SSD1306_SetScreen(OFF);
@@ -537,8 +509,10 @@ int main(void)
 		}
 		continue;
 	}
-	// Enter sleep until next interrupt.
-	if(hdma_tim3_ch1_trig.State != HAL_DMA_STATE_BUSY){
+
+	// Enter CPU sleep until next interrupt.
+	if(	hdma_tim3_ch1_trig.State != HAL_DMA_STATE_BUSY
+		&& hdma_i2c1_tx.State != HAL_DMA_STATE_BUSY) {
 		HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 	}
     /* USER CODE END WHILE */
@@ -792,7 +766,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM3_Init 2 */
-
+  hdma_tim3_ch1_trig.Instance->CCR &= ~(DMA_CCR_HTIE | DMA_CCR_TEIE);		//Disable DMA1 half or error transfer interrupt(for LEDs).
   /* USER CODE END TIM3_Init 2 */
   HAL_TIM_MspPostInit(&htim3);
 

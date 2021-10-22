@@ -21,11 +21,13 @@ _BEGIN_STD_C
 #include "stm32f0xx_hal.h"
 #include "ssd1306_fonts.h"
 
+#define SSD1306_USE_DMA	1
+
 //! @def LrE-6 I2C hardware
 #define SSD1306_I2C_PORT		hi2c1
 #define SSD1306_I2C_ADDR        (0x3C << 1)
 extern	I2C_HandleTypeDef		SSD1306_I2C_PORT;
-#define SSD1306_PWRUP_WAIT		10	//(ms)
+#define SSD1306_PWRUP_WAIT		5	//(ms)
 
 #define SSD1306_CMD				0x00
 #define	SSD1306_DATA			0x40
@@ -75,6 +77,8 @@ extern	I2C_HandleTypeDef		SSD1306_I2C_PORT;
 //! @def SSD1306 OLED screen dimensions
 #define SSD1306_HEIGHT          32		// height
 #define SSD1306_WIDTH           128		// width
+#define MSG_LINES	2
+#define MSG_WIDTH	16
 
 //! @def SSD1306 OLED character rendering
 #define SCREEN_BLANK			0x00
