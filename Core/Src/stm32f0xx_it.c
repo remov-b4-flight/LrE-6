@@ -200,7 +200,6 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles EXTI line 0 and 1 interrupts.
   */
-#if ENC_9R5KQ
 void EXTI0_1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
@@ -243,18 +242,16 @@ void EXTI0_1_IRQHandler(void)
 	}
 
   /* USER CODE END EXTI0_1_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+  HAL_GPIO_EXTI_IRQHandler(ENC_5A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_5B_Pin);
   /* USER CODE BEGIN EXTI0_1_IRQn 1 */
 
   /* USER CODE END EXTI0_1_IRQn 1 */
 }
-#endif //ENC_9R5KQ
 
 /**
   * @brief This function handles EXTI line 4 to 15 interrupts.
   */
-#if ENC_9R5KQ
 void EXTI4_15_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
@@ -475,22 +472,20 @@ void EXTI4_15_IRQHandler(void)
 
     }
   /* USER CODE END EXTI4_15_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
+  HAL_GPIO_EXTI_IRQHandler(ENC_1A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_1B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_2A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_2B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_3A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_3B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_6A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_6B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_4A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC_4B_Pin);
   /* USER CODE BEGIN EXTI4_15_IRQn 1 */
 
   /* USER CODE END EXTI4_15_IRQn 1 */
 }
-
-#endif //ENC_9R5KQ
 
 /**
   * @brief This function handles DMA1 channel 4, 5, 6 and 7 interrupts.
@@ -616,4 +611,4 @@ void USB_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+

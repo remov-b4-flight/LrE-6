@@ -79,18 +79,18 @@ void Start_LCDTimer(uint32_t tick);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define TIM_PRESC_1uS 47
-#define TIM_PRESC_100uS 4799
-#define TIM_PERIOD_4mS 4000
-#define TIM_PERIOD_1SEC 10000
-#define TIM_PERIOD_125uS 125
-#define TIM_PERIOD_10mS 10000
 #define LrE6_PID 0x0BEA
-#define LrE6_PRODUCT "LrE-6"
+#define TIM_PERIOD_32mS 32768
+#define TIM_PERIOD_125uS 125
+#define TIM_PERIOD_8mS 7999
+#define TIM_PRESC_100uS 99
+#define PWM_HI 38
+#define TIM_PRESC_1uS 47
 #define LrE6_VENDOR "Ruffles Inc."
-#define PWM_PERIOD 59	//1.25 us
-#define PWM_HI 38 //791ns
-#define PWM_LO 15 //312ns
+#define PWM_LO 15
+#define LrE6_PRODUCT "LrE-6"
+#define PWM_PERIOD 59
+#define TIM_PERIOD_24ms 24756
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
 #define ENC_4A_EXTI_IRQn EXTI4_15_IRQn
@@ -263,5 +263,3 @@ enum {
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
