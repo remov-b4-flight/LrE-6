@@ -2,7 +2,7 @@
  * 	@file led.h
  *	@brief (WS2812B style) RGB LEDs control functions.
  *	@author remov-b4-flight
- *	@copyright	GPLv3
+ *	@copyright	3-Clause BSD Licence
  */
 
 #ifndef _LED_H    /* Guard against multiple inclusion */
@@ -34,7 +34,7 @@ enum led_color_t {
 };
 #define COLOR_MAX 13
 
-//! @def LrE-6 board definition
+//! @def Lr**** board definition
 #define LED_COUNT		6
 #define BITS_PER_LED    24  // (RGB) 3 * 8bit
 #define TOTAL_BITS      (LED_COUNT * BITS_PER_LED)
@@ -73,7 +73,7 @@ typedef union leddata_t {
     void LED_Initialize();
     void LED_TestPattern();
     void LED_SetPulse(uint8_t index, uint8_t color,uint8_t pulse);
-    void LED_SendPulse();
+    bool LED_SendPulse();
 
     /* Provide C++ Compatibility */
 #ifdef __cplusplus

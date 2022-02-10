@@ -4,8 +4,6 @@
   * @file	main.h
   * @brief	Header for main.c file.
   *         This file contains the common defines of the application.
-  * @author	remov-b4-flight
-  * @copyright GPLv3
   ******************************************************************************
   * @attention
   *
@@ -35,7 +33,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x49
+#define USBD_DEVICE_VER_MIN	0x58
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -53,7 +51,7 @@ typedef union keyscan_t {
 		unsigned char enc3:2;	//Rotary encoder
 		unsigned char enc4:2;	//Rotary encoder
 		unsigned char enc5:2;	//Rotary encoder
-        unsigned int  uu:4;		//dummy
+        unsigned char dummy:4;	//dummy
     } nb;
 } KEYSCAN;
 /* USER CODE END ET */
@@ -74,23 +72,22 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-void Delay_us(uint32_t microsec);
-void Start_LCDTimer(uint32_t tick);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LrE6_PID 0x0BEA
+#define TIM_PERIOD_24mS 24576
+#define Lr_PID 0x0BEA
+#define TIM_PERIOD_8mS 7999
 #define TIM_PERIOD_32mS 32768
 #define TIM_PERIOD_125uS 125
-#define TIM_PERIOD_8mS 7999
-#define TIM_PRESC_100uS 99
+#define Lr_PRODUCT "LrE-6"
 #define PWM_HI 38
+#define Lr_VENDOR "Ruffles Inc."
 #define TIM_PRESC_1uS 47
-#define LrE6_VENDOR "Ruffles Inc."
 #define PWM_LO 15
-#define LrE6_PRODUCT "LrE-6"
 #define PWM_PERIOD 59
-#define TIM_PERIOD_24ms 24756
+#define TIM_PERIOD_100uS 99
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
 #define ENC_4A_EXTI_IRQn EXTI4_15_IRQn
@@ -158,11 +155,11 @@ void Start_LCDTimer(uint32_t tick);
 #define ENC_2B_GPIO_Port GPIOB
 #define ENC_2B_EXTI_IRQn EXTI4_15_IRQn
 /* USER CODE BEGIN Private defines */
-#undef		LrE6_PID
-#undef		LrE6_PRODUCT
-#define LrE6_PID 0xA320
-#define LrE6_PRODUCT "LrE-6"
-#define LrE6_VENDOR "Ruffles Inc."
+#undef	Lr_PID
+#undef	Lr_PRODUCT
+#define Lr_PID 0xA320
+#define Lr_PRODUCT "LrE-6"
+#define Lr_VENDOR "Ruffles Inc."
 
 //! LrE-6 Ports on Board
 #define Mx_GPIO_Port GPIOA
@@ -175,13 +172,13 @@ void Start_LCDTimer(uint32_t tick);
 #define KEY_COUNT	16
 #define	ENC_COUNT	6
 
-//! LrE-6 States
-enum lre6_state_t {
-	LRE6_RESET,        //!< LRE6_RESET
-	LRE6_USB_NOLINK,   //!< LRE6_USB_NOLINK
-	LRE6_USB_LINKUP,   //!< LRE6_USB_LINKUP
-	LRE6_USB_LINKED,   //!< LRE6_USB_LINKED
-	LRE6_USB_LINK_LOST,//!< LRE6_USB_LINK_LOST
+//! Lr**** States
+enum lr_state_t {
+	LR_RESET,        //!< LR_RESET
+	LR_USB_NOLINK,   //!< LRE6_USB_NOLINK
+	LR_USB_LINKUP,   //!< LR_USB_LINKUP
+	LR_USB_LINKED,   //!< LR_USB_LINKED
+	LR_USB_LINK_LOST,//!< LR_USB_LINK_LOST
 };
 
 //! Key matrix lines
@@ -193,68 +190,45 @@ enum {
 };
 
 //! Scene definition in MIDI
-enum {
-	LrE6_SCENE0 = 0,
-	LrE6_SCENE1 = 1,
-	LrE6_SCENE2 = 2,
-	LrE6_SCENE3 = 3,
+enum lr_scene_t {
+	Lr_SCENE0 = 0,
+	Lr_SCENE1 = 1,
+	Lr_SCENE2 = 2,
+	Lr_SCENE3 = 3,
 };
+#define	SCENE_COUNT		4
 
 //! Encoder definitions
-enum {
-	LrE6_ENC0 = 0,
-	LrE6_ENC1,
-	LrE6_ENC2,
-	LrE6_ENC3,
-	LrE6_ENC4,
-	LrE6_ENC5,
+enum lr_enc_t {
+	Lr_ENC0 = 0,
+	Lr_ENC1,
+	Lr_ENC2,
+	Lr_ENC3,
+	Lr_ENC4,
+	Lr_ENC5,
 };
-
-#define SCENE_COUNT		4
 //! Define key that designated for scene change.
 #define SCENE_BIT		9
-#define KEY_PER_SCENE	(KEY_COUNT)
-#define	CC_CH_PER_SCENE	16
+#define CC_CH_OFFSET		64
+#define CC_CH_PER_SCENE		8
 #define NOTES_PER_SCENE	32
 //! Key define structure
-#define KEY_DEFINE_COUNT	( KEY_COUNT + (ENC_COUNT * 2) )
-
-#define LxMASK	0x0F
-//
-#define PRMASK_R0	0x3000
-#define PRMASK_R1	0x0030
-#define PRMASK_R2	0x0300
-#define PRMASK_R3	0x0C00
-#define PRMASK_R4	0xC000
-#define PRMASK_R5	0x0003
+#define DEFINES_PER_SCENE	( KEY_COUNT + (ENC_COUNT * 2) )
 
 // Screen timer definitions
-#define MSG_TIMER_DEFAULT	1000	//4s (1 tick=4ms)
-#define MSG_TIMER_INIT		10      //40ms SSD1306 initialize time
-#define MSG_TIMER_UPDATE	250		//1s (LCD update in USB not connected)
+#define MSG_TIMER_DEFAULT	122		//4Sec (1 tick=32.7ms)
+#define MSG_TIMER_UPDATE	31		//1Sec (OLED update in USB not connected)
 
 // LED timer definitions
-#define LED_TIM_NORM		25		//400ms (1 tick=16ms)
-#define LED_TIM_HALF		12		//192ms
-#define LED_TIM_LONG		35		//560ms
-#define	LED_TIM_CONNECT		150
+#define LED_TIM_NORM		21		//500ms (1 tick=24ms)
+#define LED_TIM_HALF		11		//250ms
+#define LED_TIM_LONG		42		//1Sec
+#define LED_TIM_CONNECT		83		//2Sec
 //! LED TIM3 definitions
 #define LED_TIM_RETRY_WAIT	21		//Transfer period for I2C
 
-#define ENC_NOT_MOVE        0
-#define ENC_MOVE_CW         1
-#define ENC_MOVE_CCW        2
-#define ENC_MASK			0x03
-#define MOD_SW_BIT_MASK		0x0fffffff
-
 //! I2C time definitions
 #define I2C_RETRY_WAIT		2		//Transfer period for TIM3 PWM
-
-//! For temperature calculator
-#define TEMP110_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7C2))
-#define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
-#define VDD_CALIB ((uint16_t) (330))
-#define VDD_APPLI ((uint16_t) (300))
 
 /* USER CODE END Private defines */
 
@@ -263,3 +237,5 @@ enum {
 #endif
 
 #endif /* __MAIN_H */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

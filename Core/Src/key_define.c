@@ -1,24 +1,24 @@
 /**
 * @file key_define.c
-* @brief HID key definition & MIDI channel definition
-* @details This file defines 'key code' sent to PC on HID build OR MIDI Control Change(CC) / Note ON-OFF event on MIDI build.
+* @brief MIDI channel definition
+* @details This file defines MIDI Control Change(CC) / Note ON-OFF event on MIDI build.
 * LrE-6 has 6 rotator as rot0~5, and 10 individual switch(SW) as SW1~10 and SW on rotator as 'rot0~5 push'
-* In MIDI use , users can send individual CC/Note event channel per switch and rotator.
+* In MIDI use , users can send individual CC/Note event channel per switch and encoder.
 * At switches, LrE-6 sends Note message has velocity= 127 when switch on, and sends velocity = 0 when switch off.
-* At rotator, LrE-6 sends CC message every rotators move,values are increase/decrease by towards.
-* LrE-6 MIDI can use 'Scene'. Users can alter all SW/Rotator definition. To alter Scene, push SW10.
+* At encoder, LrE-6 sends CC message every encoders move,values are increase/decrease by towards.
+* LrE-6 MIDI can use 'Scene'. Users can alter all SW/Encoder definition. To alter Scene, push SW10.
 * Users can use up to 4 Scenes. SW10 is fixed for Scene function.
 *
-* Scene / CC event channel definition (by Rotators)
-* ch. 0~15		Scene0
-* ch. 16~31		Scene1
-* ch. 32~47		Scene2
-* ch. 48~64		Scene3
+* Scene / CC event channel definition (by Encoders)
+* ch. 64~71		Scene0
+* ch. 72~79		Scene1
+* ch. 80~87		Scene2
+* ch. 88~95		Scene3
 * Scene / Note definition (by SWs)
 * Note	0~15	Scene0
 * Note	16~31	Scene1
 * Note	32~47	Scene2
-* Note	48~64	Scene3
+* Note	48~63	Scene3
 */
 
 /* Includes ------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 #include "led.h"
 
 /* Variables ----------------------------------------------------------------*/
-//! User-friendly scene names appears on LCD.
+//! User-friendly scene names appears on OLED.
 const char *scene_name[SCENE_COUNT] = {
 /*		 0123456789ABCDEF */
 		"Library",
@@ -45,7 +45,7 @@ const uint8_t LED_Scene[SCENE_COUNT][LED_COUNT] = {
 };
 
 //! @union Key/encoder configuration table
-const KEY_DEFINE keytable[SCENE_COUNT][KEY_DEFINE_COUNT] = {
+const KEY_DEFINE keytable[SCENE_COUNT][DEFINES_PER_SCENE] = {
 	{	//Scene0 Button (Library Tab)                                                                   0123456789ABCDEF
 /*N00*/	{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_YELLOW,.period = LED_TIM_NORM,	.message = "Rate = 1"},			//L0M0	SW1
 		{.type = TYPE_SWITCH,	.axis = 0,	.color = LED_YELLOW,.period = LED_TIM_NORM,	.message = "Rate = 2"},			//L0M1	SW2

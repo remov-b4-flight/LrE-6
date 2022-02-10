@@ -13,12 +13,14 @@
 #include <string.h>
 #include "main.h"
 #include "ssd1306.h"
-char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
+
 extern uint8_t Font8x16[];
 extern uint8_t connect_bitmap[];
 
+//! @brief string buffer to render for Frame_Buffer[].
+char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 //! @brief SSD1306 OLED frame buffer
-static uint8_t Frame_Buffer[SSD1306_WIDTH * MAX_PAGE];
+static uint8_t Frame_Buffer[SSD1306_WIDTH * (MAX_PAGE+1)];
 
 /**
  * @brief Write SSD1306 command register
@@ -107,9 +109,7 @@ void SSD1306_Initialize(void) {
  * @brief Clear all of frame buffer
  */
 void SSD1306_ClearBuffer() {
-    for(size_t i = 0; i < sizeof(Frame_Buffer); i++) {
-        Frame_Buffer[i] = SCREEN_BLANK;
-    }
+    memset(Frame_Buffer,SCREEN_BLANK,sizeof(Frame_Buffer));
 }
 
 /**
@@ -137,7 +137,6 @@ bool SSD1306_FlashScreen(void) {
 void SSD1306_SetScreen(bool on){
     SSD1306_WriteCommand( (on)? CMD_DISPLAY_ON : CMD_DISPLAY_OFF );
 }
-#ifndef debug
 /**
  * @brief Render Msg_Buffer contents to frame buffer
  * @pre Sets up string contents to Msg_Buffer
@@ -162,7 +161,7 @@ void SSD1306_Render2Buffer(void){
 		}//Msg_Buffer column Loop
 	}//Msg_Buffer line Loop
 }
-#endif
+#ifndef DEBUG
 /**
  * @brief Rendar banner message to frame buffer
  * @param string	Message to screen
@@ -170,14 +169,14 @@ void SSD1306_Render2Buffer(void){
  * @param y		y coordinate to render
  * @param op	operator with frame buffer contents
  */
-void SSD1306_RenderBanner(char *string, int x, int y ,uint8_t op){
+void SSD1306_RenderBanner(char *string, int x, int y){
 	uint8_t	page = y / BITS_PER_PAGE;
-	if (page == MAX_PAGE) {
-		page = MAX_PAGE -1;
+	if (page >= MAX_PAGE) {
+		page = MAX_PAGE;
 	}
-	int l = strlen(string);
-	if ( ((l * FONT_WIDTH) + x) > SSD1306_WIDTH ){
-		x = SSD1306_WIDTH - (FONT_WIDTH * l);
+	int len = strlen(string);
+	if ( ((len * FONT_WIDTH) + x) > (SSD1306_WIDTH-1) ){
+		x = SSD1306_WIDTH - (FONT_WIDTH * len);
 		if (x < 0) {
 			x = 0;
 		}
@@ -190,24 +189,16 @@ void SSD1306_RenderBanner(char *string, int x, int y ,uint8_t op){
 			uint8_t font_h = Font8x16[font_top + column];
 			uint8_t font_l = Font8x16[font_top + column + FONT_WIDTH];
 			uint16_t fb_index = fb_top + (i * FONT_WIDTH) + column;
-			if (op == INP){
 				Frame_Buffer[fb_index] = font_h;
 				Frame_Buffer[fb_index + SSD1306_WIDTH] = font_l;
-			} else if (op == XOR){
-				Frame_Buffer[fb_index ] ^= font_h;
-				Frame_Buffer[fb_index + SSD1306_WIDTH] ^= font_l;
-			}
 		}//Frame Buffer column Loop
 	}//String Loop
 }
-#ifndef DEBUG
 /**
  * @brief Load bitmap image to frame buffer
  * @param bitmap SSD1306 style bitmap 8bit array.
  */
 void SSD1306_LoadBitmap(){
-	for (size_t i = 0; i < FB_SIZE; i++){
-		Frame_Buffer[i] = connect_bitmap[i];
-	}
+	memcpy(Frame_Buffer,connect_bitmap,FB_SIZE);
 }
 #endif

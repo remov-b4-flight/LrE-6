@@ -66,26 +66,21 @@
 
 #define USBD_VID     1155
 #define USBD_LANGID_STRING     1033
-#define USBD_MANUFACTURER_STRING     "LrE6_VENDOR"
-#define USBD_PID_FS     LrE6_PID
-#define USBD_PRODUCT_STRING_FS     "LrE6_PRODUCT"
-#define USBD_CONFIGURATION_STRING_FS     "HID Config"
-#define USBD_INTERFACE_STRING_FS     "HID Interface"
+#define USBD_MANUFACTURER_STRING     "Lr_VENDOR"
+#define USBD_PID_FS     Lr_PID
+#define USBD_PRODUCT_STRING_FS     "Lr_PRODUCT"
+#define USBD_CONFIGURATION_STRING_FS     "MIDI Config"
+#define USBD_INTERFACE_STRING_FS     "MIDI Interface"
 
 /* USER CODE BEGIN PRIVATE_DEFINES */
 #undef	USBD_VID
 #undef	USBD_MANUFACTURER_STRING
 #undef	USBD_PRODUCT_STRING_FS
 #define USBD_VID     0x1209
-#define USBD_MANUFACTURER_STRING	LrE6_VENDOR
-#define USBD_PRODUCT_STRING_FS		LrE6_PRODUCT
-#if MIDI
-	#define	DEVICE_CLASS	0x02	/*bDeviceClass = CDC */
-	#define	DEVICE_SUBCLASS	0x02	/*bDeviceSubClass = ACM */
-#else //HID
-	#define	DEVICE_CLASS	0x00	/*bDeviceClass (I/F desc.)*/
-	#define	DEVICE_SUBCLASS	0x00	/*bDeviceSubClass (I/F desc.)*/
-#endif
+#define USBD_MANUFACTURER_STRING	Lr_VENDOR
+#define USBD_PRODUCT_STRING_FS		Lr_PRODUCT
+#define	DEVICE_CLASS				0x00	/*bDeviceClass = (specified in interface desc.) */
+#define	DEVICE_SUBCLASS				0x00	/*bDeviceSubClass = (specified in interface desc.) */
 /* USER CODE END PRIVATE_DEFINES */
 
 /**
@@ -164,16 +159,18 @@ __ALIGN_BEGIN uint8_t USBD_FS_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END =
   USB_DESC_TYPE_DEVICE,       /*bDescriptorType*/
   0x00,                       /*bcdUSB */
   0x02,
-  0x00,                       /*bDeviceClass*/
-  0x00,                       /*bDeviceSubClass*/
+/* USER CODE BEGIN DESC. */
+  DEVICE_CLASS,
+  DEVICE_SUBCLASS,
+/* USER CODE END DESC. */
   0x00,                       /*bDeviceProtocol*/
   USB_MAX_EP0_SIZE,           /*bMaxPacketSize*/
   LOBYTE(USBD_VID),           /*idVendor*/
   HIBYTE(USBD_VID),           /*idVendor*/
   LOBYTE(USBD_PID_FS),        /*idProduct*/
   HIBYTE(USBD_PID_FS),        /*idProduct*/
-  0x00,                       /*bcdDevice rel. 2.00*/
-  0x02,
+  USBD_DEVICE_VER_MIN,        /*bcdDevice minor*/
+  USBD_DEVICE_VER_MAJ,        /*bcdDevice major*/
   USBD_IDX_MFC_STR,           /*Index of manufacturer  string*/
   USBD_IDX_PRODUCT_STR,       /*Index of product string*/
   USBD_IDX_SERIAL_STR,        /*Index of serial number string*/
@@ -404,3 +401,4 @@ static void IntToUnicode(uint32_t value, uint8_t * pbuf, uint8_t len)
   * @}
   */
 
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

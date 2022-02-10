@@ -24,7 +24,6 @@
 #include "usb_device.h"
 #include "usbd_core.h"
 #include "usbd_desc.h"
-#include "usbd_hid.h"
 
 /* USER CODE BEGIN Includes */
 #include "usbd_midi.h"
@@ -84,7 +83,7 @@ void MX_USB_MIDI_INIT(void)
 void MX_USB_DEVICE_Init(void)
 {
   /* USER CODE BEGIN USB_DEVICE_Init_PreTreatment */
-  
+#if 0
   /* USER CODE END USB_DEVICE_Init_PreTreatment */
 
   /* Init Device Library, add supported class and start the library. */
@@ -102,7 +101,7 @@ void MX_USB_DEVICE_Init(void)
   }
 
   /* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
-  
+#endif
   /* USER CODE END USB_DEVICE_Init_PostTreatment */
 }
 
@@ -114,3 +113,4 @@ void MX_USB_DEVICE_Init(void)
   * @}
   */
 
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

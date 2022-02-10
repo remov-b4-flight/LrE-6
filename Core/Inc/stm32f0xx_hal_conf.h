@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    stm32f0xx_hal_conf.h
@@ -10,12 +9,10 @@
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F0xx_HAL_CONF_H
@@ -320,3 +317,4 @@
 
 #endif /* __STM32F0xx_HAL_CONF_H */
 
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

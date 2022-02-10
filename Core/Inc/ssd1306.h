@@ -77,8 +77,8 @@ extern	I2C_HandleTypeDef		SSD1306_I2C_PORT;
 //! @def SSD1306 OLED screen dimensions
 #define SSD1306_HEIGHT          32		// height
 #define SSD1306_WIDTH           128		// width
-#define MSG_LINES	2
-#define MSG_WIDTH	16
+#define MSG_LINES	(SSD1306_HEIGHT / FONT_HEIGHT)
+#define MSG_WIDTH	(SSD1306_WIDTH / FONT_WIDTH)
 
 //! @def SSD1306 OLED character rendering
 #define SCREEN_BLANK			0x00
@@ -86,7 +86,7 @@ extern	I2C_HandleTypeDef		SSD1306_I2C_PORT;
 #define FONT_PRINTABLE_END		0x7e
 #define BYTES_PER_CHAR_DATA		16
 #define BITS_PER_PAGE			8
-#define MAX_PAGE				(SSD1306_HEIGHT / BITS_PER_PAGE)
+#define MAX_PAGE				((SSD1306_HEIGHT / BITS_PER_PAGE) - 1)
 #define FB_SIZE					(SSD1306_WIDTH * (SSD1306_HEIGHT / BITS_PER_PAGE))
 
 enum screen_stat {
@@ -107,7 +107,7 @@ void SSD1306_ClearBuffer(void);
 bool SSD1306_FlashScreen(void);
 void SSD1306_SetScreen(bool on);
 void SSD1306_Render2Buffer(void);
-void SSD1306_RenderBanner(char *string, int x, int y ,uint8_t op);
+void SSD1306_RenderBanner(char *string, int x, int y);
 void SSD1306_LoadBitmap();
 _END_STD_C
 

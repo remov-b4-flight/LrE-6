@@ -43,7 +43,16 @@
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#if ENC_9R5KQ
+
+ // Definitions for Encoders
+
+#define PRMASK_R0	0x3000
+#define PRMASK_R1	0x0030
+#define PRMASK_R2	0x0300
+#define PRMASK_R3	0x0C00
+#define PRMASK_R4	0xC000
+#define PRMASK_R5	0x0003
+
 //! 9R5KQ type Encoder
 enum enc9R5_t {
 	ENC_MV3 =	3,
@@ -51,15 +60,18 @@ enum enc9R5_t {
 	ENC_MV1	=	1,
 	ENC_MV0	=	0,
 };
-#else
-enum ec11_t {
-	//! Standard EC11 type Encoder
-	ENC_MOVE =	0,
-	ENC_MVCCW =	2,
-	ENC_MVCW =	1,
-	ENC_NOMV =	3,
+
+enum enc_move_t {
+	ENC_STOPPED = 0,
+	ENC_MOVE_CW,
+	ENC_MOVE_CCW,
+	ENC_INVALID,
 };
-#endif
+
+#define ENC_MASK	0x03
+
+// Definitions for Matrix
+#define LxMASK	0x0F
 
 /* USER CODE END EM */
 
@@ -73,6 +85,8 @@ void EXTI0_1_IRQHandler(void);
 void EXTI4_15_IRQHandler(void);
 void DMA1_Channel4_5_6_7_IRQHandler(void);
 void TIM1_BRK_UP_TRG_COM_IRQHandler(void);
+void TIM6_DAC_IRQHandler(void);
+void TIM7_IRQHandler(void);
 void I2C1_IRQHandler(void);
 void USB_IRQHandler(void);
 /* USER CODE BEGIN EFP */
@@ -84,3 +98,5 @@ void USB_IRQHandler(void);
 #endif
 
 #endif /* __STM32F0xx_IT_H */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
