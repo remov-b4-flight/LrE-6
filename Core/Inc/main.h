@@ -76,18 +76,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define Lr_PID 0xA320
 #define TIM_PERIOD_24mS 24576
-#define Lr_PID 0x0BEA
 #define TIM_PERIOD_8mS 7999
 #define TIM_PERIOD_32mS 32768
 #define TIM_PERIOD_125uS 125
-#define Lr_PRODUCT "LrE-6"
+#define TIM_PRESC_100uS 99
 #define PWM_HI 38
-#define Lr_VENDOR "Ruffles Inc."
 #define TIM_PRESC_1uS 47
+#define Lr_VENDOR "Ruffles Inc."
 #define PWM_LO 15
+#define Lr_PRODUCT "LrE-6"
 #define PWM_PERIOD 59
-#define TIM_PERIOD_100uS 99
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
 #define ENC_4A_EXTI_IRQn EXTI4_15_IRQn
