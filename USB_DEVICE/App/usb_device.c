@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -28,7 +28,6 @@
 /* USER CODE BEGIN Includes */
 #include "usbd_midi.h"
 #include "usbd_midi_if.h"
-
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN PV */
@@ -99,7 +98,6 @@ void MX_USB_DEVICE_Init(void)
   {
     Error_Handler();
   }
-
   /* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
 #endif
   /* USER CODE END USB_DEVICE_Init_PostTreatment */

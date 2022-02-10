@@ -3,11 +3,11 @@
   ******************************************************************************
   * @file	main.h
   * @brief	Header for main.c file.
-  *         This file contains the common defines of the application.
+  * 		This file contains the common defines of the application.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -41,9 +41,9 @@ extern "C" {
 typedef union keyscan_t {
     uint32_t wd;
     struct ks_bit_t {
-        unsigned char n0:4;		//Switch Line0
-        unsigned char n1:4;		//Switch Line1
-        unsigned char n2:4;		//Switch Line2
+		unsigned char n0:4;		//Switch Line0
+		unsigned char n1:4;		//Switch Line1
+		unsigned char n2:4;		//Switch Line2
 		unsigned char n3:4;		//Switch Line3
 		unsigned char enc0:2;	//Rotary encoder
 		unsigned char enc1:2;	//Rotary encoder
@@ -81,13 +81,13 @@ void Error_Handler(void);
 #define TIM_PERIOD_8mS 7999
 #define TIM_PERIOD_32mS 32768
 #define TIM_PERIOD_125uS 125
-#define TIM_PRESC_100uS 99
 #define PWM_HI 38
 #define TIM_PRESC_1uS 47
 #define Lr_VENDOR "Ruffles Inc."
 #define PWM_LO 15
 #define Lr_PRODUCT "LrE-6"
 #define PWM_PERIOD 59
+#define TIM_PERIOD_100uS 99
 #define ENC_4A_Pin GPIO_PIN_14
 #define ENC_4A_GPIO_Port GPIOC
 #define ENC_4A_EXTI_IRQn EXTI4_15_IRQn
@@ -168,7 +168,7 @@ void Error_Handler(void);
 #define ENC4_GPIO_Port GPIOC
 #define ENC5_GPIO_Port GPIOF
 
-//! LrE-6 Hardware definition
+//! Lr**** Hardware definition
 #define KEY_COUNT	16
 #define	ENC_COUNT	6
 
@@ -208,10 +208,10 @@ enum lr_enc_t {
 	Lr_ENC5,
 };
 //! Define key that designated for scene change.
-#define SCENE_BIT		9
+#define SCENE_BIT			9
 #define CC_CH_OFFSET		64
 #define CC_CH_PER_SCENE		8
-#define NOTES_PER_SCENE	32
+#define NOTES_PER_SCENE		32
 //! Key define structure
 #define DEFINES_PER_SCENE	( KEY_COUNT + (ENC_COUNT * 2) )
 

@@ -4,11 +4,10 @@
   * @file           : App/usbd_desc.c
   * @version        : v2.0_Cube
   * @brief          : This file implements the USB device descriptors.
-  * @author			remov-b4-flight
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -76,7 +75,7 @@
 #undef	USBD_VID
 #undef	USBD_MANUFACTURER_STRING
 #undef	USBD_PRODUCT_STRING_FS
-#define USBD_VID     0x1209
+#define USBD_VID					0x1209
 #define USBD_MANUFACTURER_STRING	Lr_VENDOR
 #define USBD_PRODUCT_STRING_FS		Lr_PRODUCT
 #define	DEVICE_CLASS				0x00	/*bDeviceClass = (specified in interface desc.) */
@@ -297,7 +296,7 @@ uint8_t * USBD_FS_SerialStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
    * ID */
   Get_SerialNum();
   /* USER CODE BEGIN USBD_FS_SerialStrDescriptor */
-  
+
   /* USER CODE END USBD_FS_SerialStrDescriptor */
   return (uint8_t *) USBD_StringSerial;
 }

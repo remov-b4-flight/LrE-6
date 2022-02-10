@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -38,7 +38,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- 
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -196,6 +196,7 @@ void EXTI0_1_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
     uint32_t pr = EXTI->PR;
+
 	// Encoder 5
 	if( pr & PRMASK_R5 ){
 	uint8_t	r5 = (ENC5_GPIO_Port->IDR) & ENC_MASK;
@@ -235,6 +236,34 @@ void EXTI4_15_IRQHandler(void)
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
     uint32_t pr = EXTI->PR;
 
+    //Encoder 0(selector)
+    if( pr & PRMASK_R0 ){
+	    uint8_t	r230 = ( (ENC230_GPIO_Port->IDR) >> 8 );
+    	uint8_t	r0 = ( r230 >> 4 ) & ENC_MASK;
+    	uint8_t op = enc_table[enc_prev[Lr_ENC0]][r0];
+		enc_prev[Lr_ENC0] = r0;
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+    	if (op == ENC_MOVE_CW) {
+			Key_Stat.nb.enc0 = ENC_MOVE_CW;
+	        MIDI_CC_Inc(Lr_ENC0);
+			isKeyPressed = true;
+			return;
+    	}else if(op == ENC_MOVE_CCW){
+			Key_Stat.nb.enc0 = ENC_MOVE_CCW;
+	        MIDI_CC_Dec(Lr_ENC0);
+	        isKeyPressed = true;
+	        return;
+    	}else if(op == ENC_STOPPED){
+			Key_Stat.nb.enc0 = ENC_STOPPED;
+			isKeyPressed = true;
+			return;
+    	}else{
+			Key_Stat.nb.enc0 = ENC_STOPPED;
+			isKeyPressed = false;
+    	}
+    }
+
     // Encoder 1
     if(pr & PRMASK_R1){
 	    uint8_t	ra = (ENC1_GPIO_Port->IDR);
@@ -262,9 +291,8 @@ void EXTI4_15_IRQHandler(void)
     	}
     }
 
-
     //Encoder 2
-    if(pr & PRMASK_R2){ 
+    if(pr & PRMASK_R2){
 	    uint8_t	r230 = ( (ENC230_GPIO_Port->IDR) >> 8 );
     	uint8_t	r2 = r230 & ENC_MASK;
     	uint8_t op = enc_table[enc_prev[Lr_ENC2]][r2];
@@ -272,7 +300,7 @@ void EXTI4_15_IRQHandler(void)
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
 
-		if (op == ENC_MOVE_CW) {
+    	if (op == ENC_MOVE_CW) {
 			Key_Stat.nb.enc2 = ENC_MOVE_CW;
 	        MIDI_CC_Inc(Lr_ENC2);
 			isKeyPressed = true;
@@ -290,7 +318,7 @@ void EXTI4_15_IRQHandler(void)
 			Key_Stat.nb.enc2 = ENC_STOPPED;
 			isKeyPressed = false;
     	}
-    }
+	}
 
     //Rotator 3
 	if( pr & PRMASK_R3 ){
@@ -347,34 +375,6 @@ void EXTI4_15_IRQHandler(void)
 			isKeyPressed = false;
     	}
     }
-
-    //Encoder 0(selector)
-    if( pr & PRMASK_R0 ){
-	    uint8_t	r230 = ( (ENC230_GPIO_Port->IDR) >> 8 );
-    	uint8_t	r0 = ( r230 >> 4 ) & ENC_MASK;
-    	uint8_t op = enc_table[enc_prev[Lr_ENC0]][r0];
-		enc_prev[Lr_ENC0] = r0;
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
-    	if (op == ENC_MOVE_CW) {
-			Key_Stat.nb.enc0 = ENC_MOVE_CW;
-	        MIDI_CC_Inc(Lr_ENC0);
-			isKeyPressed = true;
-			return;
-    	}else if(op == ENC_MOVE_CCW){
-			Key_Stat.nb.enc0 = ENC_MOVE_CCW;
-	        MIDI_CC_Dec(Lr_ENC0);
-	        isKeyPressed = true;
-	        return;
-    	}else if(op == ENC_STOPPED){
-			Key_Stat.nb.enc0 = ENC_STOPPED;
-			isKeyPressed = true;
-			return;
-    	}else{
-			Key_Stat.nb.enc0 = ENC_STOPPED;
-			isKeyPressed = false;
-    	}
-  }
 
   /* USER CODE END EXTI4_15_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(ENC_1A_Pin);

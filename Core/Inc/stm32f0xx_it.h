@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -55,7 +55,7 @@
 
 //! 9R5KQ type Encoder
 enum enc9R5_t {
-	ENC_MV3 =	3,
+	ENC_MV3	=	3,
 	ENC_MV2	=	2,
 	ENC_MV1	=	1,
 	ENC_MV0	=	0,

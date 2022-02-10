@@ -1,7 +1,7 @@
 /**
  *	@file	bitcount.c
  *	@brief 'bit count' functions
- *  @author	remov-b4-flight
+ *	@author	remov-b4-flight
  *	@copyright	3-Clause BSD License
  *
  */
@@ -52,7 +52,7 @@ int bitcount32(uint32_t b32)
  *	@return	bit number (0-15)
  */
 uint8_t ntz16(uint16_t v){
-    uint16_t w=(v&(-v))-1;
+    uint16_t w = (v & (-v)) - 1;
     return bitcount16(w);
 }
 
@@ -62,7 +62,7 @@ uint8_t ntz16(uint16_t v){
  *	@return	bit number (0-31)
  */
 uint8_t ntz32(uint32_t v){
-    uint32_t w=(v&(-v))-1;
+    uint32_t w = (v & (-v)) - 1;
     return bitcount32(w);
 }     
 /* ******************************************************* **** END OF FILE****/

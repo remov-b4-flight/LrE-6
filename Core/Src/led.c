@@ -12,9 +12,9 @@
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
 extern bool	isLEDsendpulse;
-uint8_t	LEDColor[LED_COUNT];	// coded LED color value
+uint8_t		LEDColor[LED_COUNT];		// coded LED color value
 uint16_t	LEDPulse[TOTAL_BITS + 1];	// Data formed PWM width send to LED
-uint8_t	LEDTimer[LED_COUNT];	// Individual LED Timer Counter
+uint8_t		LEDTimer[LED_COUNT];		// Individual LED Timer Counter
 
 /**
  * @brief RGB LED intensity table

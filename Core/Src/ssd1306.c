@@ -29,6 +29,7 @@ static uint8_t Frame_Buffer[SSD1306_WIDTH * (MAX_PAGE+1)];
 static inline void SSD1306_WriteCommand(uint8_t cmd) {
 	HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, SSD1306_CMD, 1, &cmd, 1, HAL_MAX_DELAY);
 }
+
 #if !(SSD1306_USE_DMA)
 /**
  * @brief Write SSD1306 data register
@@ -167,7 +168,6 @@ void SSD1306_Render2Buffer(void){
  * @param string	Message to screen
  * @param x		x coordinate to render
  * @param y		y coordinate to render
- * @param op	operator with frame buffer contents
  */
 void SSD1306_RenderBanner(char *string, int x, int y){
 	uint8_t	page = y / BITS_PER_PAGE;
@@ -189,8 +189,8 @@ void SSD1306_RenderBanner(char *string, int x, int y){
 			uint8_t font_h = Font8x16[font_top + column];
 			uint8_t font_l = Font8x16[font_top + column + FONT_WIDTH];
 			uint16_t fb_index = fb_top + (i * FONT_WIDTH) + column;
-				Frame_Buffer[fb_index] = font_h;
-				Frame_Buffer[fb_index + SSD1306_WIDTH] = font_l;
+			Frame_Buffer[fb_index] = font_h;
+			Frame_Buffer[fb_index + SSD1306_WIDTH] = font_l;
 		}//Frame Buffer column Loop
 	}//String Loop
 }
