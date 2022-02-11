@@ -166,8 +166,8 @@ void Error_Handler(void);
 #define ENC1_GPIO_Port GPIOB
 #define ENC2_GPIO_Port GPIOB
 #define ENC3_GPIO_Port GPIOC
-#define ENC4_GPIO_Port GPIOF
-#define ENC5_GPIO_Port GPIOB
+#define ENC5_GPIO_Port GPIOF
+//#define ENC5_GPIO_Port GPIOB
 
 //! Lr**** Hardware definition
 #define KEY_COUNT	16

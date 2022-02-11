@@ -37,7 +37,7 @@ const char *scene_name[SCENE_COUNT] = {
 };
 //! LED patterns that set by switching scenes.
 const uint8_t LED_Scene[SCENE_COUNT][LED_COUNT] = {
-	//0					1					2					3					4					5
+	//0			1			2			3			4			5
 	{LED_OFF,	LED_OFF,	LED_OFF,	LED_OFF,	LED_OFF,	LED_OFF,},	//Scene0
 	{LED_OFF,	LED_OFF,	LED_OFF,	LED_OFF,	LED_OFF,	LED_OFF,},	//Scene1
 	{LED_OFF,	LED_DARK,	LED_GLAY,	LED_WHITE,	LED_HILIGHT,LED_OFF,},	//Scene2
