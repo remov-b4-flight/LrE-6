@@ -46,12 +46,12 @@
 
  // Definitions for Encoders
 
-#define PRMASK_R0	0x3000
-#define PRMASK_R1	0x0030
-#define PRMASK_R2	0x0300
-#define PRMASK_R3	0x0C00
-#define PRMASK_R4	0xC000
-#define PRMASK_R5	0x0003
+#define PRMASK_R0	0x0030
+#define PRMASK_R1	0x0300
+#define PRMASK_R2	0x0C00
+#define PRMASK_R3	0xC000
+#define PRMASK_R4	0x0003
+#define PRMASK_R5	0x3000
 
 //! 9R5KQ type Encoder
 enum enc9R5_t {
@@ -98,5 +98,3 @@ void USB_IRQHandler(void);
 #endif
 
 #endif /* __STM32F0xx_IT_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

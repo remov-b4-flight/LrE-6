@@ -852,14 +852,14 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, L3_Pin|L0_Pin|L1_Pin|L2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : ENC_4A_Pin ENC_4B_Pin */
-  GPIO_InitStruct.Pin = ENC_4A_Pin|ENC_4B_Pin;
+  /*Configure GPIO pins : ENC3A_Pin ENC3B_Pin */
+  GPIO_InitStruct.Pin = ENC3A_Pin|ENC3B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC_5A_Pin ENC_5B_Pin */
-  GPIO_InitStruct.Pin = ENC_5A_Pin|ENC_5B_Pin;
+  /*Configure GPIO pins : ENC4A_Pin ENC4B_Pin */
+  GPIO_InitStruct.Pin = ENC4A_Pin|ENC4B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
@@ -870,8 +870,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC_1A_Pin ENC_1B_Pin */
-  GPIO_InitStruct.Pin = ENC_1A_Pin|ENC_1B_Pin;
+  /*Configure GPIO pins : ENC0A_Pin ENC0B_Pin */
+  GPIO_InitStruct.Pin = ENC0A_Pin|ENC0B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -883,10 +883,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC_3A_Pin ENC_3B_Pin ENC_6A_Pin ENC_6B_Pin
-                           ENC_2A_Pin ENC_2B_Pin */
-  GPIO_InitStruct.Pin = ENC_3A_Pin|ENC_3B_Pin|ENC_6A_Pin|ENC_6B_Pin
-                          |ENC_2A_Pin|ENC_2B_Pin;
+  /*Configure GPIO pins : ENC2A_Pin ENC2B_Pin ENC5A_Pin ENC5B_Pin
+                           ENC1A_Pin ENC1B_Pin */
+  GPIO_InitStruct.Pin = ENC2A_Pin|ENC2B_Pin|ENC5A_Pin|ENC5B_Pin
+                          |ENC1A_Pin|ENC1B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -935,4 +935,3 @@ void assert_failed(uint8_t *file, uint32_t line)
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

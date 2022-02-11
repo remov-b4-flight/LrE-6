@@ -197,32 +197,32 @@ void EXTI0_1_IRQHandler(void)
   /* USER CODE BEGIN EXTI0_1_IRQn 0 */
     uint32_t pr = EXTI->PR;
 
-	// Encoder 5
-	if( pr & PRMASK_R5 ){
-	uint8_t	r5 = (ENC5_GPIO_Port->IDR) & ENC_MASK;
-   	uint8_t op = enc_table[enc_prev[Lr_ENC5]][r5];
-	enc_prev[Lr_ENC5] = r5;
+	// Encoder 4
+	if( pr & PRMASK_R4 ){
+	uint8_t	r4 = (ENC4_GPIO_Port->IDR) & ENC_MASK;
+   	uint8_t op = enc_table[enc_prev[Lr_ENC4]][r4];
+	enc_prev[Lr_ENC4] = r4;
 
     	if (op == ENC_MOVE_CW) {
-			Key_Stat.nb.enc5 = ENC_MOVE_CW;
-	        MIDI_CC_Inc(Lr_ENC5);
+			Key_Stat.nb.enc4 = ENC_MOVE_CW;
+	        MIDI_CC_Inc(Lr_ENC4);
 			isKeyPressed = true;
     	}else if(op == ENC_MOVE_CCW){
-			Key_Stat.nb.enc5 = ENC_MOVE_CCW;
-	        MIDI_CC_Dec(Lr_ENC5);
+			Key_Stat.nb.enc4 = ENC_MOVE_CCW;
+	        MIDI_CC_Dec(Lr_ENC4);
 	        isKeyPressed = true;
     	}else if(op == ENC_STOPPED){
-			Key_Stat.nb.enc5 = ENC_STOPPED;
+			Key_Stat.nb.enc4 = ENC_STOPPED;
 			isKeyPressed = true;
     	}else{
-			Key_Stat.nb.enc5 = ENC_STOPPED;
+			Key_Stat.nb.enc4 = ENC_STOPPED;
 			isKeyPressed = false;
     	}
 	}
 
   /* USER CODE END EXTI0_1_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(ENC_5A_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_5B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC4A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC4B_Pin);
   /* USER CODE BEGIN EXTI0_1_IRQn 1 */
 
   /* USER CODE END EXTI0_1_IRQn 1 */
@@ -236,14 +236,13 @@ void EXTI4_15_IRQHandler(void)
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
     uint32_t pr = EXTI->PR;
 
-    //Encoder 0(selector)
+    //Encoder 0
     if( pr & PRMASK_R0 ){
-	    uint8_t	r230 = ( (ENC230_GPIO_Port->IDR) >> 8 );
-    	uint8_t	r0 = ( r230 >> 4 ) & ENC_MASK;
+    	uint8_t	r0 = ( (ENC0_GPIO_Port->IDR) >> 4 ) & ENC_MASK;
     	uint8_t op = enc_table[enc_prev[Lr_ENC0]][r0];
 		enc_prev[Lr_ENC0] = r0;
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+		HAL_GPIO_EXTI_IRQHandler(ENC0A_Pin);
+		HAL_GPIO_EXTI_IRQHandler(ENC0B_Pin);
     	if (op == ENC_MOVE_CW) {
 			Key_Stat.nb.enc0 = ENC_MOVE_CW;
 	        MIDI_CC_Inc(Lr_ENC0);
@@ -266,11 +265,11 @@ void EXTI4_15_IRQHandler(void)
 
     // Encoder 1
     if(pr & PRMASK_R1){
-	    uint8_t	ra = (ENC1_GPIO_Port->IDR);
-        uint8_t	r1 = ( ra >> 4 ) & ENC_MASK;
+	    uint8_t	rb = ( (ENC1_GPIO_Port->IDR) >> 8 );
+        uint8_t	r1 = ( rb ) & ENC_MASK;
     	uint8_t op = enc_table[enc_prev[Lr_ENC1]][r1];
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
+		HAL_GPIO_EXTI_IRQHandler(ENC1A_Pin);
+		HAL_GPIO_EXTI_IRQHandler(ENC1B_Pin);
     	if (op == ENC_MOVE_CW) {
 			Key_Stat.nb.enc1 = ENC_MOVE_CW;
 	        MIDI_CC_Inc(Lr_ENC1);
@@ -293,12 +292,12 @@ void EXTI4_15_IRQHandler(void)
 
     //Encoder 2
     if(pr & PRMASK_R2){
-	    uint8_t	r230 = ( (ENC230_GPIO_Port->IDR) >> 8 );
-    	uint8_t	r2 = r230 & ENC_MASK;
+	    uint8_t	rb = ( (ENC2_GPIO_Port->IDR) >> 10 );
+    	uint8_t	r2 = rb & ENC_MASK;
     	uint8_t op = enc_table[enc_prev[Lr_ENC2]][r2];
 		enc_prev[Lr_ENC2] = r2;
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
+		HAL_GPIO_EXTI_IRQHandler(ENC2A_Pin);
+		HAL_GPIO_EXTI_IRQHandler(ENC2B_Pin);
 
     	if (op == ENC_MOVE_CW) {
 			Key_Stat.nb.enc2 = ENC_MOVE_CW;
@@ -322,12 +321,12 @@ void EXTI4_15_IRQHandler(void)
 
     //Rotator 3
 	if( pr & PRMASK_R3 ){
-	    uint8_t	r230 = ( (ENC230_GPIO_Port->IDR) >> 8 );
-		uint8_t	r3 = ( r230 >> 2 ) & ENC_MASK;
+	    uint8_t	rc = ( (ENC3_GPIO_Port->IDR) >> 14 );
+		uint8_t	r3 = ( rc ) & ENC_MASK;
     	uint8_t op = enc_table[enc_prev[Lr_ENC3]][r3];
 		enc_prev[Lr_ENC3] = r3;
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+		HAL_GPIO_EXTI_IRQHandler(ENC3A_Pin);
+		HAL_GPIO_EXTI_IRQHandler(ENC3B_Pin);
 
     	if (op == ENC_MOVE_CW) {
 			Key_Stat.nb.enc3 = ENC_MOVE_CW;
@@ -349,44 +348,44 @@ void EXTI4_15_IRQHandler(void)
     	}
 	}
 
-    //Encoder 4
-    if(pr & PRMASK_R4){
-    	uint8_t	r4 = ( (ENC4_GPIO_Port->IDR) >> 14 ) & ENC_MASK;
-    	uint8_t op = enc_table[enc_prev[Lr_ENC4]][r4];
-		enc_prev[Lr_ENC4] = r4;
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
-		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
+    //Encoder 5
+    if(pr & PRMASK_R5){
+    	uint8_t	r5 = ( (ENC4_GPIO_Port->IDR) >> 12 ) & ENC_MASK;
+    	uint8_t op = enc_table[enc_prev[Lr_ENC5]][r5];
+		enc_prev[Lr_ENC4] = r5;
+		HAL_GPIO_EXTI_IRQHandler(ENC5A_Pin);
+		HAL_GPIO_EXTI_IRQHandler(ENC5B_Pin);
     	if (op == ENC_MOVE_CW) {
-			Key_Stat.nb.enc4 = ENC_MOVE_CW;
+			Key_Stat.nb.enc5 = ENC_MOVE_CW;
 	        MIDI_CC_Inc(Lr_ENC4);
 			isKeyPressed = true;
 			return;
     	}else if(op == ENC_MOVE_CCW){
-			Key_Stat.nb.enc4 = ENC_MOVE_CCW;
+			Key_Stat.nb.enc5 = ENC_MOVE_CCW;
 	        MIDI_CC_Dec(Lr_ENC4);
 	        isKeyPressed = true;
 	        return;
     	}else if(op == ENC_STOPPED){
-			Key_Stat.nb.enc4 = ENC_STOPPED;
+			Key_Stat.nb.enc5 = ENC_STOPPED;
 			isKeyPressed = true;
 			return;
     	}else{
-			Key_Stat.nb.enc4 = ENC_STOPPED;
+			Key_Stat.nb.enc5 = ENC_STOPPED;
 			isKeyPressed = false;
     	}
     }
 
   /* USER CODE END EXTI4_15_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(ENC_1A_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_1B_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_2A_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_2B_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_3A_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_3B_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_6A_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_6B_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_4A_Pin);
-  HAL_GPIO_EXTI_IRQHandler(ENC_4B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC0A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC0B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC1A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC1B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC2A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC2B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC5A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC5B_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC3A_Pin);
+  HAL_GPIO_EXTI_IRQHandler(ENC3B_Pin);
   /* USER CODE BEGIN EXTI4_15_IRQn 1 */
 
   /* USER CODE END EXTI4_15_IRQn 1 */
@@ -536,4 +535,4 @@ void USB_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
