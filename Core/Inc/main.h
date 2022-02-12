@@ -87,18 +87,18 @@ void Error_Handler(void);
 #define PWM_LO 15
 #define Lr_PRODUCT "LrE-6"
 #define PWM_PERIOD 59
-#define ENC3A_Pin GPIO_PIN_14
-#define ENC3A_GPIO_Port GPIOC
-#define ENC3A_EXTI_IRQn EXTI4_15_IRQn
-#define ENC3B_Pin GPIO_PIN_15
-#define ENC3B_GPIO_Port GPIOC
-#define ENC3B_EXTI_IRQn EXTI4_15_IRQn
-#define ENC4A_Pin GPIO_PIN_0
-#define ENC4A_GPIO_Port GPIOF
-#define ENC4A_EXTI_IRQn EXTI0_1_IRQn
-#define ENC4B_Pin GPIO_PIN_1
-#define ENC4B_GPIO_Port GPIOF
-#define ENC4B_EXTI_IRQn EXTI0_1_IRQn
+#define ENC4A_Pin GPIO_PIN_14
+#define ENC4A_GPIO_Port GPIOC
+#define ENC4A_EXTI_IRQn EXTI4_15_IRQn
+#define ENC4B_Pin GPIO_PIN_15
+#define ENC4B_GPIO_Port GPIOC
+#define ENC4B_EXTI_IRQn EXTI4_15_IRQn
+#define ENC5A_Pin GPIO_PIN_0
+#define ENC5A_GPIO_Port GPIOF
+#define ENC5A_EXTI_IRQn EXTI0_1_IRQn
+#define ENC5B_Pin GPIO_PIN_1
+#define ENC5B_GPIO_Port GPIOF
+#define ENC5B_EXTI_IRQn EXTI0_1_IRQn
 #define M0_Pin GPIO_PIN_0
 #define M0_GPIO_Port GPIOA
 #define M1_Pin GPIO_PIN_1
@@ -107,28 +107,28 @@ void Error_Handler(void);
 #define M2_GPIO_Port GPIOA
 #define M3_Pin GPIO_PIN_3
 #define M3_GPIO_Port GPIOA
-#define ENC0A_Pin GPIO_PIN_4
-#define ENC0A_GPIO_Port GPIOA
-#define ENC0A_EXTI_IRQn EXTI4_15_IRQn
-#define ENC0B_Pin GPIO_PIN_5
-#define ENC0B_GPIO_Port GPIOA
-#define ENC0B_EXTI_IRQn EXTI4_15_IRQn
+#define ENC1A_Pin GPIO_PIN_4
+#define ENC1A_GPIO_Port GPIOA
+#define ENC1A_EXTI_IRQn EXTI4_15_IRQn
+#define ENC1B_Pin GPIO_PIN_5
+#define ENC1B_GPIO_Port GPIOA
+#define ENC1B_EXTI_IRQn EXTI4_15_IRQn
 #define LED_DON_Pin GPIO_PIN_6
 #define LED_DON_GPIO_Port GPIOA
 #define L3_Pin GPIO_PIN_2
 #define L3_GPIO_Port GPIOB
-#define ENC2A_Pin GPIO_PIN_10
-#define ENC2A_GPIO_Port GPIOB
-#define ENC2A_EXTI_IRQn EXTI4_15_IRQn
-#define ENC2B_Pin GPIO_PIN_11
-#define ENC2B_GPIO_Port GPIOB
-#define ENC2B_EXTI_IRQn EXTI4_15_IRQn
-#define ENC5A_Pin GPIO_PIN_12
-#define ENC5A_GPIO_Port GPIOB
-#define ENC5A_EXTI_IRQn EXTI4_15_IRQn
-#define ENC5B_Pin GPIO_PIN_13
-#define ENC5B_GPIO_Port GPIOB
-#define ENC5B_EXTI_IRQn EXTI4_15_IRQn
+#define ENC3A_Pin GPIO_PIN_10
+#define ENC3A_GPIO_Port GPIOB
+#define ENC3A_EXTI_IRQn EXTI4_15_IRQn
+#define ENC3B_Pin GPIO_PIN_11
+#define ENC3B_GPIO_Port GPIOB
+#define ENC3B_EXTI_IRQn EXTI4_15_IRQn
+#define ENC0A_Pin GPIO_PIN_12
+#define ENC0A_GPIO_Port GPIOB
+#define ENC0A_EXTI_IRQn EXTI4_15_IRQn
+#define ENC0B_Pin GPIO_PIN_13
+#define ENC0B_GPIO_Port GPIOB
+#define ENC0B_EXTI_IRQn EXTI4_15_IRQn
 #define USB_DM_Pin GPIO_PIN_11
 #define USB_DM_GPIO_Port GPIOA
 #define USB_DP_Pin GPIO_PIN_12
@@ -147,27 +147,18 @@ void Error_Handler(void);
 #define SCL_GPIO_Port GPIOB
 #define SDA_Pin GPIO_PIN_7
 #define SDA_GPIO_Port GPIOB
-#define ENC1A_Pin GPIO_PIN_8
-#define ENC1A_GPIO_Port GPIOB
-#define ENC1A_EXTI_IRQn EXTI4_15_IRQn
-#define ENC1B_Pin GPIO_PIN_9
-#define ENC1B_GPIO_Port GPIOB
-#define ENC1B_EXTI_IRQn EXTI4_15_IRQn
+#define ENC2A_Pin GPIO_PIN_8
+#define ENC2A_GPIO_Port GPIOB
+#define ENC2A_EXTI_IRQn EXTI4_15_IRQn
+#define ENC2B_Pin GPIO_PIN_9
+#define ENC2B_GPIO_Port GPIOB
+#define ENC2B_EXTI_IRQn EXTI4_15_IRQn
 /* USER CODE BEGIN Private defines */
 #undef	Lr_PID
 #undef	Lr_PRODUCT
 #define Lr_PID 0xA320
 #define Lr_PRODUCT "LrE-6"
 #define Lr_VENDOR "Ruffles Inc."
-
-//! LrE-6 Ports on Board
-#define Mx_GPIO_Port GPIOA
-#define ENC0_GPIO_Port GPIOA
-#define ENC1_GPIO_Port GPIOB
-#define ENC2_GPIO_Port GPIOB
-#define ENC3_GPIO_Port GPIOC
-#define ENC5_GPIO_Port GPIOF
-//#define ENC5_GPIO_Port GPIOB
 
 //! Lr**** Hardware definition
 #define KEY_COUNT	16

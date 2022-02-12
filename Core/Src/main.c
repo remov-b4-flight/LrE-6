@@ -852,14 +852,14 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, L3_Pin|L0_Pin|L1_Pin|L2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : ENC3A_Pin ENC3B_Pin */
-  GPIO_InitStruct.Pin = ENC3A_Pin|ENC3B_Pin;
+  /*Configure GPIO pins : ENC4A_Pin ENC4B_Pin */
+  GPIO_InitStruct.Pin = ENC4A_Pin|ENC4B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC4A_Pin ENC4B_Pin */
-  GPIO_InitStruct.Pin = ENC4A_Pin|ENC4B_Pin;
+  /*Configure GPIO pins : ENC5A_Pin ENC5B_Pin */
+  GPIO_InitStruct.Pin = ENC5A_Pin|ENC5B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
@@ -870,8 +870,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC0A_Pin ENC0B_Pin */
-  GPIO_InitStruct.Pin = ENC0A_Pin|ENC0B_Pin;
+  /*Configure GPIO pins : ENC1A_Pin ENC1B_Pin */
+  GPIO_InitStruct.Pin = ENC1A_Pin|ENC1B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -883,10 +883,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC2A_Pin ENC2B_Pin ENC5A_Pin ENC5B_Pin
-                           ENC1A_Pin ENC1B_Pin */
-  GPIO_InitStruct.Pin = ENC2A_Pin|ENC2B_Pin|ENC5A_Pin|ENC5B_Pin
-                          |ENC1A_Pin|ENC1B_Pin;
+  /*Configure GPIO pins : ENC3A_Pin ENC3B_Pin ENC0A_Pin ENC0B_Pin
+                           ENC2A_Pin ENC2B_Pin */
+  GPIO_InitStruct.Pin = ENC3A_Pin|ENC3B_Pin|ENC0A_Pin|ENC0B_Pin
+                          |ENC2A_Pin|ENC2B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
