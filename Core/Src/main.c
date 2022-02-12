@@ -39,7 +39,7 @@
 #ifdef DEBUG
 #define CONN_MSG_D	"%s %2x.%02xD"
 #else
-#define CONN_MSG	"%2x.%02x"
+#define CONN_MSG	"%s %2x.%02x"
 #endif
 /* USER CODE END PTD */
 
@@ -402,8 +402,8 @@ int main(void)
 		Msg_Print();
 #else
 		SSD1306_LoadBitmap();
-		sprintf(Msg_Buffer[0], CONN_MSG, USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
-		SSD1306_RenderBanner(Msg_Buffer[0], 88, 16);
+		sprintf(Msg_Buffer[0], CONN_MSG, Lr_PRODUCT, USBD_DEVICE_VER_MAJ, USBD_DEVICE_VER_MIN);
+		SSD1306_RenderBanner(Msg_Buffer[0], 12, 12);
 		SSD1306_FlashScreen();
 #endif
 		Start_MsgTimer(MSG_TIMER_DEFAULT);
