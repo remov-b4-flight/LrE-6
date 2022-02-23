@@ -33,7 +33,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #define USBD_DEVICE_VER_MAJ	0x00
-#define USBD_DEVICE_VER_MIN	0x58
+#define USBD_DEVICE_VER_MIN	0x59
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -229,3 +229,5 @@ enum lr_enc_t {
 #endif
 
 #endif /* __MAIN_H */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

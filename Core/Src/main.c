@@ -1,8 +1,8 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file	main.c
-  * @brief	Main program body
+  * @file main.c
+  * @brief  Main program body
   * @author	remov-b4-flight
   * @copyright	3-Clause BSD License
   ******************************************************************************
@@ -124,8 +124,9 @@ extern char Msg_Buffer[MSG_LINES][MSG_WIDTH + 1];
 uint8_t MIDI_CC_Value[SCENE_COUNT][ENC_COUNT];
 //! keep previous sent 'Key On' note/channel for release message.
 uint8_t prev_note;
-//! USB MIDI message buffer
-uint8_t	USBMIDI_Event[4];
+//! USB MIDI message structure for send
+MIDI_EVENT	USBMIDI_Event;
+
 //! Instance Handle of USB interface
 extern USBD_HandleTypeDef *pInstance;
 
@@ -240,10 +241,10 @@ static void EmulateMIDI(){
 
             if (isKeyReport == true) {
 				//Set 'Note ON
-				USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_NT_ON;
-				USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_NT_ON_S;
-				USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = note;
-				USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_NT_VELOCITY;
+				USBMIDI_Event.header = MIDI_NT_ON;
+				USBMIDI_Event.status = MIDI_NT_ON_S;
+				USBMIDI_Event.channel = note;
+				USBMIDI_Event.value = MIDI_NT_VELOCITY;
 
 				prev_note = note;
 				isPrev_sw = true;
@@ -254,10 +255,11 @@ static void EmulateMIDI(){
         	uint8_t val = MIDI_CC_Value[LrScene][axis];
         	uint8_t channel = CC_CH_OFFSET + (LrScene * CC_CH_PER_SCENE) + axis;
 
-            USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_CC_HEADER;
-            USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_CC_STATUS;
-            USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = channel;
-            USBMIDI_Event[MIDI_EV_IDX_VALUE] = val;
+            USBMIDI_Event.header = MIDI_CC_HEADER;
+            USBMIDI_Event.status = MIDI_CC_STATUS;
+            USBMIDI_Event.channel = channel;
+            USBMIDI_Event.value = val;
+
             isPrev_sw = false;
 
             //Print Message to OLED & LED
@@ -276,10 +278,10 @@ static void EmulateMIDI(){
 
         }else if(isPrev_sw == true && rkey == 0) {// Switch is released
 			//Send 'Note Off' Event
-			USBMIDI_Event[MIDI_EV_IDX_HEADER] = MIDI_NT_OFF;
-			USBMIDI_Event[MIDI_EV_IDX_STATUS] = MIDI_NT_OFF_S;
-			USBMIDI_Event[MIDI_EV_IDX_CHANNEL] = prev_note;
-			USBMIDI_Event[MIDI_EV_IDX_VALUE] = MIDI_NT_VELOCITY;
+			USBMIDI_Event.header = MIDI_NT_OFF;
+			USBMIDI_Event.status = MIDI_NT_OFF_S;
+			USBMIDI_Event.channel = prev_note;
+			USBMIDI_Event.value = MIDI_NT_VELOCITY;
 
 			isKeyReport = true;
 			isPrev_sw = false;
@@ -287,7 +289,7 @@ static void EmulateMIDI(){
 
         if(isKeyReport == true){
 			//Send MIDI event via USB
-		    USBD_LL_Transmit (pInstance, MIDI_IN_EP, USBMIDI_Event, MIDI_EVENT_LENGTH);
+		    USBD_LL_Transmit (pInstance, MIDI_IN_EP, (uint8_t *)&USBMIDI_Event, MIDI_EVENT_LENGTH);
 			isKeyReport = false;
         }
 
@@ -458,8 +460,8 @@ int main(void)
 		for (uint8_t i = 0; i < LED_COUNT; i++){
 			if (LEDTimer[i] != LED_TIMER_CONSTANT && --LEDTimer[i] == 0) {
 				LED_SetPulse(i, LED_Scene[LrScene][i], LED_TIMER_CONSTANT);
-				}
 		 	}
+		}
 		LED_Timer_Update = false;
 		continue;
 	}
@@ -467,7 +469,7 @@ int main(void)
 	//Flashing LEDs
 	if (isLEDsendpulse == true) {
 		if (LED_SendPulse() == true){
-		isLEDsendpulse = false;
+			isLEDsendpulse = false;
 		}else{
 			HAL_Delay(LED_TIM_RETRY_WAIT);	// i2c is busy, retry with interval
 		}
@@ -484,7 +486,7 @@ int main(void)
 		continue;
 	}
 
-	//LCD off Timer
+	//OLED off Timer
 	if(Msg_Off_Flag == true){
 		Msg_Off_Flag = false;
 		SSD1306_SetScreen(OFF);
@@ -492,7 +494,7 @@ int main(void)
 		continue;
 	}
 
-	//Flashing LCD.
+	//Flashing OLED.
 	if (isMsgFlash == true) {
 		if (isRender == true) {
 			SSD1306_Render2Buffer();
@@ -507,7 +509,7 @@ int main(void)
 		continue;
 	}
 #ifndef DEBUG
-		HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+	HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 #endif
     /* USER CODE END WHILE */
 

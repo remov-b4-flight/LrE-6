@@ -2,7 +2,7 @@
 * @file key_define.c
 * @brief MIDI channel definition
 * @details This file defines MIDI Control Change(CC) / Note ON-OFF event on MIDI build.
-* LrE-6 has 6 rotator as rot0~5, and 10 individual switch(SW) as SW1~10 and SW on rotator as 'rot0~5 push'
+* LrE-6 has 6 encoder as enc0~5, and 10 individual switch(SW) as SW1~10 and SW on rotator as 'rot0~5 push'
 * In MIDI use , users can send individual CC/Note event channel per switch and encoder.
 * At switches, LrE-6 sends Note message has velocity= 127 when switch on, and sends velocity = 0 when switch off.
 * At encoder, LrE-6 sends CC message every encoders move,values are increase/decrease by towards.

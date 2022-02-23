@@ -4,10 +4,8 @@
   * @author modified by remov-b4-flight
   * @copyright  original copyright below
   ******************************************************************************
-
     (CC at)2016 by D.F.Mac. @@TripArts Music
-
-*/ 
+*/
 
 /* Includes ------------------------------------------------------------------*/
 #include <midi.h>
@@ -23,13 +21,12 @@ static uint8_t  USBD_MIDI_DataIn (USBD_HandleTypeDef *pdev, uint8_t epnum);
 static uint8_t  USBD_MIDI_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum);
 
 static uint8_t  *USBD_MIDI_GetCfgDesc (uint16_t *length);
-//uint8_t  *USBD_MIDI_GetDeviceQualifierDescriptor (uint16_t *length);
-USBD_HandleTypeDef *pInstance = NULL; 
+USBD_HandleTypeDef *pInstance = NULL;
 
 __ALIGN_BEGIN uint8_t USB_Rx_Buffer[MIDI_DATA_OUT_PACKET_SIZE] __ALIGN_END ;
 
 /* USB MIDI interface class callbacks structure */
-USBD_ClassTypeDef  USBD_MIDI = 
+USBD_ClassTypeDef  USBD_MIDI =
 {
   USBD_MIDI_Init,
   USBD_MIDI_DeInit,
@@ -64,7 +61,7 @@ __ALIGN_BEGIN uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZ] __ALIGN_END =
   0x06, CS_INTERFACE, MIDI_IN_JACK, MIDI_JACK_ENB, MIDI_IN_JACK_NO, NO_STRING_IDX,
   // MIDI OUT JACKS
   0x09, CS_INTERFACE, MIDI_OUT_JACK, MIDI_JACK_ENB, MIDI_OUT_JACK_NO, 0x01, 0x01, 0x01, NO_STRING_IDX,
-  // IN endpoint descriptor
+  // IN EP descriptor
   0x09, ENDPOINT, MIDI_IN_EP, BULK, 64, 0, INTERVAL, MIDI_UNUSED, MIDI_UNUSED,
   0x05, CS_ENDPOINT, MS_GENERAL, 0x01, MIDI_IN_JACK_NO,
   // OUT EP descriptor
@@ -95,7 +92,7 @@ static uint8_t USBD_MIDI_DataIn (USBD_HandleTypeDef *pdev, uint8_t epnum){
 }
 
 static uint8_t  USBD_MIDI_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum)
-{      
+{
 
   USBD_MIDI_ItfTypeDef *pmidi = (USBD_MIDI_ItfTypeDef *)(pdev->pUserData);
   uint16_t USB_Rx_Cnt = ((PCD_HandleTypeDef*)pdev->pData)->OUT_ep[epnum].xfer_count;
@@ -114,11 +111,11 @@ static uint8_t *USBD_MIDI_GetCfgDesc (uint16_t *length){
 uint8_t USBD_MIDI_RegisterInterface(USBD_HandleTypeDef *pdev, USBD_MIDI_ItfTypeDef *fops)
 {
   uint8_t ret = USBD_FAIL;
-  
+
   if(fops != NULL){
     pdev->pUserData= fops;
-    ret = USBD_OK;    
+    ret = USBD_OK;
   }
-  
+
   return ret;
 }
