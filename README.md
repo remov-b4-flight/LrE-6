@@ -1,3 +1,5 @@
+Current development was moved to 8-Axis [LrTMAX](https://github.com/remov-b4-flight/LrTMAX) repository.
+***
 # LrE-6
 Adobe Lightroom MIDI Developer Controller project (STM32F072Cx based)  
 LrE-6 MIDI controller is formed by embedded hardware board and its firmware.  
